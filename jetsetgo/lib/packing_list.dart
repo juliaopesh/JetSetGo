@@ -57,6 +57,24 @@ class _PackingListScreenState extends State<PackingListScreen> {
     );
   }
 
+  void _showInfoDialog() {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text("AI Suggestions"),
+          content: Text("This feature provides AI-generated packing recommendations based on your trip."),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.pop(context),
+              child: Text("Got it!"),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -109,22 +127,44 @@ class _PackingListScreenState extends State<PackingListScreen> {
           ),
           Positioned(
             bottom: 20,
-            right: -10, // Peeks out from the right
-            child: GestureDetector(
-              onTap: _getAISuggestions,
-              child: ClipRRect(
-                borderRadius: BorderRadius.horizontal(left: Radius.circular(20)),
-                child: Container(
-                  width: 150,
-                  height: 120, // Increased height for better visibility
-                  color: Colors.blue[800],
-                  alignment: Alignment.center,
-                  child: Text(
-                    "Get AI Suggestions",
-                    style: TextStyle(color: Colors.white, fontSize: 14),
+            right: -30, // Peeks out from the right
+            child: Stack(
+              alignment: Alignment.centerRight,
+              children: [
+                // Main AI Suggestions button
+                GestureDetector(
+                  onTap: _getAISuggestions,
+                  child: ClipRRect(
+                    borderRadius: BorderRadius.horizontal(left: Radius.circular(20)),
+                    child: Container(
+                      width: 150,
+                      height: 60, // Increased height for better visibility
+                      color: Colors.blue[800],
+                      alignment: Alignment.center,
+                      child: Text(
+                        "Get AI Suggestions",
+                        style: TextStyle(color: Colors.white, fontSize: 14),
+                      ),
+                    ),
                   ),
                 ),
-              ),
+                // Info button sticking out
+                Positioned(
+                  left: -5, // Makes it peek out
+                  child: GestureDetector(
+                    onTap: _showInfoDialog,
+                    child: ClipOval(
+                      child: Container(
+                        width: 30,
+                        height: 30,
+                        color: Colors.blue[600],
+                        alignment: Alignment.center,
+                        child: Icon(Icons.info, color: Colors.white, size: 20),
+                      ),
+                    ),
+                  ),
+                ),
+              ],
             ),
           ),
         ],
