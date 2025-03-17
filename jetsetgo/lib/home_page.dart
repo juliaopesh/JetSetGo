@@ -35,19 +35,19 @@ class HomePage extends StatelessWidget {
                     destination: 'Barcelona, Spain',
                     dates: 'Sept 20 - 27, 2025',
                     duration: '7 days',
-                    imageName: 'assets/images/barcelona_widget.jpg', 
+                    imageName: 'assets/images/widgets/barcelona_widget.jpg', 
                   ),
                   TripCard(
                     destination: 'Tokyo, Japan',
                     dates: 'Oct 5 - 15, 2025',
                     duration: '10 days',
-                   imageName: 'assets/images/tokyo_widget.jpeg', 
+                   imageName: 'assets/images/widgets/tokyo_widget.jpeg', 
                   ),
                   TripCard(
                     destination: 'Paris, France',
                     dates: 'Nov 1 - 7, 2025',
                     duration: '6 days',
-                    imageName: 'assets/images/paris_widget.jpg', // Name of the image in your assets
+                    imageName: 'assets/images/widgets/paris_widget.jpg', // Name of the image in your assets
                   ),
                 ],
               ),
