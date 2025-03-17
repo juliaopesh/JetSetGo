@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'packing_list.dart'; // Import the Packing List screen
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
