@@ -1,15 +1,17 @@
 import 'package:flutter/material.dart';
 
 class PackingListScreen extends StatefulWidget {
+  const PackingListScreen({super.key});
+
   @override
   _PackingListScreenState createState() => _PackingListScreenState();
 }
 
 class _PackingListScreenState extends State<PackingListScreen> {
-  List<Map<String, dynamic>> _packingItems = [];
+  final List<Map<String, dynamic>> _packingItems = [];
 
   void _showAddItemDialog() {
-    TextEditingController _textController = TextEditingController();
+    TextEditingController textController = TextEditingController();
 
     showDialog(
       context: context,
@@ -17,7 +19,7 @@ class _PackingListScreenState extends State<PackingListScreen> {
         return AlertDialog(
           title: Text("Add Item"),
           content: TextField(
-            controller: _textController,
+            controller: textController,
             decoration: InputDecoration(hintText: "Enter item name"),
           ),
           actions: [
@@ -27,10 +29,10 @@ class _PackingListScreenState extends State<PackingListScreen> {
             ),
             ElevatedButton(
               onPressed: () {
-                if (_textController.text.trim().isNotEmpty) {
+                if (textController.text.trim().isNotEmpty) {
                   setState(() {
                     _packingItems.add({
-                      "text": _textController.text.trim(),
+                      "text": textController.text.trim(),
                       "checked": false
                     });
                   });
@@ -93,7 +95,7 @@ class _PackingListScreenState extends State<PackingListScreen> {
           Center(
             child: _packingItems.isEmpty
                 ? Text("No items yet. Tap + to add.")
-                : Container(
+                : SizedBox(
                     width: MediaQuery.of(context).size.width * 0.7,
                     child: Column(
                       mainAxisSize: MainAxisSize.min,
