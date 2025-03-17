@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
-import 'packing_list.dart'; // Import the Packing List screen
+
+
+import 'packing_list.dart'; // Packing List screen
+import 'home_page.dart'; 
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -55,6 +58,21 @@ class _LoginScreenState extends State<LoginScreen> {
                   onPressed: () {
                     if (_formKey.currentState!.validate()) {
                       // Handle login logic here
+                      
+                      //go to homepage 
+                      Navigator.pushReplacement(
+                        context, 
+                        PageRouteBuilder(
+                          pageBuilder: (context, animation, secondaryAnimation) => HomePage(),
+                          transitionsBuilder: (context, animation, secondaryAnimation, child){
+                            return FadeTransition(
+                              opacity:animation, 
+                              child: child,
+                            ); 
+                          },
+                        ),
+                      );
+                  
                       ScaffoldMessenger.of(context).showSnackBar(
                         SnackBar(content: Text('Logging in...')),
                       );

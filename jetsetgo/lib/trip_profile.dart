@@ -3,8 +3,9 @@ import 'packing_list.dart';
 
 class TripScreen extends StatelessWidget {
   final String tripName;
+  final String tripDates; 
 
-  const TripScreen({Key? key, required this.tripName}) : super(key: key);
+  const TripScreen({Key? key, required this.tripName, required this.tripDates}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -29,7 +30,7 @@ class TripScreen extends StatelessWidget {
                 mainAxisSize: MainAxisSize.min,
                 children: [
                   Text(
-                    "My trip to...",
+                    "My trip to... ",
                     style: TextStyle(fontSize: 28, fontWeight: FontWeight.w400, color: Colors.black),
                   ),
                   SizedBox(height: 8),

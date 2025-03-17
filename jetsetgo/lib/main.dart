@@ -5,6 +5,8 @@ import 'dart:convert';
 
 import 'create_account.dart'; //Create Account
 import 'login.dart'; //Login
+import 'home_page.dart'; // Import HomePage
+import 'trip_profile.dart'; //trip screen 
 
 void main() {
   runApp(JetSetGo());

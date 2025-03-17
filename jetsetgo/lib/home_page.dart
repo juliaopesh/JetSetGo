@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import 'trip_profile.dart'; // Import TripScreen
+
 class HomePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
@@ -98,59 +100,69 @@ class TripCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Card(
-      margin: EdgeInsets.symmetric(vertical: 10),
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(15),
-      ),
-      elevation: 5,
-      child: Padding(
-        padding: const EdgeInsets.all(15.0),
-        child: Row(
-          children: [
+    return GestureDetector(
+      onTap:(){
+        //when clicked, navigate to trip screen 
+        Navigator.push(
+          context, MaterialPageRoute(
+            builder: (context) => TripScreen(tripName: destination, tripDates:dates),
+          ),
+        );
+      },
+      child: Card(
+        margin: EdgeInsets.symmetric(vertical: 10),
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(15),
+        ),
+        elevation: 5,
+        child: Padding(
+          padding: const EdgeInsets.all(15.0),
+          child: Row(
+            children: [
             // Trip details on the left
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    destination,
-                    style: TextStyle(
-                      fontSize: 20,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.blue[900],
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      destination,
+                      style: TextStyle(
+                        fontSize: 20,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.blue[900],
+                      ),
                     ),
-                  ),
-                  SizedBox(height: 10),
-                  Text(
-                    'Dates: $dates',
-                    style: TextStyle(
-                      fontSize: 16,
-                      color: Colors.black87,
+                    SizedBox(height: 10),
+                    Text(
+                      'Dates: $dates',
+                      style: TextStyle(
+                        fontSize: 16,
+                        color: Colors.black87,
+                      ),
                     ),
-                  ),
-                  Text(
-                    'Duration: $duration',
-                    style: TextStyle(
-                      fontSize: 16,
-                      color: Colors.black87,
+                    Text(
+                      'Duration: $duration',
+                      style: TextStyle(
+                        fontSize: 16,
+                        color: Colors.black87,
+                      ),
                     ),
-                  ),
-                ],
+                  ],
+                ),
               ),
-            ),
-            SizedBox(width: 10),
-            // Image for the destination
-            ClipRRect(
-              borderRadius: BorderRadius.circular(10),
-              child: Image.network(
-                imageName,
-                width: 100,
-                height: 100,
-                fit: BoxFit.cover,
+              SizedBox(width: 10),
+              // Image for the destination
+              ClipRRect(
+                borderRadius: BorderRadius.circular(10),
+                child: Image.network(
+                  imageName,
+                  width: 100,
+                  height: 100,
+                  fit: BoxFit.cover,
+                ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );
