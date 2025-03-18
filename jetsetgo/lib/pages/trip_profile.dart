@@ -1,12 +1,14 @@
 import 'package:flutter/material.dart';
 import 'packing_list.dart';
 import 'wallet.dart';
+import 'weather.dart';
 
 class TripScreen extends StatefulWidget {
   final String tripName;
   final String tripDates;
+  final String tripLocation;
 
-  const TripScreen({Key? key, required this.tripName, required this.tripDates}) : super(key: key);
+  const TripScreen({super.key, required this.tripName, required this.tripDates, required this.tripLocation});
 
   @override
   _TripScreenState createState() => _TripScreenState();
@@ -18,7 +20,7 @@ class _TripScreenState extends State<TripScreen> {
   List<String> detailedActivities = [
     "• Activity 1\n• Activity 2\n• Activity 3",
     "• Activity 4\n• Activity 5\n• Activity 6",
-    "• Activity 7\n• Activity 8\n• Activity 9"
+    "• Activity 7\n• Activity 8\n• Activity 9",
   ];
 
   void _showDayDetails(int index) {
@@ -73,17 +75,20 @@ class _TripScreenState extends State<TripScreen> {
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
-        title: Text(widget.tripName, style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold)),
+        title: Text(
+          widget.tripName,
+          style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
+        ),
         backgroundColor: const Color.fromARGB(255, 119, 165, 205),
         centerTitle: true,
       ),
-      body: SingleChildScrollView( // scrolling!!!
+      body: SingleChildScrollView(
+        // scrolling!!!
         child: Padding(
           padding: const EdgeInsets.all(20.0),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-
               // Title Box
               Container(
                 width: double.infinity,
@@ -94,16 +99,29 @@ class _TripScreenState extends State<TripScreen> {
                 ),
                 child: Column(
                   children: [
-                    Text("My trip to...", style: TextStyle(fontSize: 20, fontWeight: FontWeight.w400)),
+                    Text(
+                      "My trip to...",
+                      style: TextStyle(
+                        fontSize: 20,
+                        fontWeight: FontWeight.w400,
+                      ),
+                    ),
                     SizedBox(height: 5),
                     Text(
                       widget.tripName.toUpperCase(),
-                      style: TextStyle(fontSize: 32, fontWeight: FontWeight.bold),
+                      style: TextStyle(
+                        fontSize: 32,
+                        fontWeight: FontWeight.bold,
+                      ),
                     ),
                     SizedBox(height: 5),
                     Text(
                       "Dates: ${widget.tripDates}",
-                      style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500, color: Colors.black54),
+                      style: TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.w500,
+                        color: Colors.black54,
+                      ),
                     ),
                   ],
                 ),
@@ -122,17 +140,44 @@ class _TripScreenState extends State<TripScreen> {
                           MaterialPageRoute(builder: (context) => WalletPage()),
                         );
                       },
-                      child: _buildFeatureBox(Icons.account_balance_wallet, "Wallet"),
+                      child: _buildFeatureBox(
+                        Icons.account_balance_wallet,
+                        "Wallet",
+                      ),
                     ),
                   ),
                   SizedBox(width: 10),
-                  Expanded(child: _buildFeatureBox(Icons.wb_sunny, "Weather")),
+                  Expanded(
+                    child: GestureDetector(
+                      onTap: () {
+                        // Navigate to WeatherPage
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder:
+                                (context) => WeatherPage(
+                                  tripName: widget.tripName,
+                                  tripDates: widget.tripDates,
+                                  tripLocation: widget.tripLocation,                                ),
+                          ),
+                        );
+                      },
+                      child: _buildFeatureBox(Icons.wb_sunny, "Weather"),
+                    ),
+                  ),
                 ],
               ),
               SizedBox(height: 20),
 
               // Itinerary Section
-              Text("Itinerary", style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold, color: Colors.purple)),
+              Text(
+                "Itinerary",
+                style: TextStyle(
+                  fontSize: 24,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.purple,
+                ),
+              ),
               SizedBox(height: 10),
               SingleChildScrollView(
                 scrollDirection: Axis.horizontal,
@@ -143,11 +188,14 @@ class _TripScreenState extends State<TripScreen> {
                       return Padding(
                         padding: const EdgeInsets.only(right: 10.0),
                         child: GestureDetector(
-                          onTap: () => _showDayDetails(index), // Show day details on tap
+                          onTap:
+                              () => _showDayDetails(
+                                index,
+                              ), // Show day details on tap
                           child: _buildDayCard(day, index),
                         ),
                       );
-                    }).toList(),
+                    }),
                     SizedBox(width: 10),
                     _buildAddButton(),
                   ],
@@ -168,7 +216,11 @@ class _TripScreenState extends State<TripScreen> {
                       children: [
                         Text(
                           "Packing List",
-                          style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color: Colors.pink),
+                          style: TextStyle(
+                            fontSize: 20,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.pink,
+                          ),
                         ),
                         Spacer(),
                         ElevatedButton.icon(
@@ -176,7 +228,12 @@ class _TripScreenState extends State<TripScreen> {
                             // Navigate to the PackingListScreen when clicked
                             Navigator.push(
                               context,
-                              MaterialPageRoute(builder: (context) => PackingListScreen(tripTitle: widget.tripName)),
+                              MaterialPageRoute(
+                                builder:
+                                    (context) => PackingListScreen(
+                                      tripTitle: widget.tripName,
+                                    ),
+                              ),
                             );
                           },
                           icon: Icon(Icons.arrow_forward),
@@ -184,7 +241,10 @@ class _TripScreenState extends State<TripScreen> {
                           style: ElevatedButton.styleFrom(
                             backgroundColor: Colors.pink,
                             foregroundColor: Colors.white,
-                            padding: EdgeInsets.symmetric(horizontal: 15, vertical: 8),
+                            padding: EdgeInsets.symmetric(
+                              horizontal: 15,
+                              vertical: 8,
+                            ),
                           ),
                         ),
                       ],
@@ -218,7 +278,10 @@ class _TripScreenState extends State<TripScreen> {
       ),
       child: Column(
         children: [
-          Text(label, style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
+          Text(
+            label,
+            style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+          ),
           SizedBox(height: 10),
           Icon(icon, size: 60),
         ],
@@ -237,7 +300,14 @@ class _TripScreenState extends State<TripScreen> {
       ),
       child: Column(
         children: [
-          Text(day, style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Colors.purple)),
+          Text(
+            day,
+            style: TextStyle(
+              fontSize: 16,
+              fontWeight: FontWeight.bold,
+              color: Colors.purple,
+            ),
+          ),
           SizedBox(height: 5),
           Text("• Activity 1\n• Activity 2", style: TextStyle(fontSize: 12)),
           // You can replace these with dynamic content later

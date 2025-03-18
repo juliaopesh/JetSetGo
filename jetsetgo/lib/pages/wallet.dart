@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 
 class WalletPage extends StatelessWidget {
+  const WalletPage({super.key});
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -57,7 +59,7 @@ class WalletCard extends StatelessWidget {
   final String date;
   final IconData icon;
 
-  const WalletCard({
+  const WalletCard({super.key, 
     required this.title,
     required this.date,
     required this.icon,

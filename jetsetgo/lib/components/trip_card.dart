@@ -23,7 +23,7 @@ class TripCard extends StatelessWidget {
         Navigator.push(
           context,
           MaterialPageRoute(
-            builder: (context) => TripScreen(tripName: destination, tripDates: dates),
+            builder: (context) => TripScreen(tripName: destination, tripDates: dates, tripLocation: destination,),
           ),
         );
       },

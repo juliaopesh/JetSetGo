@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 class PackingListScreen extends StatefulWidget {
   final String tripTitle; // Add tripTitle to the constructor
 
-  const PackingListScreen({Key? key, required this.tripTitle}) : super(key: key);
+  const PackingListScreen({super.key, required this.tripTitle});
 
   @override
   _PackingListScreenState createState() => _PackingListScreenState();
