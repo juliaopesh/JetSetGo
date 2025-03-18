@@ -1,18 +1,79 @@
 import 'package:flutter/material.dart';
 import 'packing_list.dart';
+import 'wallet.dart';
 
-class TripScreen extends StatelessWidget {
+class TripScreen extends StatefulWidget {
   final String tripName;
   final String tripDates;
 
   const TripScreen({Key? key, required this.tripName, required this.tripDates}) : super(key: key);
 
   @override
+  _TripScreenState createState() => _TripScreenState();
+}
+
+class _TripScreenState extends State<TripScreen> {
+  // List to hold the itinerary days dynamically
+  List<String> itineraryDays = ["Day 1", "Day 2", "Day 3"];
+  List<String> detailedActivities = [
+    "• Activity 1\n• Activity 2\n• Activity 3",
+    "• Activity 4\n• Activity 5\n• Activity 6",
+    "• Activity 7\n• Activity 8\n• Activity 9"
+  ];
+
+  void _showDayDetails(int index) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text(itineraryDays[index]),
+          content: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(detailedActivities[index]),
+              SizedBox(height: 10),
+              ElevatedButton(
+                onPressed: () {
+                  // Add new activity for this day
+                  setState(() {
+                    detailedActivities[index] += "\n• New Activity";
+                  });
+                  Navigator.of(context).pop();
+                },
+                child: Text("Add Activity"),
+              ),
+              SizedBox(height: 10),
+              ElevatedButton(
+                onPressed: () {
+                  // Delete activity for this day
+                  setState(() {
+                    detailedActivities[index] = "• No activities yet";
+                  });
+                  Navigator.of(context).pop();
+                },
+                child: Text("Delete Activity"),
+              ),
+            ],
+          ),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              child: Text("Close"),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
-        title: Text(tripName, style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold)),
+        title: Text(widget.tripName, style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold)),
         backgroundColor: const Color.fromARGB(255, 119, 165, 205),
         centerTitle: true,
       ),
@@ -36,12 +97,12 @@ class TripScreen extends StatelessWidget {
                     Text("My trip to...", style: TextStyle(fontSize: 20, fontWeight: FontWeight.w400)),
                     SizedBox(height: 5),
                     Text(
-                      tripName.toUpperCase(),
+                      widget.tripName.toUpperCase(),
                       style: TextStyle(fontSize: 32, fontWeight: FontWeight.bold),
                     ),
                     SizedBox(height: 5),
                     Text(
-                      "Dates: $tripDates",
+                      "Dates: ${widget.tripDates}",
                       style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500, color: Colors.black54),
                     ),
                   ],
@@ -49,32 +110,44 @@ class TripScreen extends StatelessWidget {
               ),
               SizedBox(height: 20),
 
-
-
-
-              //Wallet & Weather Section
+              // Wallet & Weather Section
               Row(
                 children: [
-                  Expanded(child: _buildFeatureBox(Icons.account_balance_wallet, "Wallet")),
+                  Expanded(
+                    child: GestureDetector(
+                      onTap: () {
+                        // Navigate to the WalletPage when clicked
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(builder: (context) => WalletPage()),
+                        );
+                      },
+                      child: _buildFeatureBox(Icons.account_balance_wallet, "Wallet"),
+                    ),
+                  ),
                   SizedBox(width: 10),
                   Expanded(child: _buildFeatureBox(Icons.wb_sunny, "Weather")),
                 ],
               ),
               SizedBox(height: 20),
 
-
-              //Itinerary Section
+              // Itinerary Section
               Text("Itinerary", style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold, color: Colors.purple)),
               SizedBox(height: 10),
-              SingleChildScrollView( // ✅ Fix: Allows itinerary to be scrollable if too wide
+              SingleChildScrollView(
                 scrollDirection: Axis.horizontal,
                 child: Row(
                   children: [
-                    _buildDayCard("Day 1"),
-                    SizedBox(width: 10),
-                    _buildDayCard("Day 2"),
-                    SizedBox(width: 10),
-                    _buildDayCard("Day 3"),
+                    ...itineraryDays.map((day) {
+                      int index = itineraryDays.indexOf(day);
+                      return Padding(
+                        padding: const EdgeInsets.only(right: 10.0),
+                        child: GestureDetector(
+                          onTap: () => _showDayDetails(index), // Show day details on tap
+                          child: _buildDayCard(day, index),
+                        ),
+                      );
+                    }).toList(),
                     SizedBox(width: 10),
                     _buildAddButton(),
                   ],
@@ -82,9 +155,7 @@ class TripScreen extends StatelessWidget {
               ),
               SizedBox(height: 20),
 
-
-
-              //Packing List Section
+              // Packing List Section
               Container(
                 padding: EdgeInsets.all(10),
                 decoration: BoxDecoration(
@@ -102,9 +173,10 @@ class TripScreen extends StatelessWidget {
                         Spacer(),
                         ElevatedButton.icon(
                           onPressed: () {
+                            // Navigate to the PackingListScreen when clicked
                             Navigator.push(
                               context,
-                              MaterialPageRoute(builder: (context) => PackingListScreen(tripTitle:tripName)),
+                              MaterialPageRoute(builder: (context) => PackingListScreen(tripTitle: widget.tripName)),
                             );
                           },
                           icon: Icon(Icons.arrow_forward),
@@ -128,15 +200,13 @@ class TripScreen extends StatelessWidget {
                   ],
                 ),
               ),
-              SizedBox(height: 40), //space at bottom to avoid cutting content
+              SizedBox(height: 40), // space at bottom to avoid cutting content
             ],
           ),
         ),
       ),
     );
   }
-
-
 
   // Feature Box (Wallet & Weather)
   Widget _buildFeatureBox(IconData icon, String label) {
@@ -156,13 +226,11 @@ class TripScreen extends StatelessWidget {
     );
   }
 
-
-
-  //Itinerary Day Card
-  Widget _buildDayCard(String day) {
+  // Itinerary Day Card
+  Widget _buildDayCard(String day, int index) {
     return Container(
-      padding: EdgeInsets.all(10),
-      width: 80,
+      padding: EdgeInsets.all(15),
+      width: 120, // Wider day card
       decoration: BoxDecoration(
         border: Border.all(color: Colors.purple, width: 3),
         borderRadius: BorderRadius.circular(10),
@@ -171,21 +239,16 @@ class TripScreen extends StatelessWidget {
         children: [
           Text(day, style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Colors.purple)),
           SizedBox(height: 5),
-          Text("• Activity 1\n• Activity 2\n• Activity 3", style: TextStyle(fontSize: 12)),
+          Text("• Activity 1\n• Activity 2", style: TextStyle(fontSize: 12)),
+          // You can replace these with dynamic content later
         ],
       ),
     );
   }
 
-  
-  
-  
-  //Add Button for Itinerary
+  // Add Button for Itinerary
   Widget _buildAddButton() {
     return GestureDetector(
-      onTap: () {
-        // TODO: Implement adding a new itinerary day
-      },
       child: Container(
         width: 40,
         height: 40,
@@ -198,10 +261,7 @@ class TripScreen extends StatelessWidget {
     );
   }
 
-  
-  
-  
-  //Packing List Item
+  // Packing List Item
   Widget _buildPackingItem(String item) {
     return Row(
       children: [
