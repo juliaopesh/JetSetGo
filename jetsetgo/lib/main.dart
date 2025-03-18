@@ -1,14 +1,22 @@
 import 'package:flutter/material.dart';
 import 'dart:async';
 import 'package:flutter/services.dart';
+import 'package:jetsetgo/pages/firebase_options.dart';
 import 'dart:convert';
 
-import 'create_account.dart'; //Create Account
-import 'login.dart'; //Login
-import 'home_page.dart'; // Import HomePage
-import 'trip_profile.dart'; //trip screen 
+import '../components/my_button.dart'; // Import the reusable button
+import 'pages/home_page.dart'; // Import HomePage
+import 'pages/trip_profile.dart'; // Trip screen 
+import 'pages/login_page.dart'; // Login screen
+import 'pages/create_account.dart'; // Create Account screen
 
-void main() {
+import 'package:firebase_core/firebase_core.dart';
+
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform,
+  );
   runApp(JetSetGo());
 }
 
@@ -54,7 +62,7 @@ class _LoginPageState extends State<LoginPage> {
 
     List<String> imagePaths = manifestMap.keys
         .where((String key) =>
-            key.startsWith('assets/images/') &&
+            key.startsWith('assets/images/image_rotation/') &&
             (key.endsWith('.png') || key.endsWith('.jpg') || key.endsWith('.jpeg')))
         .toList();
 
@@ -63,7 +71,6 @@ class _LoginPageState extends State<LoginPage> {
     });
   }
 
-  @override
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -82,26 +89,26 @@ class _LoginPageState extends State<LoginPage> {
               ),
             )
           else
-            Center(child: CircularProgressIndicator()), // Show loader while images load
+            const Center(child: CircularProgressIndicator()), // Show loader while images load
 
           // Overlay content
           Center(
             child: Column(
               mainAxisAlignment: MainAxisAlignment.start,
               children: [
-                SizedBox(height: 80), // Adjust spacing from top
+                const SizedBox(height: 80), // Adjust spacing from top
                 Column(
                   children: [
-                    Text(
+                    const Text(
                       'Your trips in one place',
                       style: TextStyle(fontSize: 20, color: Colors.white60),
                       textAlign: TextAlign.center,
                     ),
-                    SizedBox(height: 10),
+                    const SizedBox(height: 10),
                     
                     TweenAnimationBuilder<double>(
                       tween: Tween<double>(begin: 0, end: 7), // Letter spacing animation
-                      duration: Duration(seconds: 4),
+                      duration: const Duration(seconds: 4),
                       builder: (context, letterSpacing, child) {
                         return Text(
                           'JETSETGO',
@@ -115,35 +122,35 @@ class _LoginPageState extends State<LoginPage> {
                         );
                       },
                     ),
-                    SizedBox(height: 20), // More spacing
+                    const SizedBox(height: 20), // More spacing
                   ],
                 ),
 
-                Spacer(), // Push buttons to bottom
+                const Spacer(), // Push buttons to bottom
 
                 Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    ElevatedButton(
-                      onPressed: () {
+                    MyButton(
+                      text: 'Login',
+                      onTap: () {
                         Navigator.push(
                           context,
                           MaterialPageRoute(builder: (context) => LoginScreen()),
                         );
                       },
-                      child: Text('Login'),
                     ),
-                    SizedBox(height: 20),
-                    ElevatedButton(
-                      onPressed: () {
+                    const SizedBox(height: 20),
+                    MyButton(
+                      text: 'Create Account',
+                      onTap: () {
                         Navigator.push(
                           context,
                           MaterialPageRoute(builder: (context) => CreateAccountScreen()),
                         );
                       },
-                      child: Text('Create Account'),
                     ),
-                    SizedBox(height: 50), // Bottom spacing
+                    const SizedBox(height: 50), // Bottom spacing
                   ],
                 ),
               ],
@@ -153,5 +160,4 @@ class _LoginPageState extends State<LoginPage> {
       ),
     );
   }
-
 }

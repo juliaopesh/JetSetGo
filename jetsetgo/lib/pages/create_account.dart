@@ -1,18 +1,15 @@
 import 'package:flutter/material.dart';
 
-
-import 'packing_list.dart'; // Packing List screen
-import 'home_page.dart'; 
-
-class LoginScreen extends StatefulWidget {
-  const LoginScreen({super.key});
+class CreateAccountScreen extends StatefulWidget {
+  const CreateAccountScreen({super.key});
 
   @override
-  _LoginScreenState createState() => _LoginScreenState();
+  _CreateAccountScreenState createState() => _CreateAccountScreenState();
 }
 
-class _LoginScreenState extends State<LoginScreen> {
+class _CreateAccountScreenState extends State<CreateAccountScreen> {
   final _formKey = GlobalKey<FormState>();
+  final TextEditingController _emailController = TextEditingController();
   final TextEditingController _usernameController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
 
@@ -20,8 +17,8 @@ class _LoginScreenState extends State<LoginScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Login'),
-        backgroundColor: const Color.fromARGB(255, 119, 165, 205),
+        title: Text('Create Account'),
+        backgroundColor: Colors.blue[900],
       ),
       body: Padding(
         padding: EdgeInsets.all(20),
@@ -31,11 +28,25 @@ class _LoginScreenState extends State<LoginScreen> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               TextFormField(
+                controller: _emailController,
+                decoration: InputDecoration(labelText: 'Email'),
+                keyboardType: TextInputType.emailAddress,
+                validator: (value) {
+                  if (value == null || value.isEmpty) {
+                    return 'Please enter an email';
+                  } else if (!RegExp(r'^[^@]+@[^@]+\.[^@]+').hasMatch(value)) {
+                    return 'Enter a valid email';
+                  }
+                  return null;
+                },
+              ),
+              SizedBox(height: 10),
+              TextFormField(
                 controller: _usernameController,
                 decoration: InputDecoration(labelText: 'Username'),
                 validator: (value) {
                   if (value == null || value.isEmpty) {
-                    return 'Please enter your username';
+                    return 'Please enter a username';
                   }
                   return null;
                 },
@@ -47,7 +58,9 @@ class _LoginScreenState extends State<LoginScreen> {
                 obscureText: true,
                 validator: (value) {
                   if (value == null || value.isEmpty) {
-                    return 'Please enter your password';
+                    return 'Please enter a password';
+                  } else if (value.length < 6) {
+                    return 'Password must be at least 6 characters';
                   }
                   return null;
                 },
@@ -57,28 +70,13 @@ class _LoginScreenState extends State<LoginScreen> {
                 child: ElevatedButton(
                   onPressed: () {
                     if (_formKey.currentState!.validate()) {
-                      // Handle login logic here
-                      
-                      //go to homepage 
-                      Navigator.pushReplacement(
-                        context, 
-                        PageRouteBuilder(
-                          pageBuilder: (context, animation, secondaryAnimation) => HomePage(),
-                          transitionsBuilder: (context, animation, secondaryAnimation, child){
-                            return FadeTransition(
-                              opacity:animation, 
-                              child: child,
-                            ); 
-                          },
-                        ),
-                      );
-                  
+                      // Handle account creation logic
                       ScaffoldMessenger.of(context).showSnackBar(
-                        SnackBar(content: Text('Logging in...')),
+                        SnackBar(content: Text('Account Created!')),
                       );
                     }
                   },
-                  child: Text('Login'),
+                  child: Text('Sign Up'),
                 ),
               ),
             ],
