@@ -8,7 +8,7 @@ class HomePage extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         title: Text('JetSetGo'),
-        backgroundColor: Colors.lightBlue,
+        backgroundColor: const Color.fromARGB(255, 119, 165, 205),
         elevation: 0,
       ),
       body: Padding(
@@ -22,7 +22,7 @@ class HomePage extends StatelessWidget {
               style: TextStyle(
                 fontSize: 24,
                 fontWeight: FontWeight.bold,
-                color: Colors.blue[900],
+                color: const Color.fromARGB(255, 119, 165, 205),
               ),
             ),
             SizedBox(height: 20),
@@ -66,7 +66,7 @@ class HomePage extends StatelessWidget {
                   );
                 },
                 style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.blue[900], 
+                  backgroundColor: const Color.fromARGB(255, 119, 165, 205), 
                   padding: EdgeInsets.symmetric(horizontal: 40, vertical: 12),
                 ),
                 child: Text(
@@ -129,7 +129,7 @@ class TripCard extends StatelessWidget {
                       style: TextStyle(
                         fontSize: 20,
                         fontWeight: FontWeight.bold,
-                        color: Colors.blue[900],
+                        color: const Color.fromARGB(255, 119, 165, 205),
                       ),
                     ),
                     SizedBox(height: 10),
@@ -176,7 +176,7 @@ class WalletPage extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         title: Text('My Wallet'),
-        backgroundColor: Colors.blue[900],
+        backgroundColor: const Color.fromARGB(255, 119, 165, 205),
       ),
       body: Padding(
         padding: const EdgeInsets.all(20.0),
@@ -188,7 +188,7 @@ class WalletPage extends StatelessWidget {
               style: TextStyle(
                 fontSize: 24,
                 fontWeight: FontWeight.bold,
-                color: Colors.blue[900],
+                color: const Color.fromARGB(255, 119, 165, 205),
               ),
             ),
             SizedBox(height: 20),
@@ -246,7 +246,7 @@ class WalletCard extends StatelessWidget {
         padding: const EdgeInsets.all(15.0),
         child: Row(
           children: [
-            Icon(icon, size: 40, color: Colors.blue[900]),
+            Icon(icon, size: 40, color: const Color.fromARGB(255, 119, 165, 205)),
             SizedBox(width: 15),
             Expanded(
               child: Column(

@@ -13,7 +13,7 @@ class TripScreen extends StatelessWidget {
       backgroundColor: Colors.white,
       appBar: AppBar(
         title: Text(tripName, style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold)),
-        backgroundColor: Colors.blue[900],
+        backgroundColor: const Color.fromARGB(255, 119, 165, 205),
         centerTitle: true,
       ),
       body: SingleChildScrollView( // scrolling!!!
@@ -104,7 +104,7 @@ class TripScreen extends StatelessWidget {
                           onPressed: () {
                             Navigator.push(
                               context,
-                              MaterialPageRoute(builder: (context) => PackingListScreen()),
+                              MaterialPageRoute(builder: (context) => PackingListScreen(tripTitle:tripName)),
                             );
                           },
                           icon: Icon(Icons.arrow_forward),

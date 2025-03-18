@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 
 class PackingListScreen extends StatefulWidget {
-  const PackingListScreen({super.key});
+  final String tripTitle; // Add tripTitle to the constructor
+
+  const PackingListScreen({Key? key, required this.tripTitle}) : super(key: key);
 
   @override
   _PackingListScreenState createState() => _PackingListScreenState();
@@ -81,8 +83,8 @@ class _PackingListScreenState extends State<PackingListScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("Packing List"),
-        backgroundColor: Colors.blue[900],
+        title: Text("Packing List for ${widget.tripTitle}"), // Use tripTitle as title
+        backgroundColor: const Color.fromARGB(255, 119, 165, 205),
         actions: [
           IconButton(
             icon: Icon(Icons.add),
