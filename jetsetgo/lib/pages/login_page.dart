@@ -3,10 +3,9 @@ import 'package:flutter/material.dart';
 import 'package:jetsetgo/pages/home_page.dart';
 import '../../components/my_textfield.dart';
 import '../../components/my_button.dart';
-import '../../components/square_tile.dart';
 
-class LoginScreen extends StatelessWidget {
-  LoginScreen({super.key});
+class LoginPage extends StatelessWidget {
+  LoginPage({super.key});
 
   // text editing controllers
   final emailController = TextEditingController();
@@ -14,11 +13,23 @@ class LoginScreen extends StatelessWidget {
 
   // sign user in method
   void signUserIn(BuildContext context) async {
+  // ✅ Show loading animation
+    showDialog(
+      context: context,
+      barrierDismissible: false, // Prevent closing by tapping outside
+      builder: (context) {
+        return const Center(
+          child: CircularProgressIndicator(),
+        );
+      },
+    );
+
     final email = emailController.text.trim();
     final password = passwordController.text.trim();
 
     // ✅ Check if email or password is empty
     if (email.isEmpty || password.isEmpty) {
+      Navigator.pop(context); // ✅ Remove loading screen before error
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text("Email and password cannot be empty")),
       );
@@ -30,12 +41,17 @@ class LoginScreen extends StatelessWidget {
         email: email, 
         password: password,
       );
+
+      Navigator.pop(context); // ✅ Remove loading screen before navigation
+
       // ✅ Redirect to home after successful login
       Navigator.pushReplacement(
         context,
         MaterialPageRoute(builder: (context) => HomePage()),
       );
     } on FirebaseAuthException catch (e) {
+      Navigator.pop(context); // ✅ Remove loading screen before showing error
+
       String errorMessage = "An error occurred. Please try again.";
 
       // ✅ Handle specific Firebase errors
@@ -53,6 +69,7 @@ class LoginScreen extends StatelessWidget {
       );
     }
   }
+
 
 
   @override

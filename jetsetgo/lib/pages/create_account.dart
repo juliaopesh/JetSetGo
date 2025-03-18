@@ -1,84 +1,141 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:jetsetgo/pages/home_page.dart';
+import '../../components/my_textfield.dart';
+import '../../components/my_button.dart';
 
-class CreateAccountScreen extends StatefulWidget {
-  const CreateAccountScreen({super.key});
+class CreateAccountPage extends StatelessWidget {
+  CreateAccountPage({super.key});
 
-  @override
-  _CreateAccountScreenState createState() => _CreateAccountScreenState();
-}
+  // text editing controllers
+  final emailController = TextEditingController();
+  final passwordController = TextEditingController();
+  final confirmPasswordController = TextEditingController();
 
-class _CreateAccountScreenState extends State<CreateAccountScreen> {
-  final _formKey = GlobalKey<FormState>();
-  final TextEditingController _emailController = TextEditingController();
-  final TextEditingController _usernameController = TextEditingController();
-  final TextEditingController _passwordController = TextEditingController();
+  // sign user in method
+  void signUserUp(BuildContext context) async {
+  // ✅ Show loading animation
+    showDialog(
+      context: context,
+      barrierDismissible: false, // Prevent closing manually
+      builder: (context) {
+        return const Center(child: CircularProgressIndicator());
+      },
+    );
+
+    final email = emailController.text.trim();
+    final password = passwordController.text.trim();
+    final confirmPassword = confirmPasswordController.text.trim();
+
+    String errorMessage = "An error occurred. Please try again.";
+
+    // ✅ Check if fields are empty
+    if (email.isEmpty || password.isEmpty || confirmPassword.isEmpty) {
+      Navigator.pop(context); // ✅ Remove loading screen
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text("Email, password, and confirm password cannot be empty.")),
+      );
+      return;
+    }
+
+    // ✅ Check if passwords match
+    if (password != confirmPassword) {
+      Navigator.pop(context); // ✅ Remove loading screen
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text("Passwords don't match.")),
+      );
+      return;
+    }
+
+    try {
+      await FirebaseAuth.instance.createUserWithEmailAndPassword(
+        email: email,
+        password: password,
+      );
+
+      Navigator.pop(context); // ✅ Remove loading screen before navigation
+
+      // ✅ Redirect to home after successful signup
+      Navigator.pushReplacement(
+        // ignore: use_build_context_synchronously
+        context,
+        MaterialPageRoute(builder: (context) => HomePage()),
+      );
+    } on FirebaseAuthException catch (e) {
+      Navigator.pop(context); // ✅ Remove loading screen before showing error
+
+      // ✅ Handle specific Firebase errors
+      if (e.code == 'email-already-in-use') {
+        errorMessage = "Email is already in use.";
+      } else if (e.code == 'weak-password') {
+        errorMessage = "Password is too weak.";
+      } else if (e.code == 'invalid-email') {
+        errorMessage = "Invalid email format.";
+      }
+
+      // ✅ Show error message in SnackBar
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text(errorMessage)),
+      );
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text('Create Account'),
-        backgroundColor: Colors.blue[900],
-      ),
-      body: Padding(
-        padding: EdgeInsets.all(20),
-        child: Form(
-          key: _formKey,
+      backgroundColor: Colors.white,
+      body: SafeArea(
+        child: Center(
           child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              TextFormField(
-                controller: _emailController,
-                decoration: InputDecoration(labelText: 'Email'),
-                keyboardType: TextInputType.emailAddress,
-                validator: (value) {
-                  if (value == null || value.isEmpty) {
-                    return 'Please enter an email';
-                  } else if (!RegExp(r'^[^@]+@[^@]+\.[^@]+').hasMatch(value)) {
-                    return 'Enter a valid email';
-                  }
-                  return null;
-                },
-              ),
-              SizedBox(height: 10),
-              TextFormField(
-                controller: _usernameController,
-                decoration: InputDecoration(labelText: 'Username'),
-                validator: (value) {
-                  if (value == null || value.isEmpty) {
-                    return 'Please enter a username';
-                  }
-                  return null;
-                },
-              ),
-              SizedBox(height: 10),
-              TextFormField(
-                controller: _passwordController,
-                decoration: InputDecoration(labelText: 'Password'),
-                obscureText: true,
-                validator: (value) {
-                  if (value == null || value.isEmpty) {
-                    return 'Please enter a password';
-                  } else if (value.length < 6) {
-                    return 'Password must be at least 6 characters';
-                  }
-                  return null;
-                },
-              ),
-              SizedBox(height: 20),
-              Center(
-                child: ElevatedButton(
-                  onPressed: () {
-                    if (_formKey.currentState!.validate()) {
-                      // Handle account creation logic
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        SnackBar(content: Text('Account Created!')),
-                      );
-                    }
-                  },
-                  child: Text('Sign Up'),
+              const SizedBox(height: 50),
+
+              // welcome back, you've been missed!
+              Text(
+                'Let\'s create an account for you!',
+                style: TextStyle(
+                  color: Colors.black,
+                  fontSize: 20,
                 ),
               ),
+
+              const SizedBox(height: 25),
+
+              // username textfield
+              MyTextField(
+                controller: emailController,
+                hintText: 'Email',
+                obscureText: false,
+              ),
+
+              const SizedBox(height: 10),
+
+              // password textfield
+              MyTextField(
+                controller: passwordController,
+                hintText: 'Password',
+                obscureText: true,
+              ),
+
+              const SizedBox(height: 10),
+
+               // password textfield
+              MyTextField(
+                controller: confirmPasswordController,
+                hintText: 'Confirm Password',
+                obscureText: true,
+              ),
+
+              const SizedBox(height: 20),
+              // sign in button
+              MyButton(
+                text: 'Sign up',
+                onTap: () => signUserUp(context), // ✅ Pass context to show errors
+              ),
+
+              const SizedBox(height: 50),
+
             ],
           ),
         ),
