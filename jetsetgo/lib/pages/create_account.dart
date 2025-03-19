@@ -1,6 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:jetsetgo/pages/home_page.dart';
+import 'package:cloud_firestore/cloud_firestore.dart'; // Add this import
 import '../../components/my_textfield.dart';
 import '../../components/my_button.dart';
 
@@ -11,10 +12,11 @@ class CreateAccountPage extends StatelessWidget {
   final emailController = TextEditingController();
   final passwordController = TextEditingController();
   final confirmPasswordController = TextEditingController();
+  final nameController = TextEditingController(); // Controller for the name field
 
-  // sign user in method
+  // sign user up method
   void signUserUp(BuildContext context) async {
-  // ✅ Show loading animation
+    // ✅ Show loading animation
     showDialog(
       context: context,
       barrierDismissible: false, // Prevent closing manually
@@ -26,14 +28,15 @@ class CreateAccountPage extends StatelessWidget {
     final email = emailController.text.trim();
     final password = passwordController.text.trim();
     final confirmPassword = confirmPasswordController.text.trim();
+    final name = nameController.text.trim(); // Get the name from the controller
 
     String errorMessage = "An error occurred. Please try again.";
 
     // ✅ Check if fields are empty
-    if (email.isEmpty || password.isEmpty || confirmPassword.isEmpty) {
+    if (email.isEmpty || password.isEmpty || confirmPassword.isEmpty || name.isEmpty) {
       Navigator.pop(context); // ✅ Remove loading screen
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text("Email, password, and confirm password cannot be empty.")),
+        const SnackBar(content: Text("All fields are required.")),
       );
       return;
     }
@@ -48,10 +51,23 @@ class CreateAccountPage extends StatelessWidget {
     }
 
     try {
-      await FirebaseAuth.instance.createUserWithEmailAndPassword(
+      // Create the user account
+      final userCredential = await FirebaseAuth.instance.createUserWithEmailAndPassword(
         email: email,
         password: password,
       );
+
+      // Store the user's name in Firestore
+      final user = userCredential.user;
+      if (user != null) {
+        await FirebaseFirestore.instance
+            .collection('users')
+            .doc(user.uid)
+            .set({
+              'name': name,
+              'email': email,
+            });
+      }
 
       Navigator.pop(context); // ✅ Remove loading screen before navigation
 
@@ -83,6 +99,10 @@ class CreateAccountPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        elevation: 0,
+        backgroundColor: Colors.white,
+      ),
       backgroundColor: Colors.white,
       body: SafeArea(
         child: Center(
@@ -92,7 +112,7 @@ class CreateAccountPage extends StatelessWidget {
               const SizedBox(height: 50),
 
               // welcome back, you've been missed!
-              Text(
+              const Text(
                 'Let\'s create an account for you!',
                 style: TextStyle(
                   color: Colors.black,
@@ -102,7 +122,16 @@ class CreateAccountPage extends StatelessWidget {
 
               const SizedBox(height: 25),
 
-              // username textfield
+              // name textfield
+              MyTextField(
+                controller: nameController,
+                hintText: 'Name',
+                obscureText: false,
+              ),
+
+              const SizedBox(height: 10),
+
+              // email textfield
               MyTextField(
                 controller: emailController,
                 hintText: 'Email',
@@ -120,7 +149,7 @@ class CreateAccountPage extends StatelessWidget {
 
               const SizedBox(height: 10),
 
-               // password textfield
+              // confirm password textfield
               MyTextField(
                 controller: confirmPasswordController,
                 hintText: 'Confirm Password',
@@ -128,14 +157,14 @@ class CreateAccountPage extends StatelessWidget {
               ),
 
               const SizedBox(height: 20),
-              // sign in button
+
+              // sign up button
               MyButton(
                 text: 'Sign up',
                 onTap: () => signUserUp(context), // ✅ Pass context to show errors
               ),
 
               const SizedBox(height: 50),
-
             ],
           ),
         ),
