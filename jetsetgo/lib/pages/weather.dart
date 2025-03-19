@@ -31,7 +31,18 @@ class _WeatherPageState extends State<WeatherPage> {
   }
 
   Future<void> _fetchWeatherData() async {
-    final String apiKey = '<My API Key>';  // Replace with your actual API key
+    final String apiKey = const String.fromEnvironment('OPENWEATHER_API_KEY');  // Access Dart define
+    if (apiKey.isEmpty) {
+      // Handle the case if API key is missing
+      setState(() {
+        weatherDescription = 'API key is missing';
+        temperature = '';
+        humidity = '';
+        isLoading = false;
+      });
+      return;
+    }
+
     final String location = widget.tripLocation;
 
     final response = await http.get(Uri.parse(

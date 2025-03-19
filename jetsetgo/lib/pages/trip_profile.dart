@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
-import 'packing_list.dart';
-import 'wallet.dart';
-import 'weather.dart';
+import 'package:http/http.dart' as http;
+import 'dart:convert';
 
 class TripScreen extends StatefulWidget {
   final String tripName;
@@ -15,59 +14,52 @@ class TripScreen extends StatefulWidget {
 }
 
 class _TripScreenState extends State<TripScreen> {
-  // List to hold the itinerary days dynamically
-  List<String> itineraryDays = ["Day 1", "Day 2", "Day 3"];
-  List<String> detailedActivities = [
-    "• Activity 1\n• Activity 2\n• Activity 3",
-    "• Activity 4\n• Activity 5\n• Activity 6",
-    "• Activity 7\n• Activity 8\n• Activity 9",
-  ];
+  // Weather data variables
+  late String weatherDescription;
+  late String temperature;
+  late String humidity;
+  bool isWeatherLoading = true;
 
-  void _showDayDetails(int index) {
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          title: Text(itineraryDays[index]),
-          content: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(detailedActivities[index]),
-              SizedBox(height: 10),
-              ElevatedButton(
-                onPressed: () {
-                  // Add new activity for this day
-                  setState(() {
-                    detailedActivities[index] += "\n• New Activity";
-                  });
-                  Navigator.of(context).pop();
-                },
-                child: Text("Add Activity"),
-              ),
-              SizedBox(height: 10),
-              ElevatedButton(
-                onPressed: () {
-                  // Delete activity for this day
-                  setState(() {
-                    detailedActivities[index] = "• No activities yet";
-                  });
-                  Navigator.of(context).pop();
-                },
-                child: Text("Delete Activity"),
-              ),
-            ],
-          ),
-          actions: [
-            TextButton(
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-              child: Text("Close"),
-            ),
-          ],
-        );
-      },
-    );
+  // Fetch weather data
+  Future<void> _fetchWeatherData() async {
+    final String apiKey = const String.fromEnvironment('OPENWEATHER_API_KEY');
+    if (apiKey.isEmpty) {
+      setState(() {
+        weatherDescription = 'API key is missing';
+        temperature = '';
+        humidity = '';
+        isWeatherLoading = false;
+      });
+      return;
+    }
+
+    final String location = widget.tripLocation;
+
+    final response = await http.get(Uri.parse(
+        'https://api.openweathermap.org/data/2.5/weather?q=$location&appid=$apiKey&units=metric'));
+
+    if (response.statusCode == 200) {
+      final Map<String, dynamic> data = json.decode(response.body);
+      setState(() {
+        weatherDescription = data['weather'][0]['description'];
+        temperature = data['main']['temp'].toString();
+        humidity = data['main']['humidity'].toString();
+        isWeatherLoading = false;
+      });
+    } else {
+      setState(() {
+        weatherDescription = 'Error fetching weather data';
+        temperature = '';
+        humidity = '';
+        isWeatherLoading = false;
+      });
+    }
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    _fetchWeatherData();
   }
 
   @override
@@ -83,7 +75,6 @@ class _TripScreenState extends State<TripScreen> {
         centerTitle: true,
       ),
       body: SingleChildScrollView(
-        // scrolling!!!
         child: Padding(
           padding: const EdgeInsets.all(20.0),
           child: Column(
@@ -128,44 +119,38 @@ class _TripScreenState extends State<TripScreen> {
               ),
               SizedBox(height: 20),
 
-              // Wallet & Weather Section
-              Row(
-                children: [
-                  Expanded(
-                    child: GestureDetector(
-                      onTap: () {
-                        // Navigate to the WalletPage when clicked
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(builder: (context) => WalletPage()),
-                        );
-                      },
-                      child: _buildFeatureBox(
-                        Icons.account_balance_wallet,
-                        "Wallet",
+              // Wallet and Weather Section with dynamic sizing
+              IntrinsicHeight(
+                child: Row(
+                  children: [
+                    // Wallet Section
+                    Expanded(
+                      child: GestureDetector(
+                        onTap: () {
+                          // Navigate to WalletPage when clicked
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(builder: (context) => WalletPage()),
+                          );
+                        },
+                        child: _buildFeatureBox(
+                          Icons.account_balance_wallet,
+                          "Wallet",
+                        ),
                       ),
                     ),
-                  ),
-                  SizedBox(width: 10),
-                  Expanded(
-                    child: GestureDetector(
-                      onTap: () {
-                        // Navigate to WeatherPage
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder:
-                                (context) => WeatherPage(
-                                  tripName: widget.tripName,
-                                  tripDates: widget.tripDates,
-                                  tripLocation: widget.tripLocation,                                ),
-                          ),
-                        );
-                      },
-                      child: _buildFeatureBox(Icons.wb_sunny, "Weather"),
+                    SizedBox(width: 10),
+                    // Weather Section
+                    Expanded(
+                      child: GestureDetector(
+                        onTap: () {
+                          // Navigate to WeatherPage or leave it as is
+                        },
+                        child: _buildWeatherBox(),
+                      ),
                     ),
-                  ),
-                ],
+                  ],
+                ),
               ),
               SizedBox(height: 20),
 
@@ -183,21 +168,12 @@ class _TripScreenState extends State<TripScreen> {
                 scrollDirection: Axis.horizontal,
                 child: Row(
                   children: [
-                    ...itineraryDays.map((day) {
-                      int index = itineraryDays.indexOf(day);
+                    ...["Day 1", "Day 2", "Day 3"].map((day) {
                       return Padding(
                         padding: const EdgeInsets.only(right: 10.0),
-                        child: GestureDetector(
-                          onTap:
-                              () => _showDayDetails(
-                                index,
-                              ), // Show day details on tap
-                          child: _buildDayCard(day, index),
-                        ),
+                        child: _buildDayCard(day),
                       );
-                    }),
-                    SizedBox(width: 10),
-                    _buildAddButton(),
+                    }).toList(),
                   ],
                 ),
               ),
@@ -226,15 +202,6 @@ class _TripScreenState extends State<TripScreen> {
                         ElevatedButton.icon(
                           onPressed: () {
                             // Navigate to the PackingListScreen when clicked
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder:
-                                    (context) => PackingListScreen(
-                                      tripTitle: widget.tripName,
-                                    ),
-                              ),
-                            );
                           },
                           icon: Icon(Icons.arrow_forward),
                           label: Text("Expand List"),
@@ -268,7 +235,7 @@ class _TripScreenState extends State<TripScreen> {
     );
   }
 
-  // Feature Box (Wallet & Weather)
+  // Feature Box (Wallet)
   Widget _buildFeatureBox(IconData icon, String label) {
     return Container(
       padding: EdgeInsets.all(15),
@@ -277,6 +244,7 @@ class _TripScreenState extends State<TripScreen> {
         borderRadius: BorderRadius.circular(12),
       ),
       child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
         children: [
           Text(
             label,
@@ -289,8 +257,54 @@ class _TripScreenState extends State<TripScreen> {
     );
   }
 
+  // Weather Box (Unified Widget for Weather)
+  Widget _buildWeatherBox() {
+    return Container(
+      padding: EdgeInsets.all(15),
+      decoration: BoxDecoration(
+        border: Border.all(color: Colors.blue, width: 3),
+        borderRadius: BorderRadius.circular(12),
+      ),
+      child: Column(
+        children: [
+          Text(
+            "Weather",
+            style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+          ),
+          SizedBox(height: 10),
+          Icon(Icons.wb_sunny, size: 60),
+          SizedBox(height: 10),
+          isWeatherLoading
+              ? CircularProgressIndicator()
+              : Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      "Weather in ${widget.tripLocation}",
+                      style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
+                    ),
+                    SizedBox(height: 10),
+                    Text(
+                      "Description: $weatherDescription",
+                      style: TextStyle(fontSize: 18),
+                    ),
+                    Text(
+                      "Temperature: $temperature°C",
+                      style: TextStyle(fontSize: 18),
+                    ),
+                    Text(
+                      "Humidity: $humidity%",
+                      style: TextStyle(fontSize: 18),
+                    ),
+                  ],
+                ),
+        ],
+      ),
+    );
+  }
+
   // Itinerary Day Card
-  Widget _buildDayCard(String day, int index) {
+  Widget _buildDayCard(String day) {
     return Container(
       padding: EdgeInsets.all(15),
       width: 120, // Wider day card
@@ -310,23 +324,7 @@ class _TripScreenState extends State<TripScreen> {
           ),
           SizedBox(height: 5),
           Text("• Activity 1\n• Activity 2", style: TextStyle(fontSize: 12)),
-          // You can replace these with dynamic content later
         ],
-      ),
-    );
-  }
-
-  // Add Button for Itinerary
-  Widget _buildAddButton() {
-    return GestureDetector(
-      child: Container(
-        width: 40,
-        height: 40,
-        decoration: BoxDecoration(
-          border: Border.all(color: Colors.purple, width: 3),
-          shape: BoxShape.circle,
-        ),
-        child: Center(child: Icon(Icons.add, color: Colors.purple, size: 24)),
       ),
     );
   }
@@ -338,6 +336,17 @@ class _TripScreenState extends State<TripScreen> {
         Checkbox(value: false, onChanged: (value) {}),
         Text(item, style: TextStyle(fontSize: 16)),
       ],
+    );
+  }
+}
+
+// Dummy WalletPage class for navigation
+class WalletPage extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(title: Text('Wallet Page')),
+      body: Center(child: Text('This is the Wallet Page')),
     );
   }
 }
