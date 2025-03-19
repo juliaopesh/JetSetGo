@@ -68,6 +68,7 @@ flutter:
   assets:
     - assets/images/trip_card/
     - assets/images/image_rotation/
+    - assets/images/
 
 
   # An image asset can refer to one or more resolution-specific "variants", see

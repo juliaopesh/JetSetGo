@@ -3,8 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:jetsetgo/components/logout_button.dart';
 import 'package:jetsetgo/components/trip_list.dart';
-import 'package:jetsetgo/components/wallet_button.dart';
 import 'package:jetsetgo/pages/add_trip.dart';
+import 'package:jetsetgo/pages/wallet.dart'; // Import the WalletPage
 
 class HomePage extends StatelessWidget {
   HomePage({super.key});
@@ -14,6 +14,7 @@ class HomePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: const Color.fromARGB(255, 255, 255, 255),
       appBar: AppBar(
         toolbarHeight: 80,
         title: StreamBuilder<DocumentSnapshot>(
@@ -38,61 +39,79 @@ class HomePage extends StatelessWidget {
               'Welcome $userName! Here are your upcoming trips...',
               style: const TextStyle(
                 fontSize: 28, // Large font size
-                color: Color.fromARGB(255, 67, 44, 84),
+                color: Colors.black,
               ),
             );
           },
         ),
-        backgroundColor: const Color.fromARGB(255, 212, 187, 230),
+        backgroundColor: const Color.fromARGB(255, 245, 244, 246),
       ),
-      body: Padding(
-        padding: const EdgeInsets.all(20.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            // List of trips
-            const Expanded(child: TripList()), // ✅ Uses TripList component
-
-            const SizedBox(height: 20),
-
-            // "Add Trip" Button (less wide)
-            Center(
-              child: SizedBox(
-                width: MediaQuery.of(context).size.width * 0.8, // 80% of screen width
-                child: ElevatedButton(
-                  onPressed: () {
-                    // Navigate to the AddTrip screen
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(builder: (context) => const AddTrip()),
-                    );
-                  },
-                  style: ElevatedButton.styleFrom(
-                    padding: const EdgeInsets.symmetric(vertical: 16), // Increase button height
-                    backgroundColor: const Color.fromARGB(255, 212, 187, 230), // Button color
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(8), // Rounded corners
-                    ),
-                  ),
-                  child: const Text(
-                    'Add Trip',
-                    style: TextStyle(
-                      fontSize: 18, // Larger font size
-                      fontWeight: FontWeight.bold,
-                      color: Colors.white, // Text color
-                    ),
-                  ),
-                ),
+      body: Stack(
+        children: [
+          Padding(
+            padding: const EdgeInsets.all(20.0),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                // List of trips
+                const Expanded(child: TripList()), // ✅ Uses TripList component
+              ],
+            ),
+          ),
+          // Wallet Image (positioned in the bottom-left corner)
+          Positioned(
+            left: 16, // Adjust the position as needed
+            bottom: 16, // Adjust the position as needed
+            child: GestureDetector(
+              onTap: () {
+                // Navigate to the WalletPage when the image is clicked
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => const WalletPage()),
+                );
+              },
+              child: Image.asset(
+                'assets/images/wallet2.png', // Path to your wallet image
+                width: 230, // Set the width
+                height: 230, // Set the height
               ),
             ),
-
-            const SizedBox(height: 20),
-
-            // Wallet Button
-            const Center(child: WalletButton()), // ✅ Uses WalletButton component
-          ],
+          ),
+        ],
+      ),
+      // Add a circular "Add Trip" button at the bottom right
+      floatingActionButton: SizedBox(
+        width: 80, // Set the width of the button
+        height: 80, // Set the height of the button
+        child: FloatingActionButton(
+          onPressed: () {
+            // Navigate to the AddTrip screen
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => const AddTrip()),
+            );
+          },
+          backgroundColor: const Color.fromARGB(255, 212, 187, 230), // Button color
+          child: const Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Icon(
+                Icons.add,
+                color: Colors.white,
+                size: 36, // Larger icon size
+              ),
+              Text(
+                'Add Trip',
+                style: TextStyle(
+                  fontSize: 12, // Smaller font size
+                  color: Colors.white,
+                ),
+              ),
+            ],
+          ),
         ),
       ),
+      floatingActionButtonLocation: FloatingActionButtonLocation.endFloat, // Position at bottom right
     );
   }
 }

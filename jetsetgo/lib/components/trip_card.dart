@@ -13,7 +13,7 @@ class TripCard extends StatelessWidget {
     required this.dates,
     required this.duration,
     required this.onDelete,
-    required this.onTap, // Add this parameter
+    required this.onTap,
   });
 
   @override
