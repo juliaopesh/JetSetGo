@@ -1,5 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import 'package:jetsetgo/components/itinerary_component.dart';
+import 'package:jetsetgo/components/packing_list_component.dart';
+import 'package:jetsetgo/components/wallet_component.dart';
+import 'package:jetsetgo/components/weather_component.dart';
 import 'dart:convert';
 
 class TripScreen extends StatefulWidget {
@@ -14,13 +18,11 @@ class TripScreen extends StatefulWidget {
 }
 
 class _TripScreenState extends State<TripScreen> {
-  // Weather data variables
   late String weatherDescription;
   late String temperature;
   late String humidity;
   bool isWeatherLoading = true;
 
-  // Fetch weather data
   Future<void> _fetchWeatherData() async {
     final String apiKey = const String.fromEnvironment('OPENWEATHER_API_KEY');
     if (apiKey.isEmpty) {
@@ -67,11 +69,16 @@ class _TripScreenState extends State<TripScreen> {
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
+        toolbarHeight: 80,
         title: Text(
           widget.tripName,
-          style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
+          style: const TextStyle(
+            fontSize: 22,
+            fontWeight: FontWeight.bold,
+            color: Colors.black,
+          ),
         ),
-        backgroundColor: const Color.fromARGB(255, 119, 165, 205),
+        backgroundColor: const Color.fromARGB(255, 245, 244, 246),
         centerTitle: true,
       ),
       body: SingleChildScrollView(
@@ -81,261 +88,91 @@ class _TripScreenState extends State<TripScreen> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               // Title Box
-              Container(
-                width: double.infinity,
-                padding: EdgeInsets.all(15),
-                decoration: BoxDecoration(
-                  border: Border.all(color: Colors.black, width: 3),
-                  borderRadius: BorderRadius.circular(12),
+              Card(
+                elevation: 5, // Match the elevation of TripCard
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(12), // Match the border radius
                 ),
-                child: Column(
-                  children: [
-                    Text(
-                      "My trip to...",
-                      style: TextStyle(
-                        fontSize: 20,
-                        fontWeight: FontWeight.w400,
+                child: Container(
+                  width: double.infinity,
+                  padding: const EdgeInsets.all(15),
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(12), // Match the border radius
+                  ),
+                  child: Column(
+                    children: [
+                      Text(
+                        "My trip to...",
+                        style: TextStyle(
+                          fontSize: 20,
+                          fontWeight: FontWeight.w400,
+                          color: Colors.black,
+                        ),
                       ),
-                    ),
-                    SizedBox(height: 5),
-                    Text(
-                      widget.tripName.toUpperCase(),
-                      style: TextStyle(
-                        fontSize: 32,
-                        fontWeight: FontWeight.bold,
+                      const SizedBox(height: 5),
+                      Text(
+                        widget.tripName.toUpperCase(),
+                        style: const TextStyle(
+                          fontSize: 32,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.black,
+                        ),
                       ),
-                    ),
-                    SizedBox(height: 5),
-                    Text(
-                      "Dates: ${widget.tripDates}",
-                      style: TextStyle(
-                        fontSize: 16,
-                        fontWeight: FontWeight.w500,
-                        color: Colors.black54,
+                      const SizedBox(height: 5),
+                      Text(
+                        "Dates: ${widget.tripDates}",
+                        style: const TextStyle(
+                          fontSize: 16,
+                          fontWeight: FontWeight.w500,
+                          color: Colors.black54,
+                        ),
                       ),
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
               ),
-              SizedBox(height: 20),
+              const SizedBox(height: 20),
 
-              // Wallet and Weather Section with dynamic sizing
+              // Wallet and Weather Section
               IntrinsicHeight(
                 child: Row(
                   children: [
-                    // Wallet Section
                     Expanded(
-                      child: GestureDetector(
+                      child: WalletSection(
                         onTap: () {
-                          // Navigate to WalletPage when clicked
                           Navigator.push(
                             context,
                             MaterialPageRoute(builder: (context) => WalletPage()),
                           );
                         },
-                        child: _buildFeatureBox(
-                          Icons.account_balance_wallet,
-                          "Wallet",
-                        ),
                       ),
                     ),
-                    SizedBox(width: 10),
-                    // Weather Section
+                    const SizedBox(width: 10),
                     Expanded(
-                      child: GestureDetector(
-                        onTap: () {
-                          // Navigate to WeatherPage or leave it as is
-                        },
-                        child: _buildWeatherBox(),
+                      child: WeatherSection(
+                        isWeatherLoading: isWeatherLoading,
+                        weatherDescription: weatherDescription,
+                        temperature: temperature,
+                        humidity: humidity,
+                        location: widget.tripLocation,
                       ),
                     ),
                   ],
                 ),
               ),
-              SizedBox(height: 20),
+              const SizedBox(height: 20),
 
               // Itinerary Section
-              Text(
-                "Itinerary",
-                style: TextStyle(
-                  fontSize: 24,
-                  fontWeight: FontWeight.bold,
-                  color: Colors.purple,
-                ),
-              ),
-              SizedBox(height: 10),
-              SingleChildScrollView(
-                scrollDirection: Axis.horizontal,
-                child: Row(
-                  children: [
-                    ...["Day 1", "Day 2", "Day 3"].map((day) {
-                      return Padding(
-                        padding: const EdgeInsets.only(right: 10.0),
-                        child: _buildDayCard(day),
-                      );
-                    }).toList(),
-                  ],
-                ),
-              ),
-              SizedBox(height: 20),
+              const ItinerarySection(),
+              const SizedBox(height: 20),
 
               // Packing List Section
-              Container(
-                padding: EdgeInsets.all(10),
-                decoration: BoxDecoration(
-                  border: Border.all(color: Colors.pink, width: 3),
-                  borderRadius: BorderRadius.circular(12),
-                ),
-                child: Column(
-                  children: [
-                    Row(
-                      children: [
-                        Text(
-                          "Packing List",
-                          style: TextStyle(
-                            fontSize: 20,
-                            fontWeight: FontWeight.bold,
-                            color: Colors.pink,
-                          ),
-                        ),
-                        Spacer(),
-                        ElevatedButton.icon(
-                          onPressed: () {
-                            // Navigate to the PackingListScreen when clicked
-                          },
-                          icon: Icon(Icons.arrow_forward),
-                          label: Text("Expand List"),
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor: Colors.pink,
-                            foregroundColor: Colors.white,
-                            padding: EdgeInsets.symmetric(
-                              horizontal: 15,
-                              vertical: 8,
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
-                    Divider(color: Colors.pink, thickness: 2),
-                    Column(
-                      children: [
-                        _buildPackingItem("Item 1"),
-                        _buildPackingItem("Item 2"),
-                        _buildPackingItem("Item 3"),
-                      ],
-                    ),
-                  ],
-                ),
-              ),
-              SizedBox(height: 40), // space at bottom to avoid cutting content
+              const PackingListSection(),
+              const SizedBox(height: 40),
             ],
           ),
         ),
       ),
-    );
-  }
-
-  // Feature Box (Wallet)
-  Widget _buildFeatureBox(IconData icon, String label) {
-    return Container(
-      padding: EdgeInsets.all(15),
-      decoration: BoxDecoration(
-        border: Border.all(color: Colors.black, width: 3),
-        borderRadius: BorderRadius.circular(12),
-      ),
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Text(
-            label,
-            style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
-          ),
-          SizedBox(height: 10),
-          Icon(icon, size: 60),
-        ],
-      ),
-    );
-  }
-
-  // Weather Box (Unified Widget for Weather)
-  Widget _buildWeatherBox() {
-    return Container(
-      padding: EdgeInsets.all(15),
-      decoration: BoxDecoration(
-        border: Border.all(color: Colors.blue, width: 3),
-        borderRadius: BorderRadius.circular(12),
-      ),
-      child: Column(
-        children: [
-          Text(
-            "Weather",
-            style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
-          ),
-          SizedBox(height: 10),
-          Icon(Icons.wb_sunny, size: 60),
-          SizedBox(height: 10),
-          isWeatherLoading
-              ? CircularProgressIndicator()
-              : Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      "Weather in ${widget.tripLocation}",
-                      style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
-                    ),
-                    SizedBox(height: 10),
-                    Text(
-                      "Description: $weatherDescription",
-                      style: TextStyle(fontSize: 18),
-                    ),
-                    Text(
-                      "Temperature: $temperature°C",
-                      style: TextStyle(fontSize: 18),
-                    ),
-                    Text(
-                      "Humidity: $humidity%",
-                      style: TextStyle(fontSize: 18),
-                    ),
-                  ],
-                ),
-        ],
-      ),
-    );
-  }
-
-  // Itinerary Day Card
-  Widget _buildDayCard(String day) {
-    return Container(
-      padding: EdgeInsets.all(15),
-      width: 120, // Wider day card
-      decoration: BoxDecoration(
-        border: Border.all(color: Colors.purple, width: 3),
-        borderRadius: BorderRadius.circular(10),
-      ),
-      child: Column(
-        children: [
-          Text(
-            day,
-            style: TextStyle(
-              fontSize: 16,
-              fontWeight: FontWeight.bold,
-              color: Colors.purple,
-            ),
-          ),
-          SizedBox(height: 5),
-          Text("• Activity 1\n• Activity 2", style: TextStyle(fontSize: 12)),
-        ],
-      ),
-    );
-  }
-
-  // Packing List Item
-  Widget _buildPackingItem(String item) {
-    return Row(
-      children: [
-        Checkbox(value: false, onChanged: (value) {}),
-        Text(item, style: TextStyle(fontSize: 16)),
-      ],
     );
   }
 }
@@ -345,8 +182,8 @@ class WalletPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text('Wallet Page')),
-      body: Center(child: Text('This is the Wallet Page')),
+      appBar: AppBar(title: const Text('Wallet Page')),
+      body: const Center(child: Text('This is the Wallet Page')),
     );
   }
 }
