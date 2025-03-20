@@ -10,7 +10,7 @@ class WalletButton extends StatelessWidget {
       onPressed: () {
         Navigator.push(
           context,
-          MaterialPageRoute(builder: (context) => WalletPage()), // Navigate to WalletPage
+          MaterialPageRoute(builder: (context) => WalletPage(tripName: '',)), // Navigate to WalletPage
         );
       },
       style: ElevatedButton.styleFrom(

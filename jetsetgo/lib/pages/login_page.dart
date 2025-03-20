@@ -1,5 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:jetsetgo/pages/forgot_password_page.dart';
 import 'package:jetsetgo/pages/home_page.dart';
 import '../../components/my_textfield.dart';
 import '../../components/my_button.dart';
@@ -122,9 +123,23 @@ class LoginPage extends StatelessWidget {
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.end,
                   children: [
-                    Text(
-                      'Forgot Password?',
-                      style: TextStyle(color: const Color.fromARGB(255, 146, 112, 171)),
+                    GestureDetector(
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => const ForgotPasswordPage(),
+                          ),
+                        );
+                      },
+                      child: Text(
+                        'Forgot Password?',
+                        style: TextStyle(
+                          color: Color.fromARGB(255, 146, 112, 171),
+                          fontWeight: FontWeight.bold,
+                          decoration: TextDecoration.underline, // Makes it clear it's clickable
+                        ),
+                      ),
                     ),
                   ],
                 ),
