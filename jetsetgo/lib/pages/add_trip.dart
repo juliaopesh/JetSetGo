@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:jetsetgo/components/add_button.dart'; // Import AddButton component
-
+import 'trip_suggestions.dart';
 class AddTrip extends StatefulWidget {
   const AddTrip({super.key});
 
@@ -95,6 +95,20 @@ class _AddTripState extends State<AddTrip> {
         backgroundColor: const Color.fromARGB(255, 245, 244, 246), // Match HomePage app bar
         elevation: 0,
         iconTheme: const IconThemeData(color: Colors.black),
+        actions: [
+          TextButton(
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => TripSuggestions()),
+              );
+            },
+            child: const Text(
+              'Suggest new trips for me',
+              style: TextStyle(fontSize: 16, color: Colors.blue),
+            ),
+          ),
+        ],
       ),
       body: Padding(
         padding: const EdgeInsets.all(20.0),

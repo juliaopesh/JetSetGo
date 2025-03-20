@@ -1,11 +1,27 @@
 import 'package:flutter/material.dart';
 import 'package:jetsetgo/components/add_button.dart'; // Import the AddButton component
 
-class WalletPage extends StatelessWidget {
+class WalletPage extends StatefulWidget {
   final String tripName; // Accept trip name
 
-
   WalletPage({super.key, required this.tripName});
+
+  @override
+  _WalletPageState createState() => _WalletPageState();
+}
+
+class _WalletPageState extends State<WalletPage> {
+  List<Map<String, dynamic>> walletItems = [
+    {'title': 'Boarding Pass: ABC123', 'date': 'Sept 20, 2025', 'icon': Icons.airplanemode_active},
+    {'title': 'Museum Ticket: XYZ987', 'date': 'Sept 21, 2025', 'icon': Icons.museum},
+    {'title': 'Concert Ticket: DEF456', 'date': 'Oct 10, 2025', 'icon': Icons.music_note},
+  ];
+
+  void _removeItem(int index) {
+    setState(() {
+      walletItems.removeAt(index);
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -13,14 +29,13 @@ class WalletPage extends StatelessWidget {
       backgroundColor: const Color.fromARGB(255, 255, 255, 255), // Match home page background
       appBar: AppBar(
         title: Text(
-          '$tripName - Wallet',
+          '${widget.tripName} - Wallet',
           style: TextStyle(
             fontSize: 28, // Match home page title size
             fontWeight: FontWeight.bold, 
           ),
         ),
         backgroundColor: Colors.orange[100],
-        //backgroundColor: const Color.fromARGB(255, 245, 244, 246), // Match home page AppBar color
         toolbarHeight: 80, // Match home page AppBar height
       ),
       body: Padding(
@@ -30,24 +45,16 @@ class WalletPage extends StatelessWidget {
             const SizedBox(height: 20),
             // Wallet items (cards)
             Expanded(
-              child: ListView(
-                children: [
-                  WalletCard(
-                    title: 'Boarding Pass: ABC123',
-                    date: 'Sept 20, 2025',
-                    icon: Icons.airplanemode_active,
-                  ),
-                  WalletCard(
-                    title: 'Museum Ticket: XYZ987',
-                    date: 'Sept 21, 2025',
-                    icon: Icons.museum,
-                  ),
-                  WalletCard(
-                    title: 'Concert Ticket: DEF456',
-                    date: 'Oct 10, 2025',
-                    icon: Icons.music_note,
-                  ),
-                ],
+              child: ListView.builder(
+                itemCount: walletItems.length,
+                itemBuilder: (context, index) {
+                  return WalletCard(
+                    title: walletItems[index]['title'],
+                    date: walletItems[index]['date'],
+                    icon: walletItems[index]['icon'],
+                    onDelete: () => _removeItem(index),
+                  );
+                },
               ),
             ),
           ],
@@ -71,7 +78,6 @@ class WalletPage extends StatelessWidget {
         ),
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,  // Center it at bottom
-
     );
   }
 }
@@ -80,11 +86,14 @@ class WalletCard extends StatelessWidget {
   final String title;
   final String date;
   final IconData icon;
+  final VoidCallback onDelete;
 
-  const WalletCard({super.key, 
+  const WalletCard({
+    super.key,
     required this.title,
     required this.date,
     required this.icon,
+    required this.onDelete,
   });
 
   @override
@@ -128,6 +137,10 @@ class WalletCard extends StatelessWidget {
                   ),
                 ],
               ),
+            ),
+            IconButton(
+              icon: const Icon(Icons.close, color: Colors.red),
+              onPressed: onDelete,
             ),
           ],
         ),
