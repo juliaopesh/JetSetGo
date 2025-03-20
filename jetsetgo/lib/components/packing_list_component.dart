@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:jetsetgo/pages/packing_list.dart';
 
 class PackingListSection extends StatelessWidget {
   const PackingListSection({super.key});
@@ -30,6 +31,14 @@ class PackingListSection extends StatelessWidget {
               ElevatedButton.icon(
                 onPressed: () {
                   // Navigate to the PackingListScreen when clicked
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => const PackingListScreen(
+                        tripTitle: "My Trip", // Pass the trip title here
+                      ),
+                    ),
+                  );
                 },
                 icon: const Icon(Icons.arrow_forward),
                 label: const Text("Expand List"),
