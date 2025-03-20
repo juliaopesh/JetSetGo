@@ -22,55 +22,67 @@ class TripCard extends StatelessWidget {
       onTap: onTap, // Trigger the onTap callback
       child: Card(
         elevation: 5,
-        margin: const EdgeInsets.symmetric(vertical: 10),
-        child: Stack(
-          children: [
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Padding(
-                  padding: const EdgeInsets.all(10),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        destination,
-                        style: const TextStyle(
-                          fontSize: 20,
-                          fontWeight: FontWeight.bold,
-                        ),
+        margin: const EdgeInsets.symmetric(vertical: 10, horizontal: 12),
+
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(16), //rounded edges
+        ),
+
+        child: Container(
+
+          width: 300, 
+          padding: const EdgeInsets.all(15),
+
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              // Trip Details
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      destination,
+                      style: const TextStyle(
+                        fontSize: 24, // Slightly bigger
+                        fontWeight: FontWeight.w600, // Slightly lighter
+                        fontFamily: 'Pacifico',
+                        letterSpacing: 1.2, // Adds spacing between letters
                       ),
-                      const SizedBox(height: 5),
-                      Text(
-                        dates,
-                        style: TextStyle(
-                          fontSize: 16,
-                          color: Colors.grey[600],
-                        ),
+                    ),
+        
+                    const SizedBox(height: 5),
+                    Text(
+                      dates.toUpperCase(),
+                      style: const TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.bold,
+                        color: Color.fromARGB(255, 44, 5, 51),
                       ),
-                      const SizedBox(height: 5),
-                      Text(
-                        duration,
-                        style: TextStyle(
-                          fontSize: 16,
-                          color: Colors.grey[600],
-                        ),
+                    ),
+                    Text(
+                      duration,
+                      style: const TextStyle(
+                        fontSize: 14,
+                        color: Colors.black87,
                       ),
-                    ],
-                  ),
+                    ),
+                  ],
                 ),
-              ],
-            ),
-            // Delete button (X icon)
-            Positioned(
-              top: 10,
-              right: 10,
-              child: IconButton(
-                icon: const Icon(Icons.close, color: Colors.red),
-                onPressed: onDelete, // Trigger the delete action
               ),
-            ),
-          ],
+
+              //icon section
+              Container(
+                width: 60,
+                height: 60,
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(15),
+                  border: Border.all(color: Colors.white, width: 2),
+                ),
+                child: Icon(Icons.airplanemode_active, size: 50, color: Colors.blue),
+              ),
+            ],
+          ),
         ),
       ),
     );

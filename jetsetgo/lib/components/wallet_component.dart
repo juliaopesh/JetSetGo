@@ -28,13 +28,13 @@ class WalletSection extends StatelessWidget {
                 style: TextStyle(
                   fontSize: 20,
                   fontWeight: FontWeight.bold,
-                  color: Colors.black,
+                  color: Color.fromARGB(255, 48, 33, 6),
                 ),
               ),
               const SizedBox(height: 10),
               const Icon(
-                Icons.account_balance_wallet,
-                size: 80,
+                Icons.wallet,
+                size: 120,
                 color: Color.fromARGB(255, 48, 33, 6),
               ),
             ],

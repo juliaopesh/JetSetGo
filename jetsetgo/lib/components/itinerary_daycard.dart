@@ -74,7 +74,7 @@ class ItineraryDayCard extends StatelessWidget {
                 top: 5,
                 right: 5,
                 child: IconButton(
-                  icon: const Icon(Icons.close, color: Colors.red),
+                  icon: const Icon(Icons.close, color: Colors.grey),
                   onPressed: onDelete, // Call delete function
                 ),
               ),

@@ -70,7 +70,7 @@ class _WeatherPageState extends State<WeatherPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text('Weather for ${widget.tripLocation}')),
+      appBar: AppBar(),
       body: isLoading
           ? Center(child: CircularProgressIndicator())
           : Padding(

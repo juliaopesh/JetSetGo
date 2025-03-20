@@ -57,7 +57,7 @@ class _PackingListSectionState extends State<PackingListSection> {
               children: [
                 Expanded(
                   child: Text(
-                    widget.tripTitle, // Trip title
+                    'Packing List', // Trip title
                     style: const TextStyle(
                       fontSize: 20,
                       fontWeight: FontWeight.bold,

@@ -78,7 +78,7 @@ class _TripScreenState extends State<TripScreen> {
       appBar: AppBar(
         toolbarHeight: 80,
         title: Text(
-          widget.tripName,
+          'Trip Details',
           style: const TextStyle(
             fontSize: 22,
             fontWeight: FontWeight.bold,
@@ -149,7 +149,7 @@ class _TripScreenState extends State<TripScreen> {
                         onTap: () {
                           Navigator.push(
                             context,
-                            MaterialPageRoute(builder: (context) => WalletPage()),
+                            MaterialPageRoute(builder: (context) => WalletPage(tripName: widget.tripName)),
                           );
                         },
                       ),

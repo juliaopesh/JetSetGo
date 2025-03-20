@@ -31,7 +31,7 @@ class WeatherSection extends StatelessWidget {
         ),
         child: Column(
           children: [
-            const Text(
+            Text(
               "Weather",
               style: TextStyle(
                 fontSize: 20,
@@ -41,9 +41,9 @@ class WeatherSection extends StatelessWidget {
             ),
             const SizedBox(height: 10),
             const Icon(
-              Icons.wb_sunny,
-              size: 80,
-              color: Color.fromARGB(255, 254, 226, 71)
+              Icons.sunny_snowing,
+              size: 120,
+              color: Color.fromARGB(255, 248, 234, 157)
             ),
             const SizedBox(height: 10),
             isWeatherLoading
@@ -51,14 +51,6 @@ class WeatherSection extends StatelessWidget {
                 : Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text(
-                        "Weather in $location",
-                        style: const TextStyle(
-                          fontSize: 18,
-                          fontWeight: FontWeight.bold,
-                          color: Colors.black,
-                        ),
-                      ),
                       const SizedBox(height: 10),
                       Text(
                         "Description: ${weatherDescription ?? 'Loading...'}", // Safely handle null

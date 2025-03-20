@@ -37,7 +37,7 @@ class HomePage extends StatelessWidget {
             return Text(
               'Welcome $userName! Here are your upcoming trips...',
               style: const TextStyle(
-                fontSize: 28, // Large font size
+                fontSize: 24, // Large font size
                 color: Colors.black,
               ),
             );
@@ -51,7 +51,7 @@ class HomePage extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             // List of trips
-            const Expanded(child: TripList()), // ✅ Uses TripList component
+            const Expanded(child: TripList()), 
           ],
         ),
       ),

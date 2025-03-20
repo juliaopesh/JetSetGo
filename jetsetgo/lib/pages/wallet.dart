@@ -2,18 +2,21 @@ import 'package:flutter/material.dart';
 import 'package:jetsetgo/components/add_button.dart'; // Import the AddButton component
 
 class WalletPage extends StatelessWidget {
-  const WalletPage({super.key});
+  final String tripName; // Accept trip name
+
+
+  WalletPage({super.key, required this.tripName});
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: const Color.fromARGB(255, 255, 255, 255), // Match home page background
       appBar: AppBar(
-        title: const Text(
-          'My Wallet',
+        title: Text(
+          '$tripName - Wallet',
           style: TextStyle(
             fontSize: 28, // Match home page title size
-            color: Colors.black, // Match home page title color
+            fontWeight: FontWeight.bold, 
           ),
         ),
         backgroundColor: Colors.orange[100],
@@ -50,15 +53,25 @@ class WalletPage extends StatelessWidget {
           ],
         ),
       ),
-      // Add a circular "Add Document" button at the bottom right
-      floatingActionButton: AddButton(
-        label: 'Add Document',
-        onPressed: () {
-          // Add functionality to handle adding a document
-          // For example, navigate to a new screen or show a dialog
-        },
+
+      // Add document button 
+      floatingActionButton: SizedBox(
+        width: 180,  
+        height: 60, 
+        child: FloatingActionButton.extended(
+          backgroundColor: Colors.orange[100], 
+          onPressed: () {
+            // Add functionality to handle adding a document
+          },
+          label: Text(
+            'Add Document',
+            style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold),  // Bigger font
+          ),
+          icon: Icon(Icons.add, size: 28),  // Bigger icon
+        ),
       ),
-      floatingActionButtonLocation: FloatingActionButtonLocation.endFloat, // Position at bottom right
+      floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,  // Center it at bottom
+
     );
   }
 }
