@@ -46,38 +46,15 @@ class HomePage extends StatelessWidget {
         ),
         backgroundColor: const Color.fromARGB(255, 245, 244, 246),
       ),
-      body: Stack(
-        children: [
-          Padding(
-            padding: const EdgeInsets.all(20.0),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                // List of trips
-                const Expanded(child: TripList()), // ✅ Uses TripList component
-              ],
-            ),
-          ),
-          // Wallet Image (positioned in the bottom-left corner)
-          Positioned(
-            left: 16, // Adjust the position as needed
-            bottom: 16, // Adjust the position as needed
-            child: GestureDetector(
-              onTap: () {
-                // Navigate to the WalletPage when the image is clicked
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => const WalletPage()),
-                );
-              },
-              child: Image.asset(
-                'assets/images/wallet2.png', // Path to your wallet image
-                width: 230, // Set the width
-                height: 230, // Set the height
-              ),
-            ),
-          ),
-        ],
+      body: Padding(
+        padding: const EdgeInsets.all(20.0),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            // List of trips
+            const Expanded(child: TripList()), // ✅ Uses TripList component
+          ],
+        ),
       ),
       // Add a circular "Add Trip" button at the bottom right
       floatingActionButton: SizedBox(
