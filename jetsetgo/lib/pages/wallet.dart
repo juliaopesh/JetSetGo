@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:jetsetgo/components/add_button.dart'; // Import the AddButton component
 
 class WalletPage extends StatelessWidget {
   const WalletPage({super.key});
@@ -6,25 +7,24 @@ class WalletPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: const Color.fromARGB(255, 255, 255, 255), // Match home page background
       appBar: AppBar(
-        title: Text('My Wallet'),
-        backgroundColor: const Color.fromARGB(255, 119, 165, 205),
+        title: const Text(
+          'My Wallet',
+          style: TextStyle(
+            fontSize: 28, // Match home page title size
+            color: Colors.black, // Match home page title color
+          ),
+        ),
+        backgroundColor: Colors.orange[100],
+        //backgroundColor: const Color.fromARGB(255, 245, 244, 246), // Match home page AppBar color
+        toolbarHeight: 80, // Match home page AppBar height
       ),
       body: Padding(
         padding: const EdgeInsets.all(20.0),
         child: Column(
           children: [
-            // Title
-            Text(
-              'Your Wallet',
-              style: TextStyle(
-                fontSize: 24,
-                fontWeight: FontWeight.bold,
-                color: const Color.fromARGB(255, 119, 165, 205),
-              ),
-            ),
-            SizedBox(height: 20),
-
+            const SizedBox(height: 20),
             // Wallet items (cards)
             Expanded(
               child: ListView(
@@ -50,6 +50,15 @@ class WalletPage extends StatelessWidget {
           ],
         ),
       ),
+      // Add a circular "Add Document" button at the bottom right
+      floatingActionButton: AddButton(
+        label: 'Add Document',
+        onPressed: () {
+          // Add functionality to handle adding a document
+          // For example, navigate to a new screen or show a dialog
+        },
+      ),
+      floatingActionButtonLocation: FloatingActionButtonLocation.endFloat, // Position at bottom right
     );
   }
 }
@@ -68,32 +77,41 @@ class WalletCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Card(
-      margin: EdgeInsets.symmetric(vertical: 10),
+      margin: const EdgeInsets.symmetric(vertical: 10),
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(15),
       ),
       elevation: 5,
+      color: const Color.fromARGB(255, 245, 244, 246), // Match home page AppBar color
       child: Padding(
         padding: const EdgeInsets.all(15.0),
         child: Row(
           children: [
-            Icon(icon, size: 40, color: const Color.fromARGB(255, 119, 165, 205)),
-            SizedBox(width: 15),
+            Icon(
+              icon,
+              size: 40,
+              color: const Color.fromARGB(255, 212, 187, 230), // Match home page button color
+            ),
+            const SizedBox(width: 15),
             Expanded(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
                     title,
-                    style: TextStyle(
+                    style: const TextStyle(
                       fontSize: 18,
                       fontWeight: FontWeight.bold,
+                      color: Color.fromARGB(255, 28, 1, 38), // Match home page text color
                     ),
                   ),
-                  SizedBox(height: 5),
+                  const SizedBox(height: 5),
                   Text(
                     'Date: $date',
-                    style: TextStyle(fontSize: 16, color: Colors.black54),
+                    style: const TextStyle(
+                      fontSize: 16,
+                      color: Colors.black54, // Match home page secondary text color
+                    ),
                   ),
                 ],
               ),

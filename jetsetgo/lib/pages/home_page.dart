@@ -5,6 +5,7 @@ import 'package:jetsetgo/components/logout_button.dart';
 import 'package:jetsetgo/components/trip_list.dart';
 import 'package:jetsetgo/pages/add_trip.dart';
 import 'package:jetsetgo/pages/wallet.dart'; // Import the WalletPage
+import 'package:jetsetgo/components/add_button.dart'; // Import the AddButton component
 
 class HomePage extends StatelessWidget {
   HomePage({super.key});
@@ -57,36 +58,15 @@ class HomePage extends StatelessWidget {
         ),
       ),
       // Add a circular "Add Trip" button at the bottom right
-      floatingActionButton: SizedBox(
-        width: 80, // Set the width of the button
-        height: 80, // Set the height of the button
-        child: FloatingActionButton(
-          onPressed: () {
-            // Navigate to the AddTrip screen
-            Navigator.push(
-              context,
-              MaterialPageRoute(builder: (context) => const AddTrip()),
-            );
-          },
-          backgroundColor: const Color.fromARGB(255, 212, 187, 230), // Button color
-          child: const Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Icon(
-                Icons.add,
-                color: Colors.white,
-                size: 36, // Larger icon size
-              ),
-              Text(
-                'Add Trip',
-                style: TextStyle(
-                  fontSize: 12, // Smaller font size
-                  color: Colors.white,
-                ),
-              ),
-            ],
-          ),
-        ),
+      floatingActionButton: AddButton(
+        label: 'Add Trip',
+        onPressed: () {
+          // Navigate to the AddTrip screen
+          Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) => const AddTrip()),
+          );
+        },
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.endFloat, // Position at bottom right
     );

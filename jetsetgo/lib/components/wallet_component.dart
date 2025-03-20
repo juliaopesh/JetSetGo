@@ -35,7 +35,7 @@ class WalletSection extends StatelessWidget {
               const Icon(
                 Icons.account_balance_wallet,
                 size: 80,
-                color: Colors.black,
+                color: Color.fromARGB(255, 48, 33, 6),
               ),
             ],
           ),

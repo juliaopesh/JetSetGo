@@ -43,7 +43,7 @@ class WeatherSection extends StatelessWidget {
             const Icon(
               Icons.wb_sunny,
               size: 80,
-              color: Colors.black,
+              color: Color.fromARGB(255, 254, 226, 71)
             ),
             const SizedBox(height: 10),
             isWeatherLoading
