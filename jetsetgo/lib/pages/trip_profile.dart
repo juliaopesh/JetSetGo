@@ -13,7 +13,12 @@ class TripScreen extends StatefulWidget {
   final String tripDates;
   final String tripLocation;
 
-  const TripScreen({super.key, required this.tripName, required this.tripDates, required this.tripLocation});
+  const TripScreen({
+    super.key,
+    required this.tripName,
+    required this.tripDates,
+    required this.tripLocation,
+  });
 
   @override
   _TripScreenState createState() => _TripScreenState();
@@ -168,13 +173,24 @@ class _TripScreenState extends State<TripScreen> {
               const ItinerarySection(),
               const SizedBox(height: 20),
 
-              // Packing List Section
-              const PackingListSection(),
+              // Packing List Section (use tripName or tripLocation depending on what you prefer)
+              PackingListSection(tripTitle: widget.tripName),  // Use tripName for tripTitle
               const SizedBox(height: 40),
             ],
           ),
         ),
       ),
+    );
+  }
+}
+
+// Dummy WalletPage class for navigation
+class WalletPage extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(title: const Text('Wallet Page')),
+      body: const Center(child: Text('This is the Wallet Page')),
     );
   }
 }

@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http; // Import HTTP package
+import 'dart:convert'; // For JSON parsing
 
 class PackingListScreen extends StatefulWidget {
   final String tripTitle; // Add tripTitle to the constructor
@@ -12,6 +14,7 @@ class PackingListScreen extends StatefulWidget {
 class _PackingListScreenState extends State<PackingListScreen> {
   final List<Map<String, dynamic>> _packingItems = [];
 
+  // Add item to the packing list
   void _showAddItemDialog() {
     TextEditingController textController = TextEditingController();
 
@@ -55,10 +58,40 @@ class _PackingListScreenState extends State<PackingListScreen> {
     });
   }
 
-  void _getAISuggestions() {
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(content: Text("Fetching AI suggestions...")),
-    );
+  // Function to get AI suggestions from Gemini API
+  Future<void> _getAISuggestions() async {
+    final String geminiApiUrl = 'https://api.gemini.com/ai_suggestions'; // Placeholder URL
+
+    try {
+      final response = await http.post(
+        Uri.parse(geminiApiUrl),
+        headers: {
+          'Content-Type': 'application/json',
+          // Add any necessary authentication headers here
+        },
+        body: json.encode({
+          'trip_title': widget.tripTitle,  // Pass trip title to API
+          // Add any other required data here
+        }),
+      );
+
+      if (response.statusCode == 200) {
+        final data = json.decode(response.body);
+        // Handle the response data (AI suggestions)
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text("AI suggestions fetched!")),
+        );
+        // Here you can update the list with suggestions
+      } else {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text("Error fetching AI suggestions")),
+        );
+      }
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text("Error connecting to the Gemini API")),
+      );
+    }
   }
 
   void _showInfoDialog() {
