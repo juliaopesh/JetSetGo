@@ -184,13 +184,3 @@ class _TripScreenState extends State<TripScreen> {
   }
 }
 
-// Dummy WalletPage class for navigation
-class WalletPage extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(title: const Text('Wallet Page')),
-      body: const Center(child: Text('This is the Wallet Page')),
-    );
-  }
-}

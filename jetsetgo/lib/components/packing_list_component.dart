@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:jetsetgo/pages/packing_list.dart'; // Make sure this is the correct import
+import 'package:jetsetgo/pages/packing_list.dart';
 
 class PackingListSection extends StatefulWidget {
-  final String tripTitle; // Add tripTitle as a parameter to the constructor
+  final String tripTitle;
 
-  const PackingListSection({super.key, required this.tripTitle}); // Constructor to receive tripTitle
+  const PackingListSection({super.key, required this.tripTitle});
 
   @override
   _PackingListSectionState createState() => _PackingListSectionState();
@@ -40,119 +40,118 @@ class _PackingListSectionState extends State<PackingListSection> {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      padding: const EdgeInsets.all(10),
-      decoration: BoxDecoration(
-        border: Border.all(
-          color: const Color.fromARGB(255, 212, 187, 230),
-          width: 3,
-        ),
-        borderRadius: BorderRadius.circular(12),
+    return Card(
+      elevation: 5, // Matches TripCard elevation
+      margin: const EdgeInsets.symmetric(vertical: 10),
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(10), // Matches TripCard border radius
       ),
-      child: Column(
-        children: [
-          Row(
-            children: [
-              Text(
-                widget.tripTitle, // Use the tripTitle passed from the parent widget
-                style: const TextStyle(
-                  fontSize: 20,
-                  fontWeight: FontWeight.bold,
-                  color: Color.fromARGB(255, 28, 1, 38),
-                ),
-              ),
-              const Spacer(),
-              ElevatedButton.icon(
-                onPressed: () {
-                  // Navigate to PackingListScreen when clicked
-                  Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => PackingListScreen(
-                      tripTitle: widget.tripTitle,
-                      //tripId: tripId, // Pass the tripId to PackingListScreen
+      color: const Color.fromARGB(255, 247, 223, 227),
+      child: Padding(
+        padding: const EdgeInsets.all(15),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            // Packing List Header with Expand Button
+            Row(
+              children: [
+                Expanded(
+                  child: Text(
+                    widget.tripTitle, // Trip title
+                    style: const TextStyle(
+                      fontSize: 20,
+                      fontWeight: FontWeight.bold,
+                      color: Color.fromARGB(255, 28, 1, 38), // Matches TripCard text color
                     ),
                   ),
-                );
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => const PackingListScreen(
-                        tripTitle: "My Trip", // Pass the trip title here
+                ),
+                IconButton(
+                  icon: const Icon(Icons.arrow_forward, color: Colors.purple),
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => PackingListScreen(
+                          tripTitle: widget.tripTitle,
+                        ),
                       ),
+                    );
+                  },
+                ),
+              ],
+            ),
+            const Divider(color: Color.fromARGB(255, 230, 187, 214)),
+
+            // Add Item Section
+            Row(
+              children: [
+                Expanded(
+                  child: TextField(
+                    controller: _controller,
+                    decoration: const InputDecoration(
+                      labelText: 'Add item',
+                      border: OutlineInputBorder(),
                     ),
-                  );
-                },
-                icon: const Icon(Icons.arrow_forward),
-                label: const Text("Expand List"),
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: const Color.fromARGB(255, 212, 187, 230),
-                  foregroundColor: Colors.white,
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: 15,
-                    vertical: 8,
                   ),
                 ),
-              ),
-            ],
-          ),
-          const Divider(color: Color.fromARGB(255, 212, 187, 230)),
-
-          // Text field to add new item
-          Row(
-            children: [
-              Expanded(
-                child: TextField(
-                  controller: _controller,
-                  decoration: const InputDecoration(
-                    labelText: 'Add new item to the packing list',
-                    border: OutlineInputBorder(),
-                  ),
+                IconButton(
+                  icon: const Icon(Icons.add, color: Color.fromARGB(255, 111, 24, 99)),
+                  onPressed: _addItem,
                 ),
-              ),
-              IconButton(
-                icon: const Icon(Icons.add),
-                onPressed: _addItem,
-              ),
-            ],
-          ),
-          const SizedBox(height: 10),
+              ],
+            ),
+            const SizedBox(height: 10),
 
-          // Packing List Items
-          Column(
-            children: _packingItems.map((item) {
-              int index = _packingItems.indexOf(item);
-              return _buildPackingItem(item, index);
-            }).toList(),
-          ),
-        ],
+            // Packing List Items
+            if (_packingItems.isEmpty)
+              const Center(
+                child: Text(
+                  "No items added yet.",
+                  style: TextStyle(color: Color.fromARGB(255, 68, 68, 68)),
+                ),
+              )
+            else
+              Column(
+                children: _packingItems.asMap().entries.map((entry) {
+                  int index = entry.key;
+                  PackingItem item = entry.value;
+                  return _buildPackingItem(item, index);
+                }).toList(),
+              ),
+          ],
+        ),
       ),
     );
   }
 
+  // Packing Item Widget (Checkbox + Text + Delete)
   Widget _buildPackingItem(PackingItem item, int index) {
-    return Row(
-      children: [
-        Checkbox(
+    return Card(
+      elevation: 3,
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+      child: ListTile(
+        leading: Checkbox(
           value: item.isChecked,
-          onChanged: (value) {
-            _toggleChecked(index);
-          },
-          activeColor: const Color.fromARGB(255, 212, 187, 230),
+          onChanged: (value) => _toggleChecked(index),
+          activeColor: const Color.fromARGB(255, 246, 200, 231),
         ),
-        Text(
+        title: Text(
           item.name,
-          style: const TextStyle(fontSize: 16),
+          style: TextStyle(
+            fontSize: 16,
+            decoration: item.isChecked ? TextDecoration.lineThrough : null,
+          ),
         ),
-        IconButton(
-          icon: const Icon(Icons.delete),
+        trailing: IconButton(
+          icon: const Icon(Icons.delete, color: Color.fromARGB(255, 90, 26, 22)),
           onPressed: () => _deleteItem(index),
         ),
-      ],
+      ),
     );
   }
 }
 
+// Packing Item Model
 class PackingItem {
   final String name;
   bool isChecked;

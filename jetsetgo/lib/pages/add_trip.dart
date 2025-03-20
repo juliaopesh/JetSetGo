@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:jetsetgo/components/add_button.dart'; // Import AddButton component
 
 class AddTrip extends StatefulWidget {
   const AddTrip({super.key});
@@ -50,13 +51,10 @@ class _AddTripState extends State<AddTrip> {
             .doc();
 
         // Create the trip document
-        await tripDocRef.set({}); // Initialize the trip document (can be empty)
+        await tripDocRef.set({}); // Initialize the trip document
 
         // Add trip details to the tripID subcollection
-        await tripDocRef
-            .collection('tripID')
-            .doc() // Automatically generate a unique ID for the tripID document
-            .set(tripData);
+        await tripDocRef.collection('tripID').doc().set(tripData);
 
         // Show success message
         ScaffoldMessenger.of(context).showSnackBar(
@@ -66,7 +64,6 @@ class _AddTripState extends State<AddTrip> {
         // Navigate back to the home page
         Navigator.pop(context);
       } catch (e) {
-        // Show error message
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(content: Text('Failed to add trip: $e')),
         );
@@ -88,9 +85,16 @@ class _AddTripState extends State<AddTrip> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.white, // Match HomePage background
       appBar: AppBar(
-        title: const Text('Add Trip'),
-        backgroundColor: const Color.fromARGB(255, 119, 165, 205),
+        toolbarHeight: 80,
+        title: const Text(
+          'Add a New Trip',
+          style: TextStyle(fontSize: 24, color: Colors.black),
+        ),
+        backgroundColor: const Color.fromARGB(255, 245, 244, 246), // Match HomePage app bar
+        elevation: 0,
+        iconTheme: const IconThemeData(color: Colors.black),
       ),
       body: Padding(
         padding: const EdgeInsets.all(20.0),
@@ -98,63 +102,49 @@ class _AddTripState extends State<AddTrip> {
           key: _formKey,
           child: ListView(
             children: [
-              TextFormField(
-                controller: _cityController,
-                decoration: const InputDecoration(labelText: 'City'),
-                validator: (value) {
-                  if (value == null || value.isEmpty) {
-                    return 'Please enter a city';
-                  }
-                  return null;
-                },
-              ),
-              TextFormField(
-                controller: _countryController,
-                decoration: const InputDecoration(labelText: 'Country'),
-                validator: (value) {
-                  if (value == null || value.isEmpty) {
-                    return 'Please enter a country';
-                  }
-                  return null;
-                },
-              ),
-              TextFormField(
-                controller: _dateLeavingController,
-                decoration: const InputDecoration(labelText: 'Date Leaving'),
-                keyboardType: TextInputType.number,
-                validator: (value) => _validateNumber(value, 'Date Leaving'),
-              ),
-              TextFormField(
-                controller: _dateReturningController,
-                decoration: const InputDecoration(labelText: 'Date Returning'),
-                keyboardType: TextInputType.number,
-                validator: (value) => _validateNumber(value, 'Date Returning'),
-              ),
-              TextFormField(
-                controller: _durationController,
-                decoration: const InputDecoration(labelText: 'Duration (days)'),
-                keyboardType: TextInputType.number,
-                validator: (value) => _validateNumber(value, 'Duration'),
-              ),
-              TextFormField(
-                controller: _monthController,
-                decoration: const InputDecoration(labelText: 'Month'),
-                validator: (value) {
-                  if (value == null || value.isEmpty) {
-                    return 'Please enter a month';
-                  }
-                  return null;
-                },
-              ),
-              const SizedBox(height: 20),
-              ElevatedButton(
-                onPressed: _addTrip,
-                child: const Text('Add Trip'),
-              ),
+              _buildTextField(_cityController, 'City'),
+              const SizedBox(height: 15),
+              _buildTextField(_countryController, 'Country'),
+              const SizedBox(height: 15),
+              _buildTextField(_dateLeavingController, 'Date Leaving', isNumber: true),
+              const SizedBox(height: 15),
+              _buildTextField(_dateReturningController, 'Date Returning', isNumber: true),
+              const SizedBox(height: 15),
+              _buildTextField(_durationController, 'Duration (days)', isNumber: true),
+              const SizedBox(height: 15),
+              _buildTextField(_monthController, 'Month'),
             ],
           ),
         ),
       ),
+      floatingActionButton: AddButton(
+        label: 'Add Trip',
+        onPressed: _addTrip,
+      ),
+      floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat, // Centered FAB like HomePage
+    );
+  }
+
+  // Helper function to create text fields
+  Widget _buildTextField(TextEditingController controller, String label, {bool isNumber = false}) {
+    return TextFormField(
+      controller: controller,
+      keyboardType: isNumber ? TextInputType.number : TextInputType.text,
+      decoration: InputDecoration(
+        labelText: label,
+        labelStyle: const TextStyle(fontSize: 16, color: Colors.black),
+        border: const OutlineInputBorder(
+          borderRadius: BorderRadius.zero, // Sharp edges
+        ),
+        filled: true,
+        fillColor: Color.fromARGB(255, 252, 252, 252), // Match trip card color
+      ),
+      validator: isNumber ? (value) => _validateNumber(value, label) : (value) {
+        if (value == null || value.isEmpty) {
+          return 'Please enter $label';
+        }
+        return null;
+      },
     );
   }
 }

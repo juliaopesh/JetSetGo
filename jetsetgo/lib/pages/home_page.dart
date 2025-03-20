@@ -1,10 +1,8 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:jetsetgo/components/logout_button.dart';
 import 'package:jetsetgo/components/trip_list.dart';
 import 'package:jetsetgo/pages/add_trip.dart';
-import 'package:jetsetgo/pages/wallet.dart'; // Import the WalletPage
 import 'package:jetsetgo/components/add_button.dart'; // Import the AddButton component
 
 class HomePage extends StatelessWidget {
