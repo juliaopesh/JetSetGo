@@ -117,7 +117,7 @@ class _PackingListScreenState extends State<PackingListScreen> {
     return Scaffold(
       appBar: AppBar(
         title: Text("Packing List for ${widget.tripTitle}"), // Use tripTitle as title
-        backgroundColor: const Color.fromARGB(255, 119, 165, 205),
+        backgroundColor: const Color.fromARGB(255, 241, 127, 168),
         actions: [
           IconButton(
             icon: Icon(Icons.add),
@@ -175,7 +175,7 @@ class _PackingListScreenState extends State<PackingListScreen> {
                     child: Container(
                       width: 30,
                       height: 30,
-                      color: Colors.blue[600],
+                      color: const Color.fromARGB(255, 233, 40, 123),
                       alignment: Alignment.center,
                       child: Icon(Icons.info, color: Colors.white, size: 20),
                     ),
@@ -190,7 +190,7 @@ class _PackingListScreenState extends State<PackingListScreen> {
                     child: Container(
                       width: MediaQuery.of(context).size.width * 0.3, // 40% of screen width
                       height: 60,
-                      color: Colors.blue[800],
+                      color: const Color.fromARGB(255, 233, 40, 123),
                       alignment: Alignment.center,
                       child: Text(
                         "Get AI Suggestions",

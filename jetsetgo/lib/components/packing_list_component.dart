@@ -46,7 +46,7 @@ class _PackingListSectionState extends State<PackingListSection> {
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(10), // Matches TripCard border radius
       ),
-      color: const Color.fromARGB(255, 247, 223, 227),
+      color: const Color.fromARGB(255, 241, 127, 168),
       child: Padding(
         padding: const EdgeInsets.all(15),
         child: Column(
@@ -61,12 +61,12 @@ class _PackingListSectionState extends State<PackingListSection> {
                     style: const TextStyle(
                       fontSize: 20,
                       fontWeight: FontWeight.bold,
-                      color: Color.fromARGB(255, 28, 1, 38), // Matches TripCard text color
+                      color: Color.fromARGB(255, 253, 246, 248), // Matches TripCard text color
                     ),
                   ),
                 ),
                 IconButton(
-                  icon: const Icon(Icons.arrow_forward, color: Colors.purple),
+                  icon: const Icon(Icons.arrow_forward, color: Colors.white),
                   onPressed: () {
                     Navigator.push(
                       context,
@@ -80,7 +80,7 @@ class _PackingListSectionState extends State<PackingListSection> {
                 ),
               ],
             ),
-            const Divider(color: Color.fromARGB(255, 230, 187, 214)),
+            const Divider(color: Color.fromARGB(255, 245, 184, 207)),
 
             // Add Item Section
             Row(
@@ -88,14 +88,43 @@ class _PackingListSectionState extends State<PackingListSection> {
                 Expanded(
                   child: TextField(
                     controller: _controller,
-                    decoration: const InputDecoration(
+                    decoration: InputDecoration(
                       labelText: 'Add item',
-                      border: OutlineInputBorder(),
+                      labelStyle: const TextStyle(
+                        color: Color.fromARGB(255, 250, 236, 241),
+                        ),
+                        filled: true, //background colour enabled 
+                        fillColor: Colors.transparent, //keep brackground same as parent
+                         
+                         border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(12), 
+                          borderSide: const BorderSide(
+                            color: Colors.white, 
+                            width: 1,
+                          ),
+                        ),
+
+                        enabledBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(12),
+                          borderSide: const BorderSide(
+                            color: Colors.white, 
+                            width: 1,
+                          ),
+                        ),
+
+                        focusedBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(12),
+                          borderSide: const BorderSide(
+                            color: Colors.white, 
+                            width: 1,
+                          ),
+                        ),
                     ),
                   ),
                 ),
+
                 IconButton(
-                  icon: const Icon(Icons.add, color: Color.fromARGB(255, 111, 24, 99)),
+                  icon: const Icon(Icons.add, color: Color.fromARGB(255, 250, 239, 243)),
                   onPressed: _addItem,
                 ),
               ],
@@ -107,7 +136,7 @@ class _PackingListSectionState extends State<PackingListSection> {
               const Center(
                 child: Text(
                   "No items added yet.",
-                  style: TextStyle(color: Color.fromARGB(255, 68, 68, 68)),
+                  style: TextStyle(color: Color.fromARGB(255, 250, 239, 243)),
                 ),
               )
             else
@@ -133,7 +162,7 @@ class _PackingListSectionState extends State<PackingListSection> {
         leading: Checkbox(
           value: item.isChecked,
           onChanged: (value) => _toggleChecked(index),
-          activeColor: const Color.fromARGB(255, 246, 200, 231),
+          activeColor: const Color.fromARGB(255, 250, 239, 243),
         ),
         title: Text(
           item.name,
@@ -143,7 +172,7 @@ class _PackingListSectionState extends State<PackingListSection> {
           ),
         ),
         trailing: IconButton(
-          icon: const Icon(Icons.delete, color: Color.fromARGB(255, 90, 26, 22)),
+          icon: const Icon(Icons.delete, color: Colors.white),
           onPressed: () => _deleteItem(index),
         ),
       ),
