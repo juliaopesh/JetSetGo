@@ -2,17 +2,17 @@ import 'package:flutter/material.dart';
 
 class WeatherSection extends StatelessWidget {
   final bool isWeatherLoading;
-  final String weatherDescription;
-  final String temperature;
-  final String humidity;
+  final String? weatherDescription; // Nullable
+  final String? temperature;        // Nullable
+  final String? humidity;           // Nullable
   final String location;
 
   const WeatherSection({
     super.key,
     required this.isWeatherLoading,
-    required this.weatherDescription,
-    required this.temperature,
-    required this.humidity,
+    this.weatherDescription, // Nullable
+    this.temperature,        // Nullable
+    this.humidity,           // Nullable
     required this.location,
   });
 
@@ -47,7 +47,7 @@ class WeatherSection extends StatelessWidget {
             ),
             const SizedBox(height: 10),
             isWeatherLoading
-                ? const CircularProgressIndicator()
+                ? const CircularProgressIndicator() // Loading state
                 : Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
@@ -61,15 +61,15 @@ class WeatherSection extends StatelessWidget {
                       ),
                       const SizedBox(height: 10),
                       Text(
-                        "Description: $weatherDescription",
+                        "Description: ${weatherDescription ?? 'Loading...'}", // Safely handle null
                         style: const TextStyle(fontSize: 16),
                       ),
                       Text(
-                        "Temperature: $temperature°C",
+                        "Temperature: ${temperature ?? 'Loading...'}°C", // Safely handle null
                         style: const TextStyle(fontSize: 16),
                       ),
                       Text(
-                        "Humidity: $humidity%",
+                        "Humidity: ${humidity ?? 'Loading...'}%", // Safely handle null
                         style: const TextStyle(fontSize: 16),
                       ),
                     ],

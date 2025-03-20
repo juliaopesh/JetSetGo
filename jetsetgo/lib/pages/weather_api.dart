@@ -19,9 +19,10 @@ class WeatherPage extends StatefulWidget {
 }
 
 class _WeatherPageState extends State<WeatherPage> {
-  late String weatherDescription;
-  late String temperature;
-  late String humidity;
+  // Make the variables nullable instead of using `late`
+  String? weatherDescription;
+  String? temperature;
+  String? humidity;
   bool isLoading = true;
 
   @override
@@ -76,9 +77,10 @@ class _WeatherPageState extends State<WeatherPage> {
               padding: EdgeInsets.all(20),
               child: Column(
                 children: [
-                  Text('Weather: $weatherDescription', style: TextStyle(fontSize: 22)),
-                  Text('Temperature: $temperature°C', style: TextStyle(fontSize: 20)),
-                  Text('Humidity: $humidity%', style: TextStyle(fontSize: 20)),
+                  // Safely handle null values using null-aware operators
+                  Text('Weather: ${weatherDescription ?? 'Loading...'}', style: TextStyle(fontSize: 22)),
+                  Text('Temperature: ${temperature ?? 'Loading...'}°C', style: TextStyle(fontSize: 20)),
+                  Text('Humidity: ${humidity ?? 'Loading...'}%', style: TextStyle(fontSize: 20)),
                 ],
               ),
             ),

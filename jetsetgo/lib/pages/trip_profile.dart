@@ -18,9 +18,9 @@ class TripScreen extends StatefulWidget {
 }
 
 class _TripScreenState extends State<TripScreen> {
-  late String weatherDescription;
-  late String temperature;
-  late String humidity;
+  late String weatherDescription = 'Loading...';
+  late String temperature = '0';
+  late String humidity = '0';
   bool isWeatherLoading = true;
 
   Future<void> _fetchWeatherData() async {
