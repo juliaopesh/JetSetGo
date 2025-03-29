@@ -2,14 +2,12 @@ import 'package:flutter/material.dart';
 
 class ItineraryDayDetails extends StatelessWidget {
   final String day;
-  final String activity1;
-  final String activity2;
+  final List<String> activities; // Change from String to List<String>
 
   const ItineraryDayDetails({
     super.key,
     required this.day,
-    required this.activity1,
-    required this.activity2,
+    required this.activities, // Accept a list of activities
   });
 
   @override
@@ -18,23 +16,21 @@ class ItineraryDayDetails extends StatelessWidget {
       appBar: AppBar(
         title: Text(
           day,
-          style: TextStyle(
-            fontSize: 28, // Match home page title size
-            color: Colors.black, // Match home page title color
+          style: const TextStyle(
+            fontSize: 28,
+            color: Colors.black,
           ),
         ),
         backgroundColor: const Color.fromARGB(255, 187, 238, 198),
-        //backgroundColor: const Color.fromARGB(255, 245, 244, 246), // Match home page AppBar color
-        toolbarHeight: 80, // Match home page AppBar height
+        toolbarHeight: 80,
       ),
-      
       body: Padding(
         padding: const EdgeInsets.all(20),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              "Activities for $day",
+              day,
               style: const TextStyle(
                 fontSize: 22,
                 fontWeight: FontWeight.bold,
@@ -49,19 +45,19 @@ class ItineraryDayDetails extends StatelessWidget {
               ),
               child: Padding(
                 padding: const EdgeInsets.all(20),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      "• $activity1",
-                      style: const TextStyle(fontSize: 18, color: Colors.black),
-                    ),
-                    const SizedBox(height: 10),
-                    Text(
-                      "• $activity2",
-                      style: const TextStyle(fontSize: 18, color: Colors.black),
-                    ),
-                  ],
+                child: SingleChildScrollView(
+                  scrollDirection: Axis.horizontal, // Enable side-by-side scrolling
+                  child: Row(
+                    children: activities
+                        .map((activity) => Padding(
+                              padding: const EdgeInsets.symmetric(horizontal: 10),
+                              child: Text(
+                                activity,
+                                style: const TextStyle(fontSize: 18, color: Colors.black),
+                              ),
+                            ))
+                        .toList(),
+                  ),
                 ),
               ),
             ),

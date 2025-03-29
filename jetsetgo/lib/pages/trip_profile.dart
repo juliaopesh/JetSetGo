@@ -12,12 +12,13 @@ class TripScreen extends StatefulWidget {
   final String tripName;
   final String tripDates;
   final String tripLocation;
-
+  final String tripId;
   const TripScreen({
     super.key,
     required this.tripName,
     required this.tripDates,
     required this.tripLocation,
+    required this.tripId,
   });
 
   @override
@@ -170,7 +171,7 @@ class _TripScreenState extends State<TripScreen> {
               const SizedBox(height: 20),
 
               // Itinerary Section
-              const ItinerarySection(),
+              ItinerarySection(tripId: widget.tripId),
               const SizedBox(height: 20),
 
               // Packing List Section (use tripName or tripLocation depending on what you prefer)

@@ -50,11 +50,32 @@ class _AddTripState extends State<AddTrip> {
             .collection('trip')
             .doc();
 
-        // Create the trip document
-        await tripDocRef.set({}); // Initialize the trip document
+        // Create the trip document with the trip data
+        await tripDocRef.set(tripData);
 
-        // Add trip details to the tripID subcollection
-        await tripDocRef.collection('tripID').doc().set(tripData);
+        // Reference to the Itinerary subcollection
+        final itineraryDocRef = tripDocRef.collection('Itinerary').doc("Day 1 - Arrival");
+
+        // Create the Title document (e.g., "Day 1 - Arrival")
+        await itineraryDocRef.set({}); // Empty document, just to hold the subcollection
+
+        // Create a Details document
+        final detailsDocRef = itineraryDocRef.collection('Details').doc();
+
+        await detailsDocRef.set({}); // Empty document to hold the subcollection
+
+        // Add schedule under the Details document
+        await detailsDocRef.collection('Schedule').add({
+          'Time': '10:00',
+          'AMorPM': 0, // 0 for AM, 1 for PM
+          'Activity': 'Check into hotel',
+        });
+
+        await detailsDocRef.collection('Schedule').add({
+          'Time': '02:00',
+          'AMorPM': 1, // 1 for PM
+          'Activity': 'Explore the city',
+        });
 
         // Show success message
         ScaffoldMessenger.of(context).showSnackBar(
@@ -70,6 +91,9 @@ class _AddTripState extends State<AddTrip> {
       }
     }
   }
+
+
+
 
   // Helper function to validate numeric fields
   String? _validateNumber(String? value, String fieldName) {

@@ -97,6 +97,7 @@ class TripList extends StatelessWidget {
                           tripName: '${tripDetails['City']}, ${tripDetails['Country']}',
                           tripDates: '${tripDetails['Month']} ${tripDetails['DateLeaving']} - ${tripDetails['DateReturning']}, 2025',
                           tripLocation: '${tripDetails['City']}, ${tripDetails['Country']}',
+                          tripId: trip.id,
                         ),
                       ),
                     );
