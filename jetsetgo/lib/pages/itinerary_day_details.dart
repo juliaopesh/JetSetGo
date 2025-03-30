@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+/*import 'package:flutter/material.dart';
 
 class ItineraryDayDetails extends StatelessWidget {
   final String day;
@@ -66,4 +66,4 @@ class ItineraryDayDetails extends StatelessWidget {
       ),
     );
   }
-}
+}*/

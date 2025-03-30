@@ -4,6 +4,8 @@ import 'package:jetsetgo/components/itinerary_component.dart';
 import 'package:jetsetgo/components/packing_list_component.dart';
 import 'package:jetsetgo/components/wallet_component.dart';
 import 'package:jetsetgo/components/weather_component.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'dart:convert';
 
 import 'package:jetsetgo/pages/wallet.dart';
@@ -66,6 +68,58 @@ class _TripScreenState extends State<TripScreen> {
     }
   }
 
+  Future<void> deleteTrip() async {
+    final user = FirebaseAuth.instance.currentUser!;
+    try {
+      await FirebaseFirestore.instance
+          .collection('users')
+          .doc(user.uid)
+          .collection('trip')
+          .doc(widget.tripId)
+          .delete();
+
+      if (mounted) {
+        Navigator.pop(context);
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Trip deleted successfully.')),
+        );
+      }
+    } catch (e) {
+      print('Error deleting trip: $e');
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Failed to delete trip: $e')),
+      );
+    }
+  }
+
+  void showDeleteConfirmationDialog() {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text('Delete Trip'),
+          content: const Text('Are you sure you want to delete this trip? This action cannot be undone.'),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.of(context).pop(),
+              child: const Text('Cancel'),
+            ),
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+                deleteTrip();
+              },
+              child: const Text(
+                'Delete',
+                style: TextStyle(color: Colors.red),
+              ),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
   @override
   void initState() {
     super.initState();
@@ -88,6 +142,13 @@ class _TripScreenState extends State<TripScreen> {
         ),
         backgroundColor: const Color.fromARGB(255, 245, 244, 246),
         centerTitle: true,
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.delete, color: Colors.red),
+            iconSize: 30, // Increased icon size
+            onPressed: showDeleteConfirmationDialog,
+          ),
+        ],
       ),
       body: SingleChildScrollView(
         child: Padding(
@@ -97,15 +158,15 @@ class _TripScreenState extends State<TripScreen> {
             children: [
               // Title Box
               Card(
-                elevation: 5, // Match the elevation of TripCard
+                elevation: 5,
                 shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(12), // Match the border radius
+                  borderRadius: BorderRadius.circular(12),
                 ),
                 child: Container(
                   width: double.infinity,
                   padding: const EdgeInsets.all(15),
                   decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(12), // Match the border radius
+                    borderRadius: BorderRadius.circular(12),
                   ),
                   child: Column(
                     children: [
@@ -150,7 +211,10 @@ class _TripScreenState extends State<TripScreen> {
                         onTap: () {
                           Navigator.push(
                             context,
-                            MaterialPageRoute(builder: (context) => WalletPage(tripName: widget.tripName)),
+                            MaterialPageRoute(
+                              builder: (context) =>
+                                  WalletPage(tripName: widget.tripName),
+                            ),
                           );
                         },
                       ),
@@ -174,8 +238,9 @@ class _TripScreenState extends State<TripScreen> {
               ItinerarySection(tripId: widget.tripId),
               const SizedBox(height: 20),
 
-              // Packing List Section (use tripName or tripLocation depending on what you prefer)
-              PackingListSection(tripTitle: widget.tripName, tripId: widget.tripId),  // Use tripName for tripTitle
+              // Packing List Section
+              PackingListSection(
+                  tripTitle: widget.tripName, tripId: widget.tripId),
               const SizedBox(height: 40),
             ],
           ),
@@ -184,4 +249,3 @@ class _TripScreenState extends State<TripScreen> {
     );
   }
 }
-

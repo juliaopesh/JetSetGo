@@ -4,7 +4,6 @@ class TripCard extends StatelessWidget {
   final String destination;
   final String dates;
   final String duration;
-  final VoidCallback onDelete; // Callback for delete action
   final VoidCallback onTap; // Callback for tap action
 
   const TripCard({
@@ -12,7 +11,6 @@ class TripCard extends StatelessWidget {
     required this.destination,
     required this.dates,
     required this.duration,
-    required this.onDelete,
     required this.onTap,
   });
 

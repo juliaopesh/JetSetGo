@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:intl/intl.dart';
+
 import 'home_page.dart';
 
 class TripSuggestions extends StatefulWidget {
@@ -17,12 +19,33 @@ class _TripSuggestionsState extends State<TripSuggestions> {
   String idealContinent = 'No Preference';
   String favoriteActivity = 'No Preference';
   final TextEditingController otherFavoritesController = TextEditingController();
-  final TextEditingController dateLeavingController = TextEditingController();
-  final TextEditingController dateReturningController = TextEditingController();
-  final TextEditingController durationController = TextEditingController();
-  final TextEditingController monthController = TextEditingController();
+
+  DateTime? _startDate;
+  DateTime? _endDate;
+
+  Future<void> _pickDateRange() async {
+    final picked = await showDateRangePicker(
+      context: context,
+      firstDate: DateTime.now(),
+      lastDate: DateTime.now().add(const Duration(days: 365)),
+    );
+
+    if (picked != null) {
+      setState(() {
+        _startDate = picked.start;
+        _endDate = picked.end;
+      });
+    }
+  }
 
   void _showTripOptions() {
+    if (_startDate == null || _endDate == null) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Please select a trip date range.')),
+      );
+      return;
+    }
+
     showDialog(
       context: context,
       builder: (context) {
@@ -49,14 +72,19 @@ class _TripSuggestionsState extends State<TripSuggestions> {
   }
 
   Future<void> _addTripProfile(String destination) async {
+    if (_startDate == null || _endDate == null) return;
+
     final user = FirebaseAuth.instance.currentUser!;
+    final duration = _endDate!.difference(_startDate!).inDays;
+    final month = DateFormat.MMMM().format(_startDate!);
+
     final tripData = {
       'City': destination.split(', ')[0],
       'Country': destination.split(', ')[1],
-      'DateLeaving': dateLeavingController.text,
-      'DateReturning': dateReturningController.text,
-      'Duration': durationController.text,
-      'Month': monthController.text,
+      'DateLeaving': _startDate!.day,
+      'DateReturning': _endDate!.day,
+      'Duration': duration,
+      'Month': month,
       'FavoriteSeason': favoriteSeason,
       'IdealWeather': idealWeather,
       'IdealSetting': idealSetting,
@@ -72,7 +100,7 @@ class _TripSuggestionsState extends State<TripSuggestions> {
           .collection('trip')
           .doc();
 
-      await tripDocRef.set({}); // Initialize trip document
+      await tripDocRef.set({});
       await tripDocRef.collection('tripID').doc().set(tripData);
 
       ScaffoldMessenger.of(context).showSnackBar(
@@ -102,6 +130,10 @@ class _TripSuggestionsState extends State<TripSuggestions> {
 
   @override
   Widget build(BuildContext context) {
+    final dateSummary = (_startDate != null && _endDate != null)
+        ? "${DateFormat.MMMd().format(_startDate!)} - ${DateFormat.MMMd().format(_endDate!)} (${_endDate!.difference(_startDate!).inDays} days)"
+        : "Select Trip Dates";
+
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
@@ -135,10 +167,22 @@ class _TripSuggestionsState extends State<TripSuggestions> {
                 'Sightseeing', 'Hiking', 'Swimming', 'No Preference'
               ], (value) => setState(() => favoriteActivity = value)),
               _buildTextField('Other Favorites', otherFavoritesController),
-              _buildTextField('Date Leaving', dateLeavingController),
-              _buildTextField('Date Returning', dateReturningController),
-              _buildTextField('Duration', durationController),
-              _buildTextField('Month', monthController),
+              const SizedBox(height: 15),
+              GestureDetector(
+                onTap: _pickDateRange,
+                child: Container(
+                  padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 12),
+                  width: double.infinity,
+                  decoration: BoxDecoration(
+                    border: Border.all(color: Colors.grey),
+                    color: const Color.fromARGB(255, 252, 252, 252),
+                  ),
+                  child: Text(
+                    dateSummary,
+                    style: const TextStyle(fontSize: 16, color: Colors.black87),
+                  ),
+                ),
+              ),
               const SizedBox(height: 20),
               ElevatedButton(
                 onPressed: _showTripOptions,

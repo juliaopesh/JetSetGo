@@ -1,30 +1,65 @@
 import 'package:flutter/material.dart';
-import 'package:http/http.dart' as http; // Import HTTP package
-import 'dart:convert'; // For JSON parsing
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'dart:convert';
+import 'package:http/http.dart' as http;
 
 class PackingListScreen extends StatefulWidget {
-  final String tripTitle; // Add tripTitle to the constructor
+  final String tripTitle;
+  final String tripId;
 
-  const PackingListScreen({super.key, required this.tripTitle});
+  const PackingListScreen({
+    super.key,
+    required this.tripTitle,
+    required this.tripId,
+  });
 
   @override
   _PackingListScreenState createState() => _PackingListScreenState();
 }
 
 class _PackingListScreenState extends State<PackingListScreen> {
-  final List<Map<String, dynamic>> _packingItems = [];
+  late CollectionReference _packingListRef;
+  final TextEditingController _controller = TextEditingController();
 
-  // Add item to the packing list
+  @override
+  void initState() {
+    super.initState();
+    final user = FirebaseAuth.instance.currentUser!;
+    _packingListRef = FirebaseFirestore.instance
+        .collection('users')
+        .doc(user.uid)
+        .collection('trip')
+        .doc(widget.tripId)
+        .collection('PackingList');
+  }
+
+  Future<void> _addItem(String item) async {
+    if (item.trim().isNotEmpty) {
+      await _packingListRef.add({
+        'item': item.trim(),
+        'checked': false,
+      });
+    }
+  }
+
+  Future<void> _toggleCheckbox(String id, bool checked) async {
+    await _packingListRef.doc(id).update({'checked': checked ? 1 : 0});
+  }
+
+  Future<void> _deleteItem(String id) async {
+    await _packingListRef.doc(id).delete();
+  }
+
   void _showAddItemDialog() {
-    TextEditingController textController = TextEditingController();
-
+    _controller.clear();
     showDialog(
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
           title: Text("Add Item"),
           content: TextField(
-            controller: textController,
+            controller: _controller,
             decoration: InputDecoration(hintText: "Enter item name"),
           ),
           actions: [
@@ -34,14 +69,7 @@ class _PackingListScreenState extends State<PackingListScreen> {
             ),
             ElevatedButton(
               onPressed: () {
-                if (textController.text.trim().isNotEmpty) {
-                  setState(() {
-                    _packingItems.add({
-                      "text": textController.text.trim(),
-                      "checked": false
-                    });
-                  });
-                }
+                _addItem(_controller.text);
                 Navigator.pop(context);
               },
               child: Text("Add"),
@@ -52,36 +80,21 @@ class _PackingListScreenState extends State<PackingListScreen> {
     );
   }
 
-  void _toggleCheckbox(int index, bool? value) {
-    setState(() {
-      _packingItems[index]["checked"] = value!;
-    });
-  }
-
-  // Function to get AI suggestions from Gemini API
   Future<void> _getAISuggestions() async {
-    final String geminiApiUrl = 'https://api.gemini.com/ai_suggestions'; // Placeholder URL
+    final String geminiApiUrl = 'https://api.gemini.com/ai_suggestions'; // Placeholder
 
     try {
       final response = await http.post(
         Uri.parse(geminiApiUrl),
-        headers: {
-          'Content-Type': 'application/json',
-          // Add any necessary authentication headers here
-        },
-        body: json.encode({
-          'trip_title': widget.tripTitle,  // Pass trip title to API
-          // Add any other required data here
-        }),
+        headers: {'Content-Type': 'application/json'},
+        body: json.encode({'trip_title': widget.tripTitle}),
       );
 
       if (response.statusCode == 200) {
-        final data = json.decode(response.body);
-        // Handle the response data (AI suggestions)
+        // Handle suggestions
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(content: Text("AI suggestions fetched!")),
         );
-        // Here you can update the list with suggestions
       } else {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(content: Text("Error fetching AI suggestions")),
@@ -89,7 +102,7 @@ class _PackingListScreenState extends State<PackingListScreen> {
       }
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text("Error connecting to the Gemini API")),
+        SnackBar(content: Text("Error connecting to Gemini API")),
       );
     }
   }
@@ -116,7 +129,7 @@ class _PackingListScreenState extends State<PackingListScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("Packing List for ${widget.tripTitle}"), // Use tripTitle as title
+        title: Text("Packing List for ${widget.tripTitle}"),
         backgroundColor: const Color.fromARGB(255, 241, 127, 168),
         actions: [
           IconButton(
@@ -125,81 +138,75 @@ class _PackingListScreenState extends State<PackingListScreen> {
           ),
         ],
       ),
-      body: Stack(
-        children: [
-          Center(
-            child: _packingItems.isEmpty
-                ? Text("No items yet. Tap + to add.")
-                : SizedBox(
-                    width: MediaQuery.of(context).size.width * 0.7,
-                    child: Column(
-                      mainAxisSize: MainAxisSize.min,
-                      children: _packingItems.map((item) {
-                        int index = _packingItems.indexOf(item);
-                        return Column(
-                          children: [
-                            Row(
-                              children: [
-                                Checkbox(
-                                  value: item["checked"],
-                                  onChanged: (value) => _toggleCheckbox(index, value),
-                                ),
-                                Expanded(
-                                  child: Text(
-                                    item["text"],
-                                    style: TextStyle(fontSize: 18),
-                                  ),
-                                ),
-                              ],
-                            ),
-                            Padding(
-                              padding: EdgeInsets.only(left: 50),
-                              child: Divider(thickness: 1, color: Colors.grey),
-                            ),
-                          ],
-                        );
-                      }).toList(),
-                    ),
-                  ),
-          ),
-          Positioned(
-            bottom: 20,
-            right: 0, // Keeps button inside screen
-            child: Row(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                // Info button peeking out from left 
-                GestureDetector(
-                  onTap: _showInfoDialog,
-                  child: ClipOval(
-                    child: Container(
-                      width: 30,
-                      height: 30,
-                      color: const Color.fromARGB(255, 233, 40, 123),
-                      alignment: Alignment.center,
-                      child: Icon(Icons.info, color: Colors.white, size: 20),
-                    ),
-                  ),
-                ),
-                SizedBox(width: 5), // Small spacing to separate from the main button
-                // Main AI Suggestions button
-                GestureDetector(
-                  onTap: _getAISuggestions,
-                  child: ClipRRect(
-                    borderRadius: BorderRadius.horizontal(left: Radius.circular(20)),
-                    child: Container(
-                      width: MediaQuery.of(context).size.width * 0.3, // 40% of screen width
-                      height: 60,
-                      color: const Color.fromARGB(255, 233, 40, 123),
-                      alignment: Alignment.center,
-                      child: Text(
-                        "Get AI Suggestions",
-                        style: TextStyle(color: Colors.white, fontSize: 14),
+      body: StreamBuilder<QuerySnapshot>(
+        stream: _packingListRef.snapshots(),
+        builder: (context, snapshot) {
+          if (!snapshot.hasData) return const Center(child: CircularProgressIndicator());
+
+          final docs = snapshot.data!.docs;
+
+          return docs.isEmpty
+              ? Center(child: Text("No items yet. Tap + to add."))
+              : ListView.builder(
+                  padding: const EdgeInsets.all(20),
+                  itemCount: docs.length,
+                  itemBuilder: (context, index) {
+                    final doc = docs[index];
+                    final data = doc.data() as Map<String, dynamic>;
+                    final item = data['item'] ?? '';
+                    final checked = data['checked'] == 1;
+
+                    return ListTile(
+                      leading: Checkbox(
+                        value: checked,
+                        onChanged: (value) => _toggleCheckbox(doc.id, value!),
                       ),
-                    ),
-                  ),
+                      title: Text(
+                        item,
+                        style: TextStyle(
+                          fontSize: 18,
+                          decoration: checked ? TextDecoration.lineThrough : null,
+                        ),
+                      ),
+                      trailing: IconButton(
+                        icon: Icon(Icons.delete, color: Colors.red),
+                        onPressed: () => _deleteItem(doc.id),
+                      ),
+                    );
+                  },
+                );
+        },
+      ),
+      floatingActionButton: Row(
+        mainAxisAlignment: MainAxisAlignment.end,
+        children: [
+          GestureDetector(
+            onTap: _showInfoDialog,
+            child: ClipOval(
+              child: Container(
+                width: 30,
+                height: 30,
+                color: const Color.fromARGB(255, 233, 40, 123),
+                alignment: Alignment.center,
+                child: Icon(Icons.info, color: Colors.white, size: 20),
+              ),
+            ),
+          ),
+          SizedBox(width: 10),
+          GestureDetector(
+            onTap: _getAISuggestions,
+            child: ClipRRect(
+              borderRadius: BorderRadius.horizontal(left: Radius.circular(20)),
+              child: Container(
+                width: MediaQuery.of(context).size.width * 0.3,
+                height: 60,
+                color: const Color.fromARGB(255, 233, 40, 123),
+                alignment: Alignment.center,
+                child: Text(
+                  "Get AI Suggestions",
+                  style: TextStyle(color: Colors.white, fontSize: 14),
                 ),
-              ],
+              ),
             ),
           ),
         ],

@@ -92,13 +92,13 @@ class _ItineraryDayCardState extends State<ItineraryDayCard> {
                       }).toList(),
 
                       // **Edit Button (inside scrollable area)**
-                      const SizedBox(height: 10),
+                      const SizedBox(height: 10, width: 50),
                       SizedBox(
                         width: double.infinity, // Makes it take the full width of the parent
                         child: ElevatedButton(
                           onPressed: widget.onEdit,
                           style: ElevatedButton.styleFrom(
-                            backgroundColor: Colors.blue,
+                            backgroundColor: const Color.fromARGB(255, 15, 106, 55),
                             foregroundColor: Colors.white,
                           ),
                           child: const Text("Edit Itinerary Card"),

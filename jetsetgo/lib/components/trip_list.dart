@@ -7,29 +7,6 @@ import 'package:jetsetgo/pages/trip_profile.dart'; // Import the TripScreen
 class TripList extends StatelessWidget {
   const TripList({super.key});
 
-  // Function to delete a trip
-  Future<void> _deleteTrip(String tripId, BuildContext context) async {
-    final user = FirebaseAuth.instance.currentUser!;
-    try {
-      await FirebaseFirestore.instance
-          .collection('users')
-          .doc(user.uid)
-          .collection('trip')
-          .doc(tripId)
-          .delete();
-
-      // Show success message
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Trip deleted successfully!')),
-      );
-    } catch (e) {
-      // Show error message
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Failed to delete trip: $e')),
-      );
-    }
-  }
-
   @override
   Widget build(BuildContext context) {
     final user = FirebaseAuth.instance.currentUser!;
@@ -87,7 +64,6 @@ class TripList extends StatelessWidget {
                   destination: '${tripDetails['City']}, ${tripDetails['Country']}',
                   dates: '${tripDetails['Month']} ${tripDetails['DateLeaving']} - ${tripDetails['DateReturning']}, 2025',
                   duration: '${tripDetails['Duration']} days',
-                  onDelete: () => _deleteTrip(trip.id, context), // Pass the delete function
                   onTap: () {
                     // Navigate to the TripScreen with trip details
                     Navigator.push(
