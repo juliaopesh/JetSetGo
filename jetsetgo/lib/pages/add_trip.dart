@@ -6,7 +6,7 @@ import 'trip_suggestions.dart';
 class AddTrip extends StatefulWidget {
   const AddTrip({super.key});
 
-  @override
+  @override 
   _AddTripState createState() => _AddTripState();
 }
 
@@ -64,19 +64,9 @@ class _AddTripState extends State<AddTrip> {
 
         await detailsDocRef.set({}); // Empty document to hold the subcollection
 
-        // Add schedule under the Details document
-        await detailsDocRef.collection('Schedule').add({
-          'Time': '10:00',
-          'AMorPM': 0, // 0 for AM, 1 for PM
-          'Activity': 'Check into hotel',
-        });
+        final packingListDocRef = tripDocRef.collection('PackingList');
 
-        await detailsDocRef.collection('Schedule').add({
-          'Time': '02:00',
-          'AMorPM': 1, // 1 for PM
-          'Activity': 'Explore the city',
-        });
-
+        await packingListDocRef.add({'item': 'Toothbrush', 'checked': 0});
         // Show success message
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(content: Text('Trip added successfully!')),

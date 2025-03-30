@@ -175,7 +175,7 @@ class _TripScreenState extends State<TripScreen> {
               const SizedBox(height: 20),
 
               // Packing List Section (use tripName or tripLocation depending on what you prefer)
-              PackingListSection(tripTitle: widget.tripName),  // Use tripName for tripTitle
+              PackingListSection(tripTitle: widget.tripName, tripId: widget.tripId),  // Use tripName for tripTitle
               const SizedBox(height: 40),
             ],
           ),
