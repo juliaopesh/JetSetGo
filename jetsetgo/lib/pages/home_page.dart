@@ -36,11 +36,16 @@ class HomePage extends StatelessWidget {
             final userData = snapshot.data!.data() as Map<String, dynamic>;
             final userName = userData['name'] ?? 'User'; // Default to 'User' if name is missing
 
-            return Text(
-              'Welcome $userName! Here are your upcoming trips...',
-              style: const TextStyle(
-                fontSize: 24, // Large font size
-                color: Colors.black,
+            return SizedBox(
+              width: MediaQuery.of(context).size.width * 0.5, // constrain width
+              child: Text(
+                'Welcome $userName! Here are your upcoming trips...',
+                style: const TextStyle(
+                  fontSize: 24,
+                  color: Colors.black,
+                ),
+                overflow: TextOverflow.ellipsis,
+                maxLines: 2, // wrap if needed
               ),
             );
           },

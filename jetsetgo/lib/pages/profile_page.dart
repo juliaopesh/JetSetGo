@@ -1,6 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:jetsetgo/components/my_button.dart';
 import 'package:jetsetgo/components/navbar.dart'; 
 import 'package:jetsetgo/pages/landing_page.dart'; 
 
@@ -93,7 +94,7 @@ class _ProfilePageState extends State<ProfilePage> {
               // Profile Info Section
               CircleAvatar(
                 radius: 70,
-                backgroundColor: Colors.blue,
+                backgroundColor: const Color.fromARGB(255, 103, 177, 237),
                 child: Icon(
                   Icons.person,
                   size: 80,
@@ -132,16 +133,10 @@ class _ProfilePageState extends State<ProfilePage> {
               ),
               const SizedBox(height: 30),
               // Log Out button
-              ElevatedButton(
-                onPressed: () => _logOut(context), // Log out button
-                child: const Text("Log Out"),
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.red,
-                  padding: EdgeInsets.symmetric(vertical: 15.0, horizontal: 40.0),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(30.0), // Rounded button
-                  ),
-                ),
+              MyButton(
+                text: "Log Out",
+                onTap: () => _logOut(context),
+                color: const Color.fromARGB(255, 242, 151, 144), // Optional: matches your current red theme
               ),
             ],
           ),
