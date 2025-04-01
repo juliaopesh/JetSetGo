@@ -4,6 +4,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:jetsetgo/components/trip_list.dart';
 import 'package:jetsetgo/pages/add_trip.dart';
 import 'package:jetsetgo/components/add_button.dart'; // Import the AddButton component
+import 'package:jetsetgo/components/navbar.dart'; // Import your BottomNavBar component
 
 class HomePage extends StatelessWidget {
   HomePage({super.key});
@@ -67,6 +68,14 @@ class HomePage extends StatelessWidget {
         },
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.endFloat, // Position at bottom right
+
+      // Bottom Navigation Bar added below the floating action button
+      bottomNavigationBar: BottomNavBar(
+        selectedIndex: 0, // Default selected index, change as necessary
+        onItemTapped: (index) {
+         
+        },
+      ),
     );
   }
 }

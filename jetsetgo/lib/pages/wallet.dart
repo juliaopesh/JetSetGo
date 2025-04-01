@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:jetsetgo/components/add_button.dart'; // Import the AddButton component
+import 'package:jetsetgo/components/navbar.dart'; // Import your BottomNavBar component
+import 'package:jetsetgo/pages/home_page.dart'; // Import your HomePage here
 
 class WalletPage extends StatefulWidget {
   final String tripName; // Accept trip name
@@ -21,6 +23,17 @@ class _WalletPageState extends State<WalletPage> {
     setState(() {
       walletItems.removeAt(index);
     });
+  }
+
+  // Add a selectedIndex variable to track the selected bottom nav index
+  int _selectedIndex = 1;
+
+  // Update the bottom navigation tap function to handle the navigation
+  void _onItemTapped(int index) {
+    setState(() {
+      _selectedIndex = index;
+    });
+    // You can add more logic for other items if needed
   }
 
   @override
@@ -60,7 +73,6 @@ class _WalletPageState extends State<WalletPage> {
           ],
         ),
       ),
-
       // Add document button 
       floatingActionButton: SizedBox(
         width: 180,  
@@ -78,6 +90,12 @@ class _WalletPageState extends State<WalletPage> {
         ),
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,  // Center it at bottom
+
+      // Bottom Navigation Bar added below the floating action button
+      bottomNavigationBar: BottomNavBar(
+        selectedIndex: _selectedIndex, // Bind the selectedIndex with BottomNavBar
+        onItemTapped: _onItemTapped, // Pass the tap handler function
+      ),
     );
   }
 }

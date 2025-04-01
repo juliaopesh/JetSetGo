@@ -7,8 +7,8 @@ import 'package:jetsetgo/components/weather_component.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'dart:convert';
-
 import 'package:jetsetgo/pages/wallet.dart';
+import 'package:jetsetgo/components/navbar.dart';
 
 class TripScreen extends StatefulWidget {
   final String tripName;
@@ -51,7 +51,7 @@ class _TripScreenState extends State<TripScreen> {
         'https://api.openweathermap.org/data/2.5/weather?q=$location&appid=$apiKey&units=metric'));
 
     if (response.statusCode == 200) {
-      final Map<String, dynamic> data = json.decode(response.body);
+      final Map<String, dynamic> data = json.decode(response.body); // This line decodes the JSON
       setState(() {
         weatherDescription = data['weather'][0]['description'];
         temperature = data['main']['temp'].toString();
@@ -124,6 +124,18 @@ class _TripScreenState extends State<TripScreen> {
   void initState() {
     super.initState();
     _fetchWeatherData();
+  }
+
+  // Navigation logic for BottomNavBar
+  int _selectedIndex = 0;
+  void _onItemTapped(int index) {
+    setState(() {
+      _selectedIndex = index;
+    });
+    // Add navigation logic if needed, for now, we can just switch between Home and TripScreen
+    if (index == 0) {
+      Navigator.pop(context); // Go back to the previous screen (likely Home)
+    }
   }
 
   @override
@@ -245,6 +257,11 @@ class _TripScreenState extends State<TripScreen> {
             ],
           ),
         ),
+      ),
+      // Use the BottomNavBar component
+      bottomNavigationBar: BottomNavBar(
+        selectedIndex: _selectedIndex,
+        onItemTapped: _onItemTapped,
       ),
     );
   }
