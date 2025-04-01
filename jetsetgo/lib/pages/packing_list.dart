@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:jetsetgo/utils/ai_suggestions.dart';
+import 'package:jetsetgo/utils/ai_packing_suggestions.dart';
 
 class PackingListScreen extends StatefulWidget {
   final String tripTitle;

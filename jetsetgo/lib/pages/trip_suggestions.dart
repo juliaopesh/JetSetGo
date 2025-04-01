@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:intl/intl.dart';
+import 'package:jetsetgo/utils/ai_trip_suggestions.dart';
 
 import 'home_page.dart';
 
@@ -13,15 +14,14 @@ class TripSuggestions extends StatefulWidget {
 }
 
 class _TripSuggestionsState extends State<TripSuggestions> {
-  String favoriteSeason = 'No Preference';
   String idealWeather = 'No Preference';
   String idealSetting = 'No Preference';
-  String idealContinent = 'No Preference';
   String favoriteActivity = 'No Preference';
   final TextEditingController otherFavoritesController = TextEditingController();
 
   DateTime? _startDate;
   DateTime? _endDate;
+  String? selectedDestination;
 
   Future<void> _pickDateRange() async {
     final picked = await showDateRangePicker(
@@ -38,7 +38,7 @@ class _TripSuggestionsState extends State<TripSuggestions> {
     }
   }
 
-  void _showTripOptions() {
+  void _showTripOptions() async {
     if (_startDate == null || _endDate == null) {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text('Please select a trip date range.')),
@@ -46,29 +46,39 @@ class _TripSuggestionsState extends State<TripSuggestions> {
       return;
     }
 
-    showDialog(
-      context: context,
-      builder: (context) {
-        return AlertDialog(
-          title: const Text('Suggested Trips'),
-          content: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              _buildTripOption('Rome, Italy'),
-              _buildTripOption('Syracuse, Italy'),
-              _buildTripOption('Vienna, Austria'),
-              _buildTripOption('Budapest, Hungary'),
-            ],
-          ),
-          actions: [
-            TextButton(
-              onPressed: () => Navigator.pop(context),
-              child: const Text('Close'),
+    try {
+      final suggestions = await fetchTripSuggestions(
+        idealWeather: idealWeather,
+        idealSetting: idealSetting,
+        favoriteActivity: favoriteActivity,
+        otherFavorites: otherFavoritesController.text,
+        startDate: _startDate.toString(),
+        endDate: _endDate.toString(),
+      );
+
+      showDialog(
+        context: context,
+        builder: (context) {
+          return AlertDialog(
+            title: const Text('Suggested Trips'),
+            content: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: suggestions.map((destination) => _buildTripOption(destination)).toList(),
             ),
-          ],
-        );
-      },
-    );
+            actions: [
+              TextButton(
+                onPressed: () => Navigator.pop(context),
+                child: const Text('Close'),
+              ),
+            ],
+          );
+        },
+      );
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Failed to fetch suggestions: $e')),
+      );
+    }
   }
 
   Future<void> _addTripProfile(String destination) async {
@@ -85,10 +95,8 @@ class _TripSuggestionsState extends State<TripSuggestions> {
       'DateReturning': _endDate!.day,
       'Duration': duration,
       'Month': month,
-      'FavoriteSeason': favoriteSeason,
       'IdealWeather': idealWeather,
       'IdealSetting': idealSetting,
-      'IdealContinent': idealContinent,
       'FavoriteActivity': favoriteActivity,
       'OtherFavorites': otherFavoritesController.text,
     };
@@ -151,18 +159,12 @@ class _TripSuggestionsState extends State<TripSuggestions> {
         child: SingleChildScrollView(
           child: Column(
             children: [
-              _buildDropdown('Favorite Season', [
-                'Summer', 'Fall', 'Winter', 'Spring', 'No Preference'
-              ], (value) => setState(() => favoriteSeason = value)),
               _buildDropdown('Ideal Weather', [
                 'Warm', 'Cold', 'Hot', 'No Preference'
               ], (value) => setState(() => idealWeather = value)),
               _buildDropdown('Ideal Setting', [
                 'Cities', 'Towns', 'Villages', 'Nature', 'Remote', 'Islands', 'Cabins', 'Camping', 'No Preference'
               ], (value) => setState(() => idealSetting = value)),
-              _buildDropdown('Ideal Continent', [
-                'East Asia', 'West Asia', 'South Asia', 'North Asia', 'Europe', 'North America', 'Central America', 'South America', 'Australia', 'No Preference'
-              ], (value) => setState(() => idealContinent = value)),
               _buildDropdown('Favorite Activity', [
                 'Sightseeing', 'Hiking', 'Swimming', 'No Preference'
               ], (value) => setState(() => favoriteActivity = value)),
