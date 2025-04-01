@@ -1,4 +1,9 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android">
+    
+    //permission to read external files
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
+
+    
     <application
         android:label="jetsetgo"
         android:name="${applicationName}"
