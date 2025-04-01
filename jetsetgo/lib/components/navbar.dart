@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:jetsetgo/pages/home_page.dart'; // Import your HomePage here
+import 'package:jetsetgo/pages/profile_page.dart'; // Import ProfilePage here
 
 class BottomNavBar extends StatelessWidget {
   final int selectedIndex;
@@ -21,9 +22,12 @@ class BottomNavBar extends StatelessWidget {
             context,
             MaterialPageRoute(builder: (context) => HomePage()), // Always go to HomePage
           );
-        } else {
-          // Call the passed function for other items like Calendar
-          onItemTapped(index);
+        } else if (index == 1) {
+          // Navigate to ProfilePage when Profile icon is tapped
+          Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) => ProfilePage()), // Navigate to ProfilePage
+          );
         }
       },
       items: const [
@@ -32,8 +36,8 @@ class BottomNavBar extends StatelessWidget {
           label: 'Home',
         ),
         BottomNavigationBarItem(
-          icon: Icon(Icons.calendar_today),
-          label: 'Calendar',
+          icon: Icon(Icons.person), // Profile icon instead of calendar
+          label: 'Profile',
         ),
       ],
     );

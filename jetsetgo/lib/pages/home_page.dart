@@ -17,6 +17,7 @@ class HomePage extends StatelessWidget {
       backgroundColor: const Color.fromARGB(255, 255, 255, 255),
       appBar: AppBar(
         toolbarHeight: 80,
+        automaticallyImplyLeading: false, // This removes the back button
         title: StreamBuilder<DocumentSnapshot>(
           stream: FirebaseFirestore.instance
               .collection('users')
