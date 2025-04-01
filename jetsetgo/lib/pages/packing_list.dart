@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'dart:convert';
-import 'package:http/http.dart' as http;
+import 'package:jetsetgo/utils/ai_suggestions.dart';
 
 class PackingListScreen extends StatefulWidget {
   final String tripTitle;
@@ -80,40 +79,14 @@ class _PackingListScreenState extends State<PackingListScreen> {
     );
   }
 
-  Future<void> _getAISuggestions() async {
-    final String geminiApiUrl = 'https://api.gemini.com/ai_suggestions'; // Placeholder
-
-    try {
-      final response = await http.post(
-        Uri.parse(geminiApiUrl),
-        headers: {'Content-Type': 'application/json'},
-        body: json.encode({'trip_title': widget.tripTitle}),
-      );
-
-      if (response.statusCode == 200) {
-        // Handle suggestions
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text("AI suggestions fetched!")),
-        );
-      } else {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text("Error fetching AI suggestions")),
-        );
-      }
-    } catch (e) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text("Error connecting to Gemini API")),
-      );
-    }
-  }
-
   void _showInfoDialog() {
     showDialog(
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
           title: Text("AI Suggestions"),
-          content: Text("This feature provides AI-generated packing recommendations based on your trip."),
+          content: Text(
+              "This feature provides AI-generated packing recommendations based on your trip."),
           actions: [
             TextButton(
               onPressed: () => Navigator.pop(context),
@@ -165,7 +138,8 @@ class _PackingListScreenState extends State<PackingListScreen> {
                         item,
                         style: TextStyle(
                           fontSize: 18,
-                          decoration: checked ? TextDecoration.lineThrough : null,
+                          decoration:
+                              checked ? TextDecoration.lineThrough : null,
                         ),
                       ),
                       trailing: IconButton(
@@ -177,39 +151,91 @@ class _PackingListScreenState extends State<PackingListScreen> {
                 );
         },
       ),
-      floatingActionButton: Row(
-        mainAxisAlignment: MainAxisAlignment.end,
-        children: [
-          GestureDetector(
-            onTap: _showInfoDialog,
-            child: ClipOval(
-              child: Container(
-                width: 30,
-                height: 30,
-                color: const Color.fromARGB(255, 233, 40, 123),
-                alignment: Alignment.center,
-                child: Icon(Icons.info, color: Colors.white, size: 20),
-              ),
-            ),
-          ),
-          SizedBox(width: 10),
-          GestureDetector(
-            onTap: _getAISuggestions,
-            child: ClipRRect(
-              borderRadius: BorderRadius.horizontal(left: Radius.circular(20)),
-              child: Container(
-                width: MediaQuery.of(context).size.width * 0.3,
-                height: 60,
-                color: const Color.fromARGB(255, 233, 40, 123),
-                alignment: Alignment.center,
-                child: Text(
-                  "Get AI Suggestions",
-                  style: TextStyle(color: Colors.white, fontSize: 14),
+      floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
+      floatingActionButton: Container(
+        margin: const EdgeInsets.only(right: 10, bottom: 10),
+        child: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            // Info button
+            GestureDetector(
+              onTap: _showInfoDialog,
+              child: ClipOval(
+                child: Container(
+                  width: 30,
+                  height: 30,
+                  color: const Color.fromARGB(255, 233, 40, 123),
+                  alignment: Alignment.center,
+                  child: Icon(Icons.info, color: Colors.white, size: 20),
                 ),
               ),
             ),
-          ),
-        ],
+            const SizedBox(width: 10),
+            // Get AI Suggestions button
+            GestureDetector(
+              onTap: () async {
+              final user = FirebaseAuth.instance.currentUser!;
+              final tripDocRef = FirebaseFirestore.instance
+                  .collection('users')
+                  .doc(user.uid)
+                  .collection('trip')
+                  .doc(widget.tripId);
+
+              try {
+                // 1. Get trip details (from tripID subcollection)
+                final tripIdSnapshot = await tripDocRef.collection('tripID').get();
+                final tripData = tripIdSnapshot.docs.isNotEmpty ? tripIdSnapshot.docs.first.data() : null;
+
+                if (tripData == null) {
+                  ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("Trip details not found.")));
+                  return;
+                }
+
+                final destination = "${tripData['City']}, ${tripData['Country']}";
+                final startDate = tripData['DateLeaving'].toString(); // Format if needed
+                final endDate = tripData['DateReturning'].toString();
+
+                // 2. Get packing list items
+                final packingSnapshot = await tripDocRef.collection('PackingList').get();
+                final items = packingSnapshot.docs.map((doc) {
+                  final data = doc.data();
+                  return data['item']?.toString() ?? '';
+                }).where((item) => item.isNotEmpty).toList();
+
+                // Navigate to AI Suggestions Screen
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => PackingAISuggestionsScreen(
+                      tripId: widget.tripId,
+                      destination: destination,
+                      startDate: startDate,
+                      endDate: endDate,
+                      existingItems: items,
+                    ),
+                  ),
+                );
+              } catch (e) {
+                print("Error fetching trip info or packing list: $e");
+                ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("Failed to fetch data.")));
+              }
+            },
+
+              child: ClipRRect(
+                borderRadius: BorderRadius.circular(10),
+                child: Container(
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 20, vertical: 14),
+                  color: const Color.fromARGB(255, 233, 40, 123),
+                  child: const Text(
+                    "Get AI Suggestions",
+                    style: TextStyle(color: Colors.white, fontSize: 14),
+                  ),
+                ),
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }
