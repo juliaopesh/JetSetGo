@@ -86,21 +86,52 @@ class _ItinerarySectionState extends State<ItinerarySection> {
 
   // **Function to Remove an Itinerary Day**
   Future<void> _deleteItineraryDay(int index) async {
-    final user = FirebaseAuth.instance.currentUser!;
-    String docId = itineraryDays[index]["id"];
+    final confirm = await showDialog<bool>(
+      context: context, 
+      builder: (context) => AlertDialog(
+        backgroundColor: const Color(0xFF2C2C2E),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+        title: const Text(
+          'Are you sure?',
+          style: TextStyle(color: Colors.white),
+        ),
+        content: const Text(
+          'This will permanently remove this itinerary day.', 
+          style: TextStyle(color: Color(0xFFA1A1A3)),
+        ),
+        actions: [
+          TextButton(
+            child: const Text('Cancel', style: TextStyle(color: Colors.white)),
+            onPressed: () => Navigator.of(context).pop(false), 
+          ),
+          TextButton(
+            child: const Text(
+              'Delete',
+              style: TextStyle(color: Colors.redAccent),
+            ), 
+            onPressed: () => Navigator.of(context).pop(true),
+          ),
+        ]
+      ),
+    ); 
+    
+    if (confirm == true){
+      final user = FirebaseAuth.instance.currentUser!;
+      String docId = itineraryDays[index]["id"];
 
-    await FirebaseFirestore.instance
-        .collection('users')
-        .doc(user.uid)
-        .collection('trip')
-        .doc(tripId)
-        .collection('itinerary')
-        .doc(docId)
-        .delete();
+      await FirebaseFirestore.instance
+          .collection('users')
+          .doc(user.uid)
+          .collection('trip')
+          .doc(tripId)
+          .collection('itinerary')
+          .doc(docId)
+          .delete();
 
-    setState(() {
-      itineraryDays.removeAt(index);
-    });
+      setState(() {
+        itineraryDays.removeAt(index);
+      });
+    }
   }
 
 
@@ -118,7 +149,7 @@ class _ItinerarySectionState extends State<ItinerarySection> {
     onSave: (day, activities) {
       setState(() {
         if (isEditing) {
-          _editItineraryDay(editIndex!, day, activities);
+          _editItineraryDay(editIndex, day, activities);
         } else {
           _addNewItineraryDay(day, activities);
         }
@@ -136,7 +167,7 @@ class _ItinerarySectionState extends State<ItinerarySection> {
         const Text(
           "Itinerary",
           style: TextStyle(
-            fontSize: 24, 
+            fontSize: 24,
             fontWeight: FontWeight.bold,
             color: Colors.white,
           ),
@@ -144,63 +175,84 @@ class _ItinerarySectionState extends State<ItinerarySection> {
         const SizedBox(height: 10),
 
         Padding(
-          padding: const EdgeInsets.symmetric(vertical:10),
+          padding: const EdgeInsets.symmetric(vertical: 10),
           child: itineraryDays.isEmpty
-            ? Container(
-                width: double.infinity,
-                padding: const EdgeInsets.all(24),
-                decoration: BoxDecoration(
-                  color: const Color(0xFF2C2C2E),  
-                  borderRadius: BorderRadius.circular(16),
-                ),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: const [
-                    Icon(Icons.calendar_today, color: Colors.white70, size: 40), 
-                    SizedBox(height: 16),
-                    Text(
-                      "No itinerary days added yet",
-                      textAlign: TextAlign.center,
-                      style: TextStyle(fontSize: 18, color: Colors.white),
+              ? GestureDetector(
+                  onTap: () => _showItineraryDialog(context),
+                  child: Container(
+                    width: double.infinity,
+                    padding: const EdgeInsets.symmetric(vertical: 40),
+                    decoration: BoxDecoration(
+                      color: const Color(0xFF2C2C2E),
+                      borderRadius: BorderRadius.circular(16),
+                      border: Border.all(color: Colors.white10),
                     ),
-                    SizedBox(height: 6),
-                    Text(
-                      "Tap the + icon to start planning your trip :)",
-                      textAlign: TextAlign.center,
-                      style: TextStyle(fontSize: 14, color: Color(0xFFA1A1A3)),
-                    ), 
-                  ],
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: const [
+                        Icon(Icons.add_circle_outline, size: 40, color: Colors.white70),
+                        SizedBox(height: 12),
+                        Text(
+                          "Start building your itinerary",
+                          style: TextStyle(
+                            fontSize: 16,
+                            color: Colors.white,
+                            fontWeight: FontWeight.w500,
+                          ),
+                        ),
+                        SizedBox(height: 6),
+                        Text(
+                          "Tap to add your first day",
+                          style: TextStyle(fontSize: 14, color: Color(0xFFA1A1A3)),
+                        ),
+                      ],
+                    ),
+                  ),
                 )
-              )
-            : Wrap(
-              spacing: 16, 
-              runSpacing: 16, 
-              children: [
-                ...itineraryDays.asMap(). entries.map((entry){
-                  int index = entry.key; 
-                  var day = entry.value; 
-                  return ItineraryDayCard(
-                    day: day["day"]!,
-                    activities: day["activities"]!, 
-                    onDelete: () => _deleteItineraryDay(index), 
-                    onEdit: () => _showItineraryDialog(context, editIndex: index), 
-                  ); 
-                }), 
-              ], 
-            ), 
-      
+              : Wrap(
+                  spacing: 16,
+                  runSpacing: 16,
+                  children: [
+                    ...itineraryDays.asMap().entries.map((entry) {
+                      int index = entry.key;
+                      var day = entry.value;
+                      return ItineraryDayCard(
+                        day: day["day"]!,
+                        activities: day["activities"]!,
+                        onDelete: () => _deleteItineraryDay(index),
+                        onEdit: () => _showItineraryDialog(context, editIndex: index),
+                      );
+                    }),
+                    // Add New Day Card (when itinerary exists)
+                    GestureDetector(
+                      onTap: () => _showItineraryDialog(context),
+                      child: Container(
+                        width: 200,
+                        padding: const EdgeInsets.symmetric(vertical: 32),
+                        decoration: BoxDecoration(
+                          color: const Color(0xFF2C2C2E),
+                          borderRadius: BorderRadius.circular(16),
+                          border: Border.all(color: Colors.white10),
+                        ),
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: const [
+                            Icon(Icons.add, size: 36, color: Colors.white70),
+                            SizedBox(height: 10),
+                            Text(
+                              "Add Day",
+                              style: TextStyle(color: Colors.white, fontSize: 16),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
         ),
-
-        // add button always shown 
-        Align(
-          alignment: Alignment.centerLeft,
-          child: IconButton(
-            icon: const Icon(Icons.add_circle, size: 40, color: Colors.green),
-            onPressed: () => _showItineraryDialog(context), 
-          ),
-        ), 
-      ], 
-    ); 
+      ],
+    );
   }
+
 }
   

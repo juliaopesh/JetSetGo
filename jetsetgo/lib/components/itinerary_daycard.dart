@@ -31,20 +31,21 @@ class _ItineraryDayCardState extends State<ItineraryDayCard> {
   Widget build(BuildContext context) {
     return Card(
       elevation: 3,
+      color: const Color(0xFF2C2C2E),
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
       child: SizedBox(
-        width: 200,
+        width: 240,
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // Title section
+            // Title section (and delete button)
             Container(
-              padding: const EdgeInsets.all(10),
+              padding: const EdgeInsets.all(12),
               decoration: const BoxDecoration(
-                color: Color.fromARGB(255, 187, 238, 198),
+                color: Color(0xFF3A3A3C),
                 borderRadius: BorderRadius.only(
-                  topLeft: Radius.circular(10),
-                  topRight: Radius.circular(10),
+                  topLeft: Radius.circular(16),
+                  topRight: Radius.circular(16),
                 ),
               ),
               child: Row(
@@ -55,34 +56,62 @@ class _ItineraryDayCardState extends State<ItineraryDayCard> {
                     style: const TextStyle(
                       fontSize: 20,
                       fontWeight: FontWeight.bold,
-                      color: Colors.black,
+                      color: Colors.white,
                     ),
                   ),
                   IconButton(
-                    icon: const Icon(Icons.delete, color: Colors.red),
-                    onPressed: widget.onDelete,
-                  ),
-                ],
-              ),
-            ),
+                    icon: const Icon(Icons.delete_outline, color: Colors.redAccent),
+                    onPressed: () async {
+                    final confirm = await showDialog<bool>(
+                      context: context,
+                      builder: (context) => AlertDialog(
+                        backgroundColor: const Color(0xFF2C2C2E),
+                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                        title: const Text('Delete this day?', style: TextStyle(color: Colors.white)),
+                        content: const Text(
+                          'Are you sure you want to remove this itinerary day?',
+                          style: TextStyle(color: Color(0xFFA1A1A3)),
+                        ),
+                        actions: [
+                          TextButton(
+                            onPressed: () => Navigator.pop(context, false),
+                            child: const Text('Cancel', style: TextStyle(color: Colors.white)),
+                          ),
+                          TextButton(
+                            onPressed: () => Navigator.pop(context, true),
+                            child: const Text('Delete', style: TextStyle(color: Colors.redAccent)),
+                          ),
+                        ],
+                      ),
+                    );
 
-            // Scrollable activities section
-            SizedBox(
-              height: 150,
+                    if (confirm == true){
+                      widget.onDelete(); 
+                    }
+                  }
+                ), 
+              ],
+            ),
+          ),
+
+            // Activities List!!
+        
+            Container(
+              constraints: const BoxConstraints(maxHeight: 160),
+              padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
               child: Scrollbar(
                 controller: _scrollController,
                 thumbVisibility: true,
                 child: SingleChildScrollView(
                   controller: _scrollController,
-                  padding: const EdgeInsets.all(12),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: widget.activities.map((activity) {
                       return Padding(
-                        padding: const EdgeInsets.symmetric(vertical: 5),
+                        padding: const EdgeInsets.symmetric(vertical: 4),
                         child: Text(
                           "• $activity",
-                          style: const TextStyle(fontSize: 16),
+                          style: const TextStyle(fontSize: 15, color: Colors.white70),
                         ),
                       );
                     }).toList(),
@@ -91,18 +120,20 @@ class _ItineraryDayCardState extends State<ItineraryDayCard> {
               ),
             ),
 
-            // Button pinned at the bottom
+            // Edit Button
             Padding(
-              padding: const EdgeInsets.all(12.0),
+              padding: const EdgeInsets.fromLTRB(12, 0, 12, 12),
               child: SizedBox(
                 width: double.infinity,
                 child: ElevatedButton(
                   onPressed: widget.onEdit,
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: Color.fromARGB(255, 181, 234, 193),
-                    foregroundColor: Colors.black,
+                    backgroundColor: const Color(0xFFD76C5B), // Terracotta
+                    foregroundColor: Colors.white,
+                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                    padding: const EdgeInsets.symmetric(vertical: 14),
                   ),
-                  child: const Text("Edit Itinerary Card"),
+                  child: const Text("Edit Itinerary Day"),
                 ),
               ),
             ),
@@ -110,5 +141,8 @@ class _ItineraryDayCardState extends State<ItineraryDayCard> {
         ),
       ),
     );
+
+
   }
-}
+} 
+ 

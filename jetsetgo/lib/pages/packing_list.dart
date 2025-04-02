@@ -47,7 +47,46 @@ class _PackingListScreenState extends State<PackingListScreen> {
   }
 
   Future<void> _deleteItem(String id) async {
-    await _packingListRef.doc(id).delete();
+    final confirm = await showDialog<bool>(
+      context: context,
+      builder: (context) => AlertDialog(
+        backgroundColor: const Color(0xFF2C2C2E),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+        title: const Text(
+          'Delete this item?',
+          style: TextStyle(color: Colors.white),
+        ),
+        content: const Text(
+          'Are you sure you want to remove this from your packing list?',
+          style: TextStyle(color: Color(0xFFA1A1A3)),
+        ),
+        actions: [
+          TextButton(
+            child: const Text('Cancel', style: TextStyle(color: Colors.white)),
+            onPressed: () => Navigator.of(context).pop(false),
+          ),
+          TextButton(
+            child: const Text(
+              'Delete',
+              style: TextStyle(color: Colors.redAccent),
+            ),
+            onPressed: () => Navigator.of(context).pop(true),
+          ),
+        ],
+      ),
+    );
+
+    if (confirm == true) {
+      await _packingListRef.doc(id).delete();
+
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text("Item deleted"),
+          backgroundColor: Color(0xFF2C2C2E),
+          behavior: SnackBarBehavior.floating,
+        ),
+      );
+    }
   }
 
   void _showAddItemDialog() {
@@ -143,7 +182,7 @@ class _PackingListScreenState extends State<PackingListScreen> {
                         ),
                       ),
                       trailing: IconButton(
-                        icon: Icon(Icons.delete, color: Colors.red),
+                        icon: Icon(Icons.delete_outline, color: Colors.red),
                         onPressed: () => _deleteItem(doc.id),
                       ),
                     );
