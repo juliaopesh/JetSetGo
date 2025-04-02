@@ -19,11 +19,11 @@ class ItineraryDayCard extends StatefulWidget {
 }
 
 class _ItineraryDayCardState extends State<ItineraryDayCard> {
-  final ScrollController _scrollController = ScrollController(); // ✅ Attach ScrollController
+  final ScrollController _scrollController = ScrollController();
 
   @override
   void dispose() {
-    _scrollController.dispose(); // ✅ Clean up memory
+    _scrollController.dispose();
     super.dispose();
   }
 
@@ -31,15 +31,13 @@ class _ItineraryDayCardState extends State<ItineraryDayCard> {
   Widget build(BuildContext context) {
     return Card(
       elevation: 3,
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(10),
-      ),
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
       child: SizedBox(
-        width: 250,
+        width: 200,
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // **Fixed Title Section**
+            // Title section
             Container(
               padding: const EdgeInsets.all(10),
               decoration: const BoxDecoration(
@@ -68,44 +66,43 @@ class _ItineraryDayCardState extends State<ItineraryDayCard> {
               ),
             ),
 
-            // **Scrollable Activities List**
+            // Scrollable activities section
             SizedBox(
-              height: 150, // ✅ Keeps height fixed while allowing scrolling
+              height: 150,
               child: Scrollbar(
-                controller: _scrollController, // ✅ Attach the controller to Scrollbar
-                thumbVisibility: true, // ✅ Makes the scrollbar always visible
+                controller: _scrollController,
+                thumbVisibility: true,
                 child: SingleChildScrollView(
-                  controller: _scrollController, // ✅ Attach the controller to the ScrollView
+                  controller: _scrollController,
                   padding: const EdgeInsets.all(12),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      // Activities List
-                      ...widget.activities.map((activity) {
-                        return Padding(
-                          padding: const EdgeInsets.symmetric(vertical: 5),
-                          child: Text(
-                            "• $activity",
-                            style: const TextStyle(fontSize: 16),
-                          ),
-                        );
-                      }).toList(),
-
-                      // **Edit Button (inside scrollable area)**
-                      const SizedBox(height: 10, width: 50),
-                      SizedBox(
-                        width: double.infinity, // Makes it take the full width of the parent
-                        child: ElevatedButton(
-                          onPressed: widget.onEdit,
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor: const Color.fromARGB(255, 15, 106, 55),
-                            foregroundColor: Colors.white,
-                          ),
-                          child: const Text("Edit Itinerary Card"),
+                    children: widget.activities.map((activity) {
+                      return Padding(
+                        padding: const EdgeInsets.symmetric(vertical: 5),
+                        child: Text(
+                          "• $activity",
+                          style: const TextStyle(fontSize: 16),
                         ),
-                      )
-                    ],
+                      );
+                    }).toList(),
                   ),
+                ),
+              ),
+            ),
+
+            // Button pinned at the bottom
+            Padding(
+              padding: const EdgeInsets.all(12.0),
+              child: SizedBox(
+                width: double.infinity,
+                child: ElevatedButton(
+                  onPressed: widget.onEdit,
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Color.fromARGB(255, 181, 234, 193),
+                    foregroundColor: Colors.black,
+                  ),
+                  child: const Text("Edit Itinerary Card"),
                 ),
               ),
             ),

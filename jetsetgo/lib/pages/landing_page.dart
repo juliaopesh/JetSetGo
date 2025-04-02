@@ -18,15 +18,20 @@ class LandingPage extends StatefulWidget {
 class _LandingPageState extends State<LandingPage> {
   int _currentImageIndex = 0;
   List<String> _imagePaths = [];
+  late Timer _timer; // Declare the Timer variable
 
   @override
   void initState() {
     super.initState();
     _loadImagesFromAssets();
-    Timer.periodic(Duration(seconds: 5), (timer) {
-      if (_imagePaths.isNotEmpty) {
+    // Set the timer in initState
+    _timer = Timer.periodic(Duration(seconds: 5), (timer) {
+      // Only update state if the widget is still in the tree
+      if (mounted) {
         setState(() {
-          _currentImageIndex = (_currentImageIndex + 1) % _imagePaths.length;
+          if (_imagePaths.isNotEmpty) {
+            _currentImageIndex = (_currentImageIndex + 1) % _imagePaths.length;
+          }
         });
       }
     });
@@ -42,9 +47,18 @@ class _LandingPageState extends State<LandingPage> {
             (key.endsWith('.png') || key.endsWith('.jpg') || key.endsWith('.jpeg')))
         .toList();
 
-    setState(() {
-      _imagePaths = imagePaths;
-    });
+    if (mounted) { // Only call setState if widget is still in the tree
+      setState(() {
+        _imagePaths = imagePaths;
+      });
+    }
+  }
+
+  @override
+  void dispose() {
+    // Cancel the timer when the widget is disposed
+    _timer.cancel();
+    super.dispose();
   }
 
   @override

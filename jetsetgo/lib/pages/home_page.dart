@@ -17,6 +17,7 @@ class HomePage extends StatelessWidget {
       backgroundColor: const Color(0xFF1C1C1E),
       appBar: AppBar(
         toolbarHeight: 80,
+        automaticallyImplyLeading: false, // This removes the back button
         title: StreamBuilder<DocumentSnapshot>(
           stream: FirebaseFirestore.instance
               .collection('users')
@@ -35,11 +36,16 @@ class HomePage extends StatelessWidget {
             final userData = snapshot.data!.data() as Map<String, dynamic>;
             final userName = userData['name'] ?? 'User'; // Default to 'User' if name is missing
 
-            return Text(
-              'Welcome $userName! Here are your upcoming trips...',
-              style: const TextStyle(
-                fontSize: 24, // Large font size
-                color: Colors.white,
+            return SizedBox(
+              width: MediaQuery.of(context).size.width * 0.5, // constrain width
+              child: Text(
+                'Welcome $userName! Here are your upcoming trips...',
+                style: const TextStyle(
+                  fontSize: 24,
+                  color: Colors.white,
+                ),
+                overflow: TextOverflow.ellipsis,
+                maxLines: 2, // wrap if needed
               ),
             );
           },
