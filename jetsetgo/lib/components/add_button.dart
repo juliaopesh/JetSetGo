@@ -17,7 +17,7 @@ class AddButton extends StatelessWidget {
       height: 80, // Set the height of the button
       child: FloatingActionButton(
         onPressed: onPressed,
-        backgroundColor: const Color.fromARGB(255, 212, 187, 230), // Button color
+        backgroundColor: const Color(0xFFFF453A),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [

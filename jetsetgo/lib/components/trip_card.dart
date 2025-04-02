@@ -21,15 +21,17 @@ class TripCard extends StatelessWidget {
       child: Card(
         elevation: 5,
         margin: const EdgeInsets.symmetric(vertical: 10, horizontal: 12),
-
+        color: const Color(0xFF2C2C2E), // Dark card background
+        
         shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(16), //rounded edges
+          borderRadius: BorderRadius.circular(16), //rounded edges\
+          side: const BorderSide(color: Color(0xFF3A3A3C)), //subtle border color 
         ),
 
         child: Container(
 
           width: 300, 
-          padding: const EdgeInsets.all(15),
+          padding: const EdgeInsets.all(16),
 
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -42,42 +44,48 @@ class TripCard extends StatelessWidget {
                     Text(
                       destination,
                       style: const TextStyle(
-                        fontSize: 24, // Slightly bigger
-                        fontWeight: FontWeight.w600, // Slightly lighter
-                        fontFamily: 'Pacifico',
-                        letterSpacing: 1.2, // Adds spacing between letters
+                        fontSize: 22, // Slightly bigger
+                        fontWeight: FontWeight.w800, // Slightly lighter
+                        color: Colors.white,
                       ),
                     ),
         
-                    const SizedBox(height: 5),
+                    const SizedBox(height: 6),
                     Text(
                       dates.toUpperCase(),
                       style: const TextStyle(
-                        fontSize: 16,
+                        fontSize: 14,
                         fontWeight: FontWeight.bold,
-                        color: Color.fromARGB(255, 44, 5, 51),
+                        color: Color(0xFFA1A1A3),
                       ),
                     ),
+                    const SizedBox(height: 2),
                     Text(
                       duration,
                       style: const TextStyle(
                         fontSize: 14,
-                        color: Colors.black87,
+                        color: Color(0xFFA1A1A3),
                       ),
                     ),
                   ],
                 ),
               ),
 
+
               //icon section
               Container(
-                width: 60,
-                height: 60,
+                width: 56,
+                height: 56,
                 decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(15),
-                  border: Border.all(color: Colors.white, width: 2),
+                  borderRadius: BorderRadius.circular(12),
+                  color: Colors.white.withAlpha((0.08 * 255).round()), // subtle icon bg : ~20 alpha
+                  border: Border.all(color: Colors.white12),    //,width: 2),
                 ),
-                child: Icon(Icons.airplanemode_active, size: 50, color: Colors.blue),
+                child: Icon(
+                  Icons.airplanemode_active, 
+                  size: 32, 
+                  color: Color(0xFFD76C5B), // soft red accent
+                ),
               ),
             ],
           ),

@@ -15,20 +15,23 @@ class MyButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SizedBox(
-      width: 200, // Adjust width as needed
+      width: 300, //fill parent container
       child: ElevatedButton(
         style: ElevatedButton.styleFrom(
-          backgroundColor: color ?? const Color.fromARGB(255, 212, 187, 230), // Default: Blue
+          backgroundColor: color ?? const Color(0xFFD76C5B), // Warm terracotta default
           foregroundColor: Colors.white, // Text color
-          padding: const EdgeInsets.symmetric(vertical: 15),
+          padding: const EdgeInsets.symmetric(vertical: 16),
           shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(20),
+            borderRadius: BorderRadius.circular(16),
           ),
         ),
         onPressed: onTap,
         child: Text(
           text,
-          style: const TextStyle(fontSize: 14),
+          style: const TextStyle(
+            fontSize: 16,
+            fontWeight: FontWeight.w600,
+          ),
         ),
       ),
     );

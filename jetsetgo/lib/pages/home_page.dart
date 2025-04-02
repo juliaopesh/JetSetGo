@@ -14,7 +14,7 @@ class HomePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color.fromARGB(255, 255, 255, 255),
+      backgroundColor: const Color(0xFF1C1C1E),
       appBar: AppBar(
         toolbarHeight: 80,
         title: StreamBuilder<DocumentSnapshot>(
@@ -39,12 +39,12 @@ class HomePage extends StatelessWidget {
               'Welcome $userName! Here are your upcoming trips...',
               style: const TextStyle(
                 fontSize: 24, // Large font size
-                color: Colors.black,
+                color: Colors.white,
               ),
             );
           },
         ),
-        backgroundColor: const Color.fromARGB(255, 245, 244, 246),
+        backgroundColor: const Color(0xFF1C1C1E),
       ),
       body: Padding(
         padding: const EdgeInsets.all(20.0),

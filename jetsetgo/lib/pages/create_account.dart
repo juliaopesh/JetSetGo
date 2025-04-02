@@ -16,7 +16,7 @@ class CreateAccountPage extends StatelessWidget {
 
   // sign user up method
   void signUserUp(BuildContext context) async {
-    // ✅ Show loading animation
+    //showing loading animation!
     showDialog(
       context: context,
       barrierDismissible: false, // Prevent closing manually
@@ -32,9 +32,9 @@ class CreateAccountPage extends StatelessWidget {
 
     String errorMessage = "An error occurred. Please try again.";
 
-    // ✅ Check if fields are empty
+    // Check if fields are empty
     if (email.isEmpty || password.isEmpty || confirmPassword.isEmpty || name.isEmpty) {
-      Navigator.pop(context); // ✅ Remove loading screen
+      Navigator.pop(context); //Remove loading screen
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text("All fields are required.")),
       );
@@ -69,18 +69,18 @@ class CreateAccountPage extends StatelessWidget {
             });
       }
 
-      Navigator.pop(context); // ✅ Remove loading screen before navigation
+      Navigator.pop(context); //remove loading screen before navigation
 
-      // ✅ Redirect to home after successful signup
+      //redirect to home after successful signup
       Navigator.pushReplacement(
         // ignore: use_build_context_synchronously
         context,
         MaterialPageRoute(builder: (context) => HomePage()),
       );
     } on FirebaseAuthException catch (e) {
-      Navigator.pop(context); // ✅ Remove loading screen before showing error
+      Navigator.pop(context); //Remove loading screen before showing error
 
-      // ✅ Handle specific Firebase errors
+      // Handle specific Firebase errors
       if (e.code == 'email-already-in-use') {
         errorMessage = "Email is already in use.";
       } else if (e.code == 'weak-password') {
@@ -89,7 +89,7 @@ class CreateAccountPage extends StatelessWidget {
         errorMessage = "Invalid email format.";
       }
 
-      // ✅ Show error message in SnackBar
+      // Show error message in SnackBar
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text(errorMessage)),
       );
@@ -101,74 +101,80 @@ class CreateAccountPage extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         elevation: 0,
-        backgroundColor: Colors.white,
+        backgroundColor: Color(0xFF1C1C1E),
+        iconTheme: const IconThemeData(color: Colors.white),
       ),
-      backgroundColor: Colors.white,
+
+      backgroundColor: const Color(0xFF1C1C1E),
       body: SafeArea(
         child: Center(
-          child: Column(
+          child: SingleChildScrollView(
+            padding: const EdgeInsets.symmetric(horizontal: 30),
+            child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              const SizedBox(height: 50),
+              children: [
+                const SizedBox(height: 40),
 
-              // welcome back, you've been missed!
-              const Text(
-                'Let\'s create an account for you!',
-                style: TextStyle(
-                  color: Colors.black,
-                  fontSize: 20,
+                // welcome back, you've been missed!
+                const Text(
+                  'Let\'s create an account for you!',
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontSize: 20,
+                    fontWeight: FontWeight.w600,
+                  ),
                 ),
-              ),
 
-              const SizedBox(height: 25),
+                const SizedBox(height: 30),
 
-              // name textfield
-              MyTextField(
-                controller: nameController,
-                hintText: 'Name',
-                obscureText: false,
-              ),
+                // name textfield
+                MyTextField(
+                  controller: nameController,
+                  hintText: 'Name',
+                  obscureText: false,
+                ),
 
-              const SizedBox(height: 10),
+                const SizedBox(height: 12),
 
-              // email textfield
-              MyTextField(
-                controller: emailController,
-                hintText: 'Email',
-                obscureText: false,
-              ),
+                // email textfield
+                MyTextField(
+                  controller: emailController,
+                  hintText: 'Email',
+                  obscureText: false,
+                ),
 
-              const SizedBox(height: 10),
+                const SizedBox(height: 12),
 
-              // password textfield
-              MyTextField(
-                controller: passwordController,
-                hintText: 'Password',
-                obscureText: true,
-              ),
+                // password textfield
+                MyTextField(
+                  controller: passwordController,
+                  hintText: 'Password',
+                  obscureText: true,
+                ),
 
-              const SizedBox(height: 10),
+                const SizedBox(height: 12),
 
-              // confirm password textfield
-              MyTextField(
-                controller: confirmPasswordController,
-                hintText: 'Confirm Password',
-                obscureText: true,
-              ),
+                // confirm password textfield
+                MyTextField(
+                  controller: confirmPasswordController,
+                  hintText: 'Confirm Password',
+                  obscureText: true,
+                ),
 
-              const SizedBox(height: 20),
+                const SizedBox(height: 24),
 
-              // sign up button
-              MyButton(
-                text: 'Sign up',
-                onTap: () => signUserUp(context), // ✅ Pass context to show errors
-              ),
+                // sign up button
+                MyButton(
+                  text: 'Sign up',
+                  onTap: () => signUserUp(context), //Pass context to show errors
+                ),
 
-              const SizedBox(height: 50),
-            ],
+                const SizedBox(height: 50),
+              ],
+            ),
           ),
         ),
-      ),
+      )
     );
   }
 }

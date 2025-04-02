@@ -11,7 +11,7 @@ class ForgotPasswordPage extends StatefulWidget {
 }
 
 class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
-  final _emailController = TextEditingController(); // ✅ Controller for email input
+  final _emailController = TextEditingController(); //Controller for email input
 
   @override
   void dispose() {
@@ -25,7 +25,7 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
         email: _emailController.text.trim(),
       );
 
-      // ✅ Success Message
+      // success!!
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
           content: Text(
@@ -38,7 +38,7 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
     } on FirebaseAuthException catch (e) {
       String errorMessage = "An error occurred. Please try again.";
 
-      // ✅ Handle Specific Firebase Errors
+      //Handle Specific Firebase Errors
       if (e.code == 'user-not-found') {
         errorMessage = "No account found with this email.";
       } else if (e.code == 'invalid-email') {
@@ -49,7 +49,7 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
         errorMessage = "Too many attempts. Try again later.";
       }
 
-      // ✅ Show Error Message to User
+      //show Error Message to User
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: Text(
@@ -65,50 +65,57 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor: const Color(0xFF1C1C1E),
       appBar: AppBar(
         elevation: 0,
-        backgroundColor: Colors.white,
+        backgroundColor: const Color(0xFF1C1C1E),
+        iconTheme: const IconThemeData(color: Colors.white),
+
       ),
       body: SafeArea(
         child: Center(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              const SizedBox(height: 50),
+          child: SingleChildScrollView(
+            padding: const EdgeInsets.symmetric(horizontal: 30),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                const SizedBox(height: 40),
 
-              // Instruction text
-              const Padding(
-                padding: EdgeInsets.symmetric(horizontal: 25.0),
-                child: Text(
-                  'Enter your email and we will send you a link to reset your password',
+                // Instruction text
+                const Text(
+                  'Please provide your email and we will send you a link to reset your password :)',
                   textAlign: TextAlign.center,
-                  style: TextStyle(fontSize: 18, color: Colors.black),
+                  style: TextStyle(
+                    fontSize: 18, 
+                    color: Colors.white,
+                    fontWeight: FontWeight.w500,
+                  ),
                 ),
-              ),
 
-              const SizedBox(height: 25),
+                const SizedBox(height: 30),
 
-              // Email text field
-              MyTextField(
-                controller: _emailController,
-                hintText: 'Email',
-                obscureText: false,
-              ),
+                // Email text field
+                MyTextField(
+                  controller: _emailController,
+                  hintText: 'Email',
+                  obscureText: false,
+                ),
 
-              const SizedBox(height: 25),
+                const SizedBox(height: 24),
 
-              // Submit button
-              MyButton(
-                text: 'Reset Password',
-                onTap: passwordReset, // ✅ Now properly handles errors and success
-              ),
+                // Submit button
+                MyButton(
+                  text: 'Reset Password',
+                  onTap: passwordReset, // Now properly handles errors and success
+                ),
 
-              const SizedBox(height: 50),
-            ],
+                const SizedBox(height: 50),
+              ],
+            ),
           ),
-        ),
+        )
       ),
     );
   }
+
 }

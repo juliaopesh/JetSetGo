@@ -19,6 +19,22 @@ class JetSetGo extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
+      theme: ThemeData.dark().copyWith(
+        scaffoldBackgroundColor: const Color(0xFF1C1C1E),
+        cardColor: const Color(0xFF2C2C2E),
+        primaryColor: const Color(0xFFFF453A),
+        textTheme: ThemeData.dark().textTheme.apply(
+              fontFamily: 'Inter',
+              bodyColor: Colors.white,
+              displayColor: Colors.white,
+            ),
+        appBarTheme: const AppBarTheme(
+          backgroundColor: Color(0xFF1C1C1E),
+          elevation: 0,
+          titleTextStyle: TextStyle(fontSize: 24, color: Colors.white),
+          iconTheme: IconThemeData(color: Colors.white),
+        ),
+      ),
       home: LandingPage(),
     );
   }
