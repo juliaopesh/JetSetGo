@@ -39,7 +39,7 @@ class HomePage extends StatelessWidget {
             return SizedBox(
               width: MediaQuery.of(context).size.width * 0.5, // constrain width
               child: Text(
-                'Welcome $userName! Here are your upcoming trips...',
+                'Welcome Back $userName! Here are your upcoming trips...',
                 style: const TextStyle(
                   fontSize: 24,
                   color: Colors.white,

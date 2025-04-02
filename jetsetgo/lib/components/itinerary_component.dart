@@ -135,36 +135,72 @@ class _ItinerarySectionState extends State<ItinerarySection> {
       children: [
         const Text(
           "Itinerary",
-          style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
-        ),
-        const SizedBox(height: 10),
-        SingleChildScrollView(
-          child: Padding(
-            padding: const EdgeInsets.symmetric(vertical: 10),
-            child: Wrap(
-              spacing: 16, // space between cards horizontally
-              runSpacing: 16, // space between cards vertically
-              children: [
-                ...itineraryDays.asMap().entries.map((entry) {
-                  int index = entry.key;
-                  var day = entry.value;
-                  return ItineraryDayCard(
-                    day: day["day"]!,
-                    activities: day["activities"]!,
-                    onDelete: () => _deleteItineraryDay(index),
-                    onEdit: () => _showItineraryDialog(context, editIndex: index),
-                  );
-                }),
-                IconButton(
-                  icon: const Icon(Icons.add_circle, size: 40, color: Colors.green,),
-                  onPressed: () => _showItineraryDialog(context),
-                ),
-              ],
-            ),
+          style: TextStyle(
+            fontSize: 24, 
+            fontWeight: FontWeight.bold,
+            color: Colors.white,
           ),
         ),
+        const SizedBox(height: 10),
 
-      ],
-    );
+        Padding(
+          padding: const EdgeInsets.symmetric(vertical:10),
+          child: itineraryDays.isEmpty
+            ? Container(
+                width: double.infinity,
+                padding: const EdgeInsets.all(24),
+                decoration: BoxDecoration(
+                  color: const Color(0xFF2C2C2E),  
+                  borderRadius: BorderRadius.circular(16),
+                ),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: const [
+                    Icon(Icons.calendar_today, color: Colors.white70, size: 40), 
+                    SizedBox(height: 16),
+                    Text(
+                      "No itinerary days added yet",
+                      textAlign: TextAlign.center,
+                      style: TextStyle(fontSize: 18, color: Colors.white),
+                    ),
+                    SizedBox(height: 6),
+                    Text(
+                      "Tap the + icon to start planning your trip :)",
+                      textAlign: TextAlign.center,
+                      style: TextStyle(fontSize: 14, color: Color(0xFFA1A1A3)),
+                    ), 
+                  ],
+                )
+              )
+            : Wrap(
+              spacing: 16, 
+              runSpacing: 16, 
+              children: [
+                ...itineraryDays.asMap(). entries.map((entry){
+                  int index = entry.key; 
+                  var day = entry.value; 
+                  return ItineraryDayCard(
+                    day: day["day"]!,
+                    activities: day["activities"]!, 
+                    onDelete: () => _deleteItineraryDay(index), 
+                    onEdit: () => _showItineraryDialog(context, editIndex: index), 
+                  ); 
+                }), 
+              ], 
+            ), 
+      
+        ),
+
+        // add button always shown 
+        Align(
+          alignment: Alignment.centerLeft,
+          child: IconButton(
+            icon: const Icon(Icons.add_circle, size: 40, color: Colors.green),
+            onPressed: () => _showItineraryDialog(context), 
+          ),
+        ), 
+      ], 
+    ); 
   }
 }
+  
