@@ -141,36 +141,39 @@ class _TripScreenState extends State<TripScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor: const Color(0xFF1C1C1E),
       appBar: AppBar(
         toolbarHeight: 80,
         title: Text(
           'Trip Details',
           style: const TextStyle(
             fontSize: 22,
-            fontWeight: FontWeight.bold,
-            color: Colors.black,
+            color: Colors.white70,
           ),
         ),
-        backgroundColor: const Color.fromARGB(255, 245, 244, 246),
+        backgroundColor: const Color(0xFF1C1C1E),
         centerTitle: true,
         actions: [
-          IconButton(
-            icon: const Icon(Icons.delete, color: Colors.red),
-            iconSize: 30, // Increased icon size
-            onPressed: showDeleteConfirmationDialog,
+          Padding(
+            padding: const EdgeInsets.only(right: 12),
+            child: IconButton(
+              icon: const Icon(Icons.delete_outline, color: Colors.redAccent),
+              iconSize: 40,
+              onPressed: showDeleteConfirmationDialog,
+            ),
           ),
         ],
       ),
       body: SingleChildScrollView(
         child: Padding(
-          padding: const EdgeInsets.all(20.0),
+          padding: const EdgeInsets.all(15.0),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               // Title Box
               Card(
-                elevation: 5,
+                color: const Color(0xFF2C2C2E),
+                elevation: 4,
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(12),
                 ),
@@ -185,18 +188,18 @@ class _TripScreenState extends State<TripScreen> {
                       Text(
                         "My trip to...",
                         style: TextStyle(
-                          fontSize: 20,
+                          fontSize: 25,
                           fontWeight: FontWeight.w400,
-                          color: Colors.black,
+                          color: Colors.white70,
                         ),
                       ),
                       const SizedBox(height: 5),
                       Text(
                         widget.tripName.toUpperCase(),
                         style: const TextStyle(
-                          fontSize: 32,
-                          fontWeight: FontWeight.bold,
-                          color: Colors.black,
+                          fontSize: 35,
+                          //fontWeight: FontWeight.bold,
+                          color: Colors.white,
                         ),
                       ),
                       const SizedBox(height: 5),
@@ -205,7 +208,7 @@ class _TripScreenState extends State<TripScreen> {
                         style: const TextStyle(
                           fontSize: 16,
                           fontWeight: FontWeight.w500,
-                          color: Colors.black54,
+                          color: Color(0xFFA1A1A3),
                         ),
                       ),
                     ],

@@ -167,12 +167,12 @@ class _ItinerarySectionState extends State<ItinerarySection> {
         const Text(
           "Itinerary",
           style: TextStyle(
-            fontSize: 24,
+            fontSize: 20,
             fontWeight: FontWeight.bold,
             color: Colors.white,
           ),
         ),
-        const SizedBox(height: 10),
+        const SizedBox(height: 5),
 
         Padding(
           padding: const EdgeInsets.symmetric(vertical: 10),
