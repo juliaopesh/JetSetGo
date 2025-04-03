@@ -5,7 +5,6 @@ import 'package:intl/intl.dart';
 import 'package:jetsetgo/components/my_textfield.dart';
 import 'package:jetsetgo/components/my_button.dart';
 import 'trip_suggestions.dart';
-import '../components/add_button.dart'; // still needed if you're keeping FAB
 
 class AddTrip extends StatefulWidget {
   const AddTrip({super.key});
@@ -101,17 +100,46 @@ class _AddTripState extends State<AddTrip> {
     return Scaffold(
       backgroundColor: const Color(0xFF1C1C1E),
       appBar: AppBar(
-        toolbarHeight: 100,
+        toolbarHeight: 80,
         title: const Text(
           'Add a New Trip',
           style: TextStyle(fontSize: 24, color: Colors.white),
-           overflow: TextOverflow.ellipsis,
-           maxLines: 2, // wrap if needed
-           textAlign: TextAlign.center,
+          overflow: TextOverflow.ellipsis,
+          maxLines: 2,
+          textAlign: TextAlign.center,
         ),
         backgroundColor: const Color(0xFF1C1C1E),
         elevation: 0,
         iconTheme: const IconThemeData(color: Colors.white),
+        actions: [
+          Padding(
+            padding: const EdgeInsets.only(right: 12.0),
+            child: TextButton(
+            style: TextButton.styleFrom(
+              backgroundColor: const Color(0xFFD76C5B),
+              padding: const EdgeInsets.only(right: 10, top: 10, bottom: 10, left: 10),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(10),
+              ),
+            ),
+            onPressed: _addTrip,
+            child: Row(
+              mainAxisSize: MainAxisSize.min,
+              children: const [
+                Icon(Icons.add, color: Colors.white, size: 14),
+                SizedBox(width: 6),
+                Text(
+                  'Add Trip',
+                  style: TextStyle(
+                    fontSize: 12,
+                    color: Colors.white,
+                  ),
+                ),
+              ],
+            ),
+          ),
+          ),
+        ],
       ),
       body: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 30),
@@ -119,7 +147,7 @@ class _AddTripState extends State<AddTrip> {
           key: _formKey,
           child: ListView(
             children: [
-              const SizedBox(height: 30),
+              const SizedBox(height: 16),
               MyTextField(
                 controller: _cityController,
                 hintText: 'City',
@@ -146,7 +174,7 @@ class _AddTripState extends State<AddTrip> {
                   ),
                 ),
               ),
-              const SizedBox(height: 20),
+              const SizedBox(height: 16),
               if (_startDate != null && _endDate != null)
                 Text(
                   'Duration: ${_endDate!.difference(_startDate!).inDays} days',
@@ -155,12 +183,12 @@ class _AddTripState extends State<AddTrip> {
               const SizedBox(height: 30),
               Center(
                 child: MyButton(
-                  color: Color.fromARGB(255, 140, 160, 225),
+                  color: const Color.fromARGB(255, 140, 160, 225),
                   text: 'Suggest new trips for me',
                   onTap: () {
                     Navigator.push(
                       context,
-                      MaterialPageRoute(builder: (context) => TripSuggestions()),
+                      MaterialPageRoute(builder: (context) => const TripSuggestions()),
                     );
                   },
                 ),
@@ -170,11 +198,6 @@ class _AddTripState extends State<AddTrip> {
           ),
         ),
       ),
-      floatingActionButton: AddButton(
-        label: 'Add Trip',
-        onPressed: _addTrip,
-      ),
-      floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
     );
   }
 }

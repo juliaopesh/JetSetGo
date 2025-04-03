@@ -182,6 +182,13 @@ Return only the list. Do not include extra explanation.
             textAlign: TextAlign.center,
         ),
         backgroundColor: const Color(0xFF1C1C1E),
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.save),
+            onPressed: _saveSelectedItemsToFirebase,
+            tooltip: "Save Selected Items",
+          )
+        ],
       ),
       body: isLoading
           ? const Center(child: CircularProgressIndicator())

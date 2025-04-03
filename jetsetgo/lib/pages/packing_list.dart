@@ -165,6 +165,12 @@ class _PackingListScreenState extends State<PackingListScreen> {
             textAlign: TextAlign.center,
         ),
         backgroundColor: const Color(0xFF1C1C1E),
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.add, color: Color(0xFFD76C5B)),
+            onPressed: _showAddItemDialog,
+          ),
+        ],
       ),
       body: StreamBuilder<QuerySnapshot>(
         stream: _packingListRef.snapshots(),

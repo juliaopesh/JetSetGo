@@ -71,6 +71,28 @@
             ReferencedContainer = "container:Runner.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
+      <CommandLineArguments>
+         <CommandLineArgument
+            argument = "--dart-define=OPENWEATHER_API_KEY=6b5ee7a928db65582a3bf2d3a44ed992"
+            isEnabled = "YES">
+         </CommandLineArgument>
+         <CommandLineArgument
+            argument = "--dart-define=GEMINI_API_KEY=AIzaSyBw8C2KdtQxJcbfh5M0daYDJ5HqcqEgwPk"
+            isEnabled = "YES">
+         </CommandLineArgument>
+      </CommandLineArguments>
+      <EnvironmentVariables>
+         <EnvironmentVariable
+            key = "GEMINI_API_KEY"
+            value = "AIzaSyBw8C2KdtQxJcbfh5M0daYDJ5HqcqEgwPk"
+            isEnabled = "YES">
+         </EnvironmentVariable>
+         <EnvironmentVariable
+            key = "OPENWEATHER_API_KEY"
+            value = "6b5ee7a928db65582a3bf2d3a44ed992"
+            isEnabled = "YES">
+         </EnvironmentVariable>
+      </EnvironmentVariables>
    </LaunchAction>
    <ProfileAction
       buildConfiguration = "Profile"

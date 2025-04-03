@@ -227,7 +227,7 @@ class _ItinerarySectionState extends State<ItinerarySection> {
                     GestureDetector(
                       onTap: () => _showItineraryDialog(context),
                       child: Container(
-                        width: 200,
+                        width: 175,
                         padding: const EdgeInsets.symmetric(vertical: 32),
                         decoration: BoxDecoration(
                           color: const Color(0xFF2C2C2E),

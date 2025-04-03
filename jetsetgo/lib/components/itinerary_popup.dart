@@ -23,7 +23,7 @@ void showItineraryDialog({
     for (var activity in existingActivities) {
       final parts = activity.split(" - ");
       final timeParts = parts[0].split(" ");
-      timeControllers.add(TextEditingController(text: timeParts[0])); // HH:MM
+      timeControllers.add(TextEditingController(text: timeParts[0])); // HH
       selectedAmPm.add(timeParts[1]);
       activityControllers.add(TextEditingController(text: parts[1]));
     }
@@ -39,7 +39,7 @@ void showItineraryDialog({
       return StatefulBuilder(
         builder: (context, setDialogState) {
           return Dialog(
-            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
             child: Container(
               width: MediaQuery.of(context).size.width * 0.8,
               height: MediaQuery.of(context).size.height * 0.6,
@@ -71,49 +71,79 @@ void showItineraryDialog({
                           ),
                           const SizedBox(height: 10),
                           ...List.generate(timeControllers.length, (index) {
-                            return Row(
-                              children: [
-                                SizedBox(
-                                  width: 50,
-                                  child: TextField(
-                                    controller: timeControllers[index],
-                                    decoration: const InputDecoration(labelText: "HH:MM"),
-                                    keyboardType: TextInputType.number,
+                            return Padding(
+                              padding: const EdgeInsets.symmetric(vertical: 8.0),
+                              child: Row(
+                                children: [
+                                  // Hour input
+                                  SizedBox(
+                                    width: 70,
+                                    child: TextField(
+                                      controller: timeControllers[index],
+                                      decoration: const InputDecoration(
+                                        labelText: "Hour",
+                                        border: OutlineInputBorder(),
+                                        isDense: true,
+                                      ),
+                                      keyboardType: TextInputType.number,
+                                    ),
                                   ),
-                                ),
-                                const SizedBox(width: 10),
-                                DropdownButton<String>(
-                                  value: selectedAmPm[index],
-                                  items: amPmOptions.map((String value) {
-                                    return DropdownMenuItem<String>(
-                                      value: value,
-                                      child: Text(value),
-                                    );
-                                  }).toList(),
-                                  onChanged: (newValue) {
-                                    setDialogState(() {
-                                      selectedAmPm[index] = newValue!;
-                                    });
-                                  },
-                                ),
-                                const SizedBox(width: 10),
-                                Expanded(
-                                  child: TextField(
-                                    controller: activityControllers[index],
-                                    decoration: const InputDecoration(labelText: "Activity"),
+
+                                  const SizedBox(width: 10),
+
+                                  // AM/PM dropdown
+                                  SizedBox(
+                                    width: 80,
+                                    child: DropdownButtonFormField<String>(
+                                      value: selectedAmPm[index],
+                                      decoration: const InputDecoration(
+                                        border: OutlineInputBorder(),
+                                        isDense: true,
+                                        contentPadding: EdgeInsets.symmetric(horizontal: 10, vertical: 12),
+                                      ),
+                                      items: amPmOptions.map((String value) {
+                                        return DropdownMenuItem<String>(
+                                          value: value,
+                                          child: Text(value),
+                                        );
+                                      }).toList(),
+                                      onChanged: (newValue) {
+                                        setDialogState(() {
+                                          selectedAmPm[index] = newValue!;
+                                        });
+                                      },
+                                    ),
                                   ),
-                                ),
-                                IconButton(
-                                  icon: const Icon(Icons.close, color: Colors.red),
-                                  onPressed: () {
-                                    setDialogState(() {
-                                      timeControllers.removeAt(index);
-                                      activityControllers.removeAt(index);
-                                      selectedAmPm.removeAt(index);
-                                    });
-                                  },
-                                ),
-                              ],
+
+                                  const SizedBox(width: 10),
+
+                                  // Activity input
+                                  Expanded(
+                                    child: TextField(
+                                      controller: activityControllers[index],
+                                      decoration: const InputDecoration(
+                                        labelText: "Activity",
+                                        border: OutlineInputBorder(),
+                                        isDense: true,
+                                      ),
+                                    ),
+                                  ),
+
+                                  const SizedBox(width: 6),
+
+                                  // Delete button
+                                  IconButton(
+                                    icon: const Icon(Icons.delete_outlined, color: Colors.red),
+                                    onPressed: () {
+                                      setDialogState(() {
+                                        timeControllers.removeAt(index);
+                                        activityControllers.removeAt(index);
+                                        selectedAmPm.removeAt(index);
+                                      });
+                                    },
+                                  ),
+                                ],
+                              ),
                             );
                           }),
                           TextButton(
@@ -124,7 +154,12 @@ void showItineraryDialog({
                                 selectedAmPm.add("AM");
                               });
                             },
-                            child: const Text("+ Add Another Activity"),
+                            child: const Text(
+                              "+ Add Another Activity",
+                              style: TextStyle(
+                                color: Color.fromARGB(255, 140, 160, 225),
+                              ),
+                            ),
                           ),
                         ],
                       ),
@@ -135,7 +170,12 @@ void showItineraryDialog({
                     children: [
                       TextButton(
                         onPressed: () => Navigator.pop(context),
-                        child: const Text("Cancel"),
+                        child: const Text(
+                          "Cancel",
+                          style: TextStyle(
+                            color: Colors.white,
+                          ),
+                        ),
                       ),
                       TextButton(
                         onPressed: () {
@@ -156,7 +196,12 @@ void showItineraryDialog({
                             }
                           }
                         },
-                        child: Text(isEditing ? "Update" : "Add"),
+                        child: Text(
+                          isEditing ? "Update" : "Add",
+                          style: TextStyle(
+                            color: Color(0xFFD76C5B),
+                          ),
+                        ),
                       ),
                     ],
                   ),

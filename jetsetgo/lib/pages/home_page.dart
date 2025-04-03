@@ -37,7 +37,7 @@ class HomePage extends StatelessWidget {
             final userName = userData['name'] ?? 'User'; // Default to 'User' if name is missing
 
             return SizedBox(
-              width: MediaQuery.of(context).size.width * 0.5, // constrain width
+              width: MediaQuery.of(context).size.width * 0.75, // constrain width
               child: Text(
                 'Welcome Back $userName! Here are your upcoming trips...',
                 style: const TextStyle(
