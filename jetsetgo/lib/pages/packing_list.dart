@@ -36,7 +36,7 @@ class _PackingListScreenState extends State<PackingListScreen> {
   Future<void> _addItem(String item) async {
     if (_controller.text.isNotEmpty) {
       await _packingListRef.add({
-        'item': _controller.text,
+        'item': _controller.text.trim(),
         'checked': false,
       });
     }
@@ -50,7 +50,7 @@ class _PackingListScreenState extends State<PackingListScreen> {
     final confirm = await showDialog<bool>(
       context: context,
       builder: (context) => AlertDialog(
-        backgroundColor: const Color(0xFFA6BDA3), //sage
+        backgroundColor: const Color(0xFFA6BDA3), // Sage
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
         title: const Text(
           'Delete this item?',
@@ -75,7 +75,7 @@ class _PackingListScreenState extends State<PackingListScreen> {
 
     if (confirm == true) {
       await _packingListRef.doc(id).delete();
-  }
+    }
   }
 
   void _showAddItemDialog() {
@@ -84,7 +84,7 @@ class _PackingListScreenState extends State<PackingListScreen> {
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          backgroundColor: const Color(0xFFA6BDA3), //sage 
+          backgroundColor: const Color(0xFFA6BDA3),
           shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
           title: const Text(
             "Add Item",
@@ -92,9 +92,10 @@ class _PackingListScreenState extends State<PackingListScreen> {
           ),
           content: TextField(
             controller: _controller,
+            style: const TextStyle(color: Color(0xFF1F1F1F)), // Charcoal text
             decoration: const InputDecoration(
               filled: true,
-              fillColor: Colors.white,
+              fillColor: Color(0xFFC9D6C9), // Lighter sage
               hintText: "Enter item name",
               hintStyle: TextStyle(color: Color(0xFF888888)),
               border: OutlineInputBorder(
@@ -110,7 +111,7 @@ class _PackingListScreenState extends State<PackingListScreen> {
             ),
             ElevatedButton(
               style: ElevatedButton.styleFrom(
-                backgroundColor: const Color(0xFFD76C5B), // Coral
+                backgroundColor: const Color(0xFFD76C5B),
                 foregroundColor: Colors.white,
                 shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
               ),
@@ -132,13 +133,10 @@ class _PackingListScreenState extends State<PackingListScreen> {
       builder: (context) => AlertDialog(
         backgroundColor: const Color(0xFFA6BDA3),
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
-        title: const Text(
-          "AI Suggestions",
-          style: TextStyle(color: Color(0xFF1F1F1F)),
-        ),
+        title: const Text("AI Suggestions", style: TextStyle(color: Color(0xFF1F1F1F))),
         content: const Text(
           "This feature provides AI-generated packing recommendations based on your trip.",
-          style: TextStyle(color: Color(0xFF888888)),
+          style: TextStyle(color: Color.fromARGB(255, 120, 117, 117)),
         ),
         actions: [
           TextButton(
@@ -153,7 +151,7 @@ class _PackingListScreenState extends State<PackingListScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xFFE7F1EB), // Light sage
+      backgroundColor: const Color(0xFFA6BDA3), // Darker sage
       appBar: AppBar(
         title: Text("Packing List for ${widget.tripTitle}"),
         backgroundColor: const Color(0xFF2C2C2E),
@@ -177,7 +175,7 @@ class _PackingListScreenState extends State<PackingListScreen> {
               child: Text(
                 "No items yet. Tap + to add.",
                 style: TextStyle(
-                  color: Color(0xFFA6BDA3),
+                  color: Color(0xFF1F1F1F),
                   fontSize: 16,
                 ),
               ),
@@ -197,7 +195,7 @@ class _PackingListScreenState extends State<PackingListScreen> {
                 margin: const EdgeInsets.symmetric(vertical: 8),
                 padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
                 decoration: BoxDecoration(
-                  color: const Color(0xFFA6BDA3),
+                  color: const Color(0xFFC9D6C9), // Lighter sage
                   borderRadius: BorderRadius.circular(12),
                 ),
                 child: Row(
@@ -214,6 +212,8 @@ class _PackingListScreenState extends State<PackingListScreen> {
                           fontSize: 16,
                           color: const Color(0xFF1F1F1F),
                           decoration: checked ? TextDecoration.lineThrough : null,
+                          decorationColor: const Color(0xFF1F1F1F), // visible line
+                          decorationThickness: 2,
                         ),
                       ),
                     ),
@@ -240,9 +240,9 @@ class _PackingListScreenState extends State<PackingListScreen> {
                 child: Container(
                   width: 30,
                   height: 30,
-                  color: const Color(0xFFA6BDA3),
+                  color: const Color(0xFFD76C5B),
                   alignment: Alignment.center,
-                  child: const Icon(Icons.info, color: Color(0xFF1F1F1F), size: 18),
+                  child: const Icon(Icons.info, color: Colors.white, size: 18),
                 ),
               ),
             ),
@@ -296,7 +296,7 @@ class _PackingListScreenState extends State<PackingListScreen> {
                 borderRadius: BorderRadius.circular(10),
                 child: Container(
                   padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 14),
-                  color: const Color(0xFFD76C5B), // coral!
+                  color: const Color(0xFFD76C5B),
                   child: const Text(
                     "Get AI Suggestions",
                     style: TextStyle(color: Colors.white, fontSize: 14),
