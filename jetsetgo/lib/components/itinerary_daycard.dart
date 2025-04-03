@@ -34,7 +34,7 @@ class _ItineraryDayCardState extends State<ItineraryDayCard> {
       color: const Color(0xFF2C2C2E),
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
       child: SizedBox(
-        width: 200,
+        width: 160,
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [

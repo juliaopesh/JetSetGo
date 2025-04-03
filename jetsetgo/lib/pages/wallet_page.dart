@@ -56,17 +56,20 @@ class _WalletPageState extends State<WalletPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color.fromARGB(255, 255, 255, 255), // Match home page background
+      backgroundColor: const Color(0xFF1C1C1E), // Match home page background
       appBar: AppBar(
+        toolbarHeight: 120,
         title: Text(
           '${widget.tripName} - Wallet',
-          style: TextStyle(
-            fontSize: 28, // Match home page title size
-            fontWeight: FontWeight.bold, 
-          ),
+           style: const TextStyle(
+              fontSize: 24,
+              color: Colors.white,
+            ),
+            overflow: TextOverflow.ellipsis,
+            maxLines: 3, // wrap if needed
+            textAlign: TextAlign.center,
         ),
-        backgroundColor: Colors.orange[100],
-        toolbarHeight: 80, // Match home page AppBar height
+        backgroundColor: const Color(0xFF1C1C1E),
       ),
       body: Padding(
         padding: const EdgeInsets.all(20.0),
@@ -98,7 +101,7 @@ class _WalletPageState extends State<WalletPage> {
         width: 180,  
         height: 60, 
         child: FloatingActionButton.extended(
-          backgroundColor: Colors.orange[100], 
+          backgroundColor: const Color.fromARGB(255, 222, 177, 109), 
           onPressed: (){
             //show AddDocumentDialog when the user presses the button 
             showDialog(
@@ -111,9 +114,10 @@ class _WalletPageState extends State<WalletPage> {
 
           label: Text(
             'Add Document',
-            style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold),  // Bigger font
+            style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold, color: Colors.white),  // Bigger font
+            
           ),
-          icon: Icon(Icons.add, size: 28),  // Bigger icon
+          icon: Icon(Icons.add, size: 28, color: Colors.white),  // Bigger icon
         ),
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,  // Center it at bottom

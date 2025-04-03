@@ -3,8 +3,9 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:intl/intl.dart';
 import 'package:jetsetgo/utils/ai_trip_suggestions.dart';
-
-import 'home_page.dart';
+import 'package:jetsetgo/pages/home_page.dart';
+import 'package:jetsetgo/components/my_textfield.dart';
+import 'package:jetsetgo/components/my_button.dart';
 
 class TripSuggestions extends StatefulWidget {
   const TripSuggestions({super.key});
@@ -21,13 +22,24 @@ class _TripSuggestionsState extends State<TripSuggestions> {
 
   DateTime? _startDate;
   DateTime? _endDate;
-  String? selectedDestination;
 
   Future<void> _pickDateRange() async {
     final picked = await showDateRangePicker(
       context: context,
       firstDate: DateTime.now(),
       lastDate: DateTime.now().add(const Duration(days: 365)),
+      builder: (context, child) {
+        return Theme(
+          data: ThemeData.dark().copyWith(
+            colorScheme: const ColorScheme.dark(
+              primary: Color(0xFFD76C5B),
+              surface: Color(0xFF1C1C1E),
+            ),
+            dialogBackgroundColor: const Color(0xFF2C2C2E),
+          ),
+          child: child!,
+        );
+      },
     );
 
     if (picked != null) {
@@ -60,7 +72,8 @@ class _TripSuggestionsState extends State<TripSuggestions> {
         context: context,
         builder: (context) {
           return AlertDialog(
-            title: const Text('Suggested Trips'),
+            backgroundColor: const Color(0xFF2C2C2E),
+            title: const Text('Suggested Trips', style: TextStyle(color: Colors.white)),
             content: Column(
               mainAxisSize: MainAxisSize.min,
               children: suggestions.map((destination) => _buildTripOption(destination)).toList(),
@@ -68,7 +81,7 @@ class _TripSuggestionsState extends State<TripSuggestions> {
             actions: [
               TextButton(
                 onPressed: () => Navigator.pop(context),
-                child: const Text('Close'),
+                child: const Text('Close', style: TextStyle(color: Color(0xFFD76C5B))),
               ),
             ],
           );
@@ -128,9 +141,9 @@ class _TripSuggestionsState extends State<TripSuggestions> {
 
   Widget _buildTripOption(String destination) {
     return ListTile(
-      title: Text(destination),
+      title: Text(destination, style: const TextStyle(color: Colors.white)),
       trailing: IconButton(
-        icon: const Icon(Icons.add_circle, color: Colors.blue),
+        icon: const Icon(Icons.add_circle, color: Color(0xFFD76C5B)),
         onPressed: () => _addTripProfile(destination),
       ),
     );
@@ -143,19 +156,19 @@ class _TripSuggestionsState extends State<TripSuggestions> {
         : "Select Trip Dates";
 
     return Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor: const Color(0xFF1C1C1E),
       appBar: AppBar(
         toolbarHeight: 80,
         title: const Text(
           'Trip Suggestions',
-          style: TextStyle(fontSize: 24, color: Colors.black),
+          style: TextStyle(fontSize: 24, color: Colors.white),
         ),
-        backgroundColor: const Color.fromARGB(255, 245, 244, 246),
+        backgroundColor: const Color(0xFF1C1C1E),
         elevation: 0,
-        iconTheme: const IconThemeData(color: Colors.black),
+        iconTheme: const IconThemeData(color: Colors.white),
       ),
       body: Padding(
-        padding: const EdgeInsets.all(20.0),
+        padding: const EdgeInsets.all(24.0),
         child: SingleChildScrollView(
           child: Column(
             children: [
@@ -168,27 +181,33 @@ class _TripSuggestionsState extends State<TripSuggestions> {
               _buildDropdown('Favorite Activity', [
                 'Sightseeing', 'Hiking', 'Swimming', 'No Preference'
               ], (value) => setState(() => favoriteActivity = value)),
-              _buildTextField('Other Favorites', otherFavoritesController),
-              const SizedBox(height: 15),
+              const SizedBox(height: 16),
+              MyTextField(
+                controller: otherFavoritesController,
+                hintText: 'Other Favorites',
+                obscureText: false,
+              ),
+              const SizedBox(height: 16),
               GestureDetector(
                 onTap: _pickDateRange,
                 child: Container(
                   padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 12),
                   width: double.infinity,
                   decoration: BoxDecoration(
-                    border: Border.all(color: Colors.grey),
-                    color: const Color.fromARGB(255, 252, 252, 252),
+                    borderRadius: BorderRadius.circular(8),
+                    color: const Color(0xFF2C2C2E),
                   ),
                   child: Text(
                     dateSummary,
-                    style: const TextStyle(fontSize: 16, color: Colors.black87),
+                    style: const TextStyle(fontSize: 16, color: Colors.white70),
                   ),
                 ),
               ),
-              const SizedBox(height: 20),
-              ElevatedButton(
-                onPressed: _showTripOptions,
-                child: const Text('Generate Options'),
+              const SizedBox(height: 32),
+              MyButton(
+                color: Color.fromARGB(255, 140, 160, 225),
+                text: 'Generate Options',
+                onTap: _showTripOptions,
               ),
             ],
           ),
@@ -199,33 +218,33 @@ class _TripSuggestionsState extends State<TripSuggestions> {
 
   Widget _buildDropdown(String label, List<String> options, Function(String) onChanged) {
     return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 10),
-      child: DropdownButtonFormField(
+      padding: const EdgeInsets.symmetric(vertical: 8),
+      child: DropdownButtonFormField<String>(
+        dropdownColor: const Color(0xFF2C2C2E),
+        value: options.last,
         decoration: InputDecoration(
           labelText: label,
-          border: const OutlineInputBorder(),
+          labelStyle: const TextStyle(color: Colors.white),
+          filled: true,
+          fillColor: const Color(0xFF2C2C2E),
+          enabledBorder: OutlineInputBorder(
+            borderSide: const BorderSide(color: Colors.white24),
+            borderRadius: BorderRadius.circular(8),
+          ),
+          focusedBorder: OutlineInputBorder(
+            borderSide: const BorderSide(color: Color(0xFFD76C5B)),
+            borderRadius: BorderRadius.circular(8),
+          ),
         ),
-        value: options.last,
+        style: const TextStyle(color: Colors.white),
+        iconEnabledColor: Colors.white70,
         items: options.map((option) {
           return DropdownMenuItem(
             value: option,
-            child: Text(option),
+            child: Text(option, style: const TextStyle(color: Colors.white)),
           );
         }).toList(),
-        onChanged: (value) => onChanged(value as String),
-      ),
-    );
-  }
-
-  Widget _buildTextField(String label, TextEditingController controller) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 10),
-      child: TextFormField(
-        controller: controller,
-        decoration: InputDecoration(
-          labelText: label,
-          border: const OutlineInputBorder(),
-        ),
+        onChanged: (value) => onChanged(value!),
       ),
     );
   }

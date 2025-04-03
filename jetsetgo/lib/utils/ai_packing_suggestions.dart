@@ -132,7 +132,7 @@ Return only the list. Do not include extra explanation.
         const SizedBox(height: 20),
         Row(
           children: [
-            const Icon(Icons.label_important, color: Colors.pink),
+            const Icon(Icons.label_important, color:  Color(0xFFA6BDA3)),
             const SizedBox(width: 8),
             Text(
               category,
@@ -160,7 +160,7 @@ Return only the list. Do not include extra explanation.
                 });
               },
               controlAffinity: ListTileControlAffinity.leading,
-              activeColor: const Color.fromARGB(255, 233, 40, 123),
+              activeColor: const Color(0xFFD76C5B),
             )),
       ],
     );
@@ -170,15 +170,18 @@ Return only the list. Do not include extra explanation.
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("AI Suggestions: ${widget.destination}"),
-        backgroundColor: const Color.fromARGB(255, 241, 127, 168),
-        actions: [
-          IconButton(
-            icon: const Icon(Icons.save),
-            onPressed: _saveSelectedItemsToFirebase,
-            tooltip: "Save Selected Items",
-          )
-        ],
+        toolbarHeight: 120,
+        title: Text(
+           "AI Suggestions: ${widget.destination}",
+           style: const TextStyle(
+              fontSize: 24,
+              color: Colors.white,
+            ),
+            overflow: TextOverflow.ellipsis,
+            maxLines: 3, // wrap if needed
+            textAlign: TextAlign.center,
+        ),
+        backgroundColor: const Color(0xFF1C1C1E),
       ),
       body: isLoading
           ? const Center(child: CircularProgressIndicator())

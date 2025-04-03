@@ -153,15 +153,18 @@ class _PackingListScreenState extends State<PackingListScreen> {
     return Scaffold(
       backgroundColor: const Color(0xFFA6BDA3), // Darker sage
       appBar: AppBar(
-        title: Text("Packing List for ${widget.tripTitle}"),
-        backgroundColor: const Color(0xFF2C2C2E),
-        elevation: 2,
-        actions: [
-          IconButton(
-            icon: const Icon(Icons.add, color: Color(0xFFD76C5B)),
-            onPressed: _showAddItemDialog,
-          ),
-        ],
+        toolbarHeight: 120,
+        title: Text(
+          "Packing List for ${widget.tripTitle}",
+           style: const TextStyle(
+              fontSize: 24,
+              color: Colors.white,
+            ),
+            overflow: TextOverflow.ellipsis,
+            maxLines: 3, // wrap if needed
+            textAlign: TextAlign.center,
+        ),
+        backgroundColor: const Color(0xFF1C1C1E),
       ),
       body: StreamBuilder<QuerySnapshot>(
         stream: _packingListRef.snapshots(),

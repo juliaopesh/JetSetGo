@@ -201,6 +201,7 @@ class _TripScreenState extends State<TripScreen> {
                           //fontWeight: FontWeight.bold,
                           color: Colors.white,
                         ),
+                        textAlign: TextAlign.center,
                       ),
                       const SizedBox(height: 5),
                       Text(
