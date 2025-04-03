@@ -84,7 +84,7 @@ class TripCard extends StatelessWidget {
                 child: Icon(
                   Icons.airplanemode_active, 
                   size: 32, 
-                  color: Color(0xFFD76C5B), // soft red accent
+                  color: Color.fromARGB(255, 140, 160, 225), // soft red accent
                 ),
               ),
             ],

@@ -52,7 +52,7 @@ class _ProfilePageState extends State<ProfilePage> {
     }
 
     return Scaffold(
-      backgroundColor: const Color.fromARGB(255, 255, 255, 255),
+      backgroundColor: const Color(0xFF1C1C1E),
       appBar: AppBar(
         toolbarHeight: 80,
         title: StreamBuilder<DocumentSnapshot>(
@@ -77,12 +77,12 @@ class _ProfilePageState extends State<ProfilePage> {
               'Welcome $userName',
               style: const TextStyle(
                 fontSize: 24,
-                color: Colors.black,
+                color: Color.fromARGB(255, 255, 255, 255),
               ),
             );
           },
         ),
-        backgroundColor: const Color.fromARGB(255, 245, 244, 246),
+        backgroundColor: const Color(0xFF1C1C1E),
       ),
       body: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 40.0),
@@ -94,7 +94,7 @@ class _ProfilePageState extends State<ProfilePage> {
               // Profile Info Section
               CircleAvatar(
                 radius: 70,
-                backgroundColor: const Color.fromARGB(255, 103, 177, 237),
+                backgroundColor: const Color.fromARGB(255, 140, 160, 225),
                 child: Icon(
                   Icons.person,
                   size: 80,
@@ -121,7 +121,7 @@ class _ProfilePageState extends State<ProfilePage> {
                   final userName = userData['name'] ?? 'N/A'; // Get user name from Firestore
 
                   return Text(
-                    "Username: $userName", // Display the username dynamically
+                    "Name: $userName", // Display the username dynamically
                     style: TextStyle(fontSize: 18),
                   );
                 },
@@ -136,7 +136,7 @@ class _ProfilePageState extends State<ProfilePage> {
               MyButton(
                 text: "Log Out",
                 onTap: () => _logOut(context),
-                color: const Color.fromARGB(255, 242, 151, 144), // Optional: matches your current red theme
+                color: const Color(0xFFD76C5B), // Optional: matches your current red theme
               ),
             ],
           ),

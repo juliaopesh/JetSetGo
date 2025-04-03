@@ -34,8 +34,7 @@ class _ItineraryDayCardState extends State<ItineraryDayCard> {
       color: const Color(0xFF2C2C2E),
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
       child: SizedBox(
-        width: 240,
-        height: 280,
+        width: 200,
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -97,14 +96,15 @@ class _ItineraryDayCardState extends State<ItineraryDayCard> {
 
             // Activities List!!
         
-            Container(
-              constraints: const BoxConstraints(maxHeight: 160),
-              padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
+            SizedBox(
+              height: 140,
+
               child: Scrollbar(
                 controller: _scrollController,
                 thumbVisibility: true,
                 child: SingleChildScrollView(
                   controller: _scrollController,
+                  padding: const EdgeInsets.all(12),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: widget.activities.map((activity) {
@@ -122,8 +122,9 @@ class _ItineraryDayCardState extends State<ItineraryDayCard> {
             ),
 
             // Edit Button
+            
             Padding(
-              padding: const EdgeInsets.fromLTRB(12, 0, 12, 12),
+              padding: const EdgeInsets.all(12.0),
               child: SizedBox(
                 width: double.infinity,
                 child: ElevatedButton(
@@ -132,7 +133,7 @@ class _ItineraryDayCardState extends State<ItineraryDayCard> {
                     backgroundColor: const Color(0xFFD76C5B), // Terracotta
                     foregroundColor: Colors.white,
                     shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-                    padding: const EdgeInsets.symmetric(vertical: 14),
+                    //padding: const EdgeInsets.symmetric(vertical: 14),
                   ),
                   child: const Text("Edit Itinerary Day"),
                 ),

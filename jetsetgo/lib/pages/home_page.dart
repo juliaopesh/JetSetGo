@@ -16,7 +16,7 @@ class HomePage extends StatelessWidget {
     return Scaffold(
       backgroundColor: const Color(0xFF1C1C1E),
       appBar: AppBar(
-        toolbarHeight: 80,
+        toolbarHeight: 120,
         automaticallyImplyLeading: false, // This removes the back button
         title: StreamBuilder<DocumentSnapshot>(
           stream: FirebaseFirestore.instance
@@ -45,7 +45,8 @@ class HomePage extends StatelessWidget {
                   color: Colors.white,
                 ),
                 overflow: TextOverflow.ellipsis,
-                maxLines: 2, // wrap if needed
+                maxLines: 3, // wrap if needed
+                textAlign: TextAlign.center,
               ),
             );
           },
@@ -53,7 +54,7 @@ class HomePage extends StatelessWidget {
         backgroundColor: const Color(0xFF1C1C1E),
       ),
       body: Padding(
-        padding: const EdgeInsets.all(20.0),
+        padding: const EdgeInsets.only(left: 20.0, right: 20.0, bottom: 20.0),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [

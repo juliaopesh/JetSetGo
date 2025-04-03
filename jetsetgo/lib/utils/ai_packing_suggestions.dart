@@ -145,7 +145,7 @@ Return only the list. Do not include extra explanation.
               title: Text(
                 item,
                 style: const TextStyle(
-                  color: Colors.black,
+                  color: Color.fromARGB(255, 255, 255, 255),
                   fontSize: 16,
                 ),
               ),

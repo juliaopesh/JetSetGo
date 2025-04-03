@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:jetsetgo/pages/wallet.dart';
+import 'package:jetsetgo/pages/wallet_page.dart';
 
 class WalletButton extends StatelessWidget {
   const WalletButton({super.key});

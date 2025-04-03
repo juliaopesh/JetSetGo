@@ -3,9 +3,7 @@ import 'package:open_file/open_file.dart';
 
 
 import 'package:flutter/material.dart';
-import 'package:jetsetgo/components/add_button.dart'; // Import the AddButton component
 import 'package:jetsetgo/components/navbar.dart'; // Import BottomNavBar component
-import 'package:jetsetgo/pages/home_page.dart'; // Import your HomePage 
 import 'package:jetsetgo/components/add_document.dart'; 
 
 
