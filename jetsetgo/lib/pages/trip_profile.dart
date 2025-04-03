@@ -222,8 +222,10 @@ class _TripScreenState extends State<TripScreen> {
                 child: Row(
                   children: [
                     Expanded(
+
                       child: WalletSection(
                         onTap: () {
+                          //navigate to wallet screen or add document! 
                           Navigator.push(
                             context,
                             MaterialPageRoute(
@@ -236,6 +238,7 @@ class _TripScreenState extends State<TripScreen> {
                     ),
                     const SizedBox(width: 10),
                     Expanded(
+
                       child: WeatherSection(
                         isWeatherLoading: isWeatherLoading,
                         weatherDescription: weatherDescription,

@@ -10,32 +10,33 @@ class WalletSection extends StatelessWidget {
     return GestureDetector(
       onTap: onTap,
       child: Card(
-        elevation: 5, // Match the elevation of TripCard
+        elevation: 5,
         shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(12), // Match the border radius
+          borderRadius: BorderRadius.circular(12),
         ),
         child: Container(
           padding: const EdgeInsets.all(15),
           decoration: BoxDecoration(
-            color: Colors.orange[100], // Light orange background
-            borderRadius: BorderRadius.circular(12), // Match the border radius
+            color: const Color(0xFF2C2C2E), 
+            borderRadius: BorderRadius.circular(12),
           ),
+          
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              const Text(
+            children: const [
+              Text(
                 "Wallet",
                 style: TextStyle(
                   fontSize: 20,
                   fontWeight: FontWeight.bold,
-                  color: Color.fromARGB(255, 48, 33, 6),
+                  color: Colors.white, // Clean, readable
                 ),
               ),
-              const SizedBox(height: 10),
-              const Icon(
+              SizedBox(height: 10),
+              Icon(
                 Icons.wallet,
                 size: 120,
-                color: Color.fromARGB(255, 48, 33, 6),
+                color: Colors.white70, // Soft white, not too harsh
               ),
             ],
           ),
