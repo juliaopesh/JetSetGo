@@ -32,7 +32,7 @@ class _ItineraryDayCardState extends State<ItineraryDayCard> {
     return Card(
       elevation: 3,
       color: const Color(0xFF2C2C2E),
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
       child: SizedBox(
         width: 200,
         child: Column(
@@ -51,12 +51,14 @@ class _ItineraryDayCardState extends State<ItineraryDayCard> {
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Text(
-                    widget.day,
-                    style: const TextStyle(
-                      fontSize: 20,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.white,
+                  Flexible(
+                    child: Text(
+                      widget.day,
+                      style: const TextStyle(
+                        fontSize: 20,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.white,
+                      ),
                     ),
                   ),
                   IconButton(
@@ -70,7 +72,7 @@ class _ItineraryDayCardState extends State<ItineraryDayCard> {
                         title: const Text('Delete this day?', style: TextStyle(color: Colors.white)),
                         content: const Text(
                           'Are you sure you want to remove this itinerary day?',
-                          style: TextStyle(color: Color(0xFFA1A1A3)),
+                          style: TextStyle(color: Color(0xFFA6BDA3)),
                         ),
                         actions: [
                           TextButton(
@@ -94,7 +96,7 @@ class _ItineraryDayCardState extends State<ItineraryDayCard> {
             ),
           ),
 
-            // Activities List!!
+            // Activities List!! with scrolling 
         
             SizedBox(
               height: 140,
@@ -130,12 +132,19 @@ class _ItineraryDayCardState extends State<ItineraryDayCard> {
                 child: ElevatedButton(
                   onPressed: widget.onEdit,
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: const Color(0xFFD76C5B), // Terracotta
-                    foregroundColor: Colors.white,
+                    backgroundColor: const Color(0xFFD76C5B), //coral
+                    foregroundColor: const Color(0xFFFBE8D2), //cream text
                     shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
                     //padding: const EdgeInsets.symmetric(vertical: 14),
                   ),
-                  child: const Text("Edit Itinerary Day"),
+                  child: const Text(
+                    "Edit Itinerary Day", 
+                    style: TextStyle(
+                      fontWeight: FontWeight.w600,
+                      fontSize: 16,
+                      )
+                    ),
+
                 ),
               ),
             ),

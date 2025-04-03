@@ -15,7 +15,7 @@ class WalletSection extends StatelessWidget {
           borderRadius: BorderRadius.circular(12),
         ),
         child: Container(
-          padding: const EdgeInsets.all(15),
+          padding: const EdgeInsets.all(16),
           decoration: BoxDecoration(
             color: const Color(0xFF2C2C2E), 
             borderRadius: BorderRadius.circular(12),

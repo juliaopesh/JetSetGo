@@ -7,7 +7,11 @@ class PackingListSection extends StatefulWidget {
   final String tripTitle;
   final String tripId;
 
-  const PackingListSection({super.key, required this.tripTitle, required this.tripId});
+  const PackingListSection({
+    super.key, 
+    required this.tripTitle, 
+    required this.tripId
+    });
 
   @override
   _PackingListSectionState createState() => _PackingListSectionState();
@@ -71,14 +75,6 @@ class _PackingListSectionState extends State<PackingListSection> {
 
     if (confirm == true) {
       await _packingListRef.doc(itemId).delete();
-
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text("Item deleted"),
-          backgroundColor: Color(0xFF2C2C2E),
-          behavior: SnackBarBehavior.floating,
-        ),
-      );
     }
   }
 
@@ -98,12 +94,12 @@ class _PackingListSectionState extends State<PackingListSection> {
         );
       },
       child: Card(
+        color: const Color(0xFFA6BDA3), //darker sage
         elevation: 5,
         margin: const EdgeInsets.symmetric(vertical: 10),
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(10),
         ),
-        color: const Color.fromARGB(255, 241, 127, 168),
         child: Padding(
           padding: const EdgeInsets.all(15),
           child: Column(
@@ -118,25 +114,26 @@ class _PackingListSectionState extends State<PackingListSection> {
                       style: const TextStyle(
                         fontSize: 20,
                         fontWeight: FontWeight.bold,
-                        color: Color.fromARGB(255, 253, 246, 248),
+                        color: Colors.white,
                       ),
                     ),
                   ),
                 ],
               ),
-              const Divider(color: Color.fromARGB(255, 245, 184, 207)),
+              const Divider(color: Colors.white70),
 
               // Add Item Section
               Row(
                 children: [
                   Expanded(
                     child: TextField(
+                      style: const TextStyle(color: Color(0xFF1F1F1F)), //charcoal text
                       controller: _controller,
                       decoration: InputDecoration(
                         labelText: 'Add item',
-                        labelStyle: const TextStyle(color: Colors.white),
+                        labelStyle: const TextStyle(color:  Color(0xFF1F1F1F)),
                         filled: true,
-                        fillColor: Colors.transparent,
+                        fillColor: Color(0xFFC9D6C9), //lighter sage
                         border: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(12),
                           borderSide: const BorderSide(color: Colors.white, width: 1),
@@ -145,7 +142,7 @@ class _PackingListSectionState extends State<PackingListSection> {
                     ),
                   ),
                   IconButton(
-                    icon: const Icon(Icons.add, color: Colors.white),
+                    icon: const Icon(Icons.add, color: Color(0xFFD76C5B)),
                     onPressed: _addItem,
                   ),
                 ],
@@ -163,7 +160,8 @@ class _PackingListSectionState extends State<PackingListSection> {
                   final items = snapshot.data!.docs;
 
                   if (items.isEmpty) {
-                    return const Center(
+                    return const Padding(
+                      padding: EdgeInsets.only(top: 8.0),
                       child: Text(
                         "No items added yet.",
                         style: TextStyle(color: Colors.white),
@@ -189,27 +187,40 @@ class _PackingListSectionState extends State<PackingListSection> {
   }
 
   Widget _buildPackingItem(String itemId, String name, bool isChecked) {
-    return Card(
-      elevation: 3,
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
-      child: ListTile(
-        leading: Checkbox(
-          value: isChecked,
-          onChanged: (value) => _toggleChecked(itemId, value!),
-          activeColor: const Color.fromARGB(255, 250, 239, 243),
-        ),
-        title: Text(
-          name,
-          style: TextStyle(
-            fontSize: 16,
-            decoration: isChecked ? TextDecoration.lineThrough : null,
+    return Container(
+      margin: const EdgeInsets.symmetric(vertical: 6),
+      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
+      decoration: BoxDecoration(
+        color: const Color(0xFFC9D6C9), // lighter sage 
+        borderRadius: BorderRadius.circular(12),
+      ),
+      child: Row(
+        children: [
+          Checkbox(
+            value: isChecked,
+            onChanged: (value) => _toggleChecked(itemId, value!),
+            activeColor: const Color(0xFFD76C5B), // Coral check color
           ),
-        ),
-        trailing: IconButton(
-          icon: const Icon(Icons.delete_outline, color: Colors.red),
-          onPressed: () => _deleteItem(itemId),
-        ),
+          Expanded(
+            child: Text(
+              name,
+              style: TextStyle(
+                fontSize: 16,
+                fontWeight: FontWeight.w500,
+                color: const Color(0xFF1F1F1F), // Charcoal text
+                decoration: isChecked ? TextDecoration.lineThrough : null,
+                decorationColor: const Color(0xFF1F1F1F), // charcoal line
+                decorationThickness: 2, // optional: makes it more visible
+              ),
+            ),
+          ),
+          IconButton(
+            icon: const Icon(Icons.delete_outline, color: Color(0xFFD76C5B)), // Coral icon
+            onPressed: () => _deleteItem(itemId),
+          ),
+        ],
       ),
     );
   }
+
 }

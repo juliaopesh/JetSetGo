@@ -34,9 +34,9 @@ class _PackingListScreenState extends State<PackingListScreen> {
   }
 
   Future<void> _addItem(String item) async {
-    if (item.trim().isNotEmpty) {
+    if (_controller.text.isNotEmpty) {
       await _packingListRef.add({
-        'item': item.trim(),
+        'item': _controller.text.trim(),
         'checked': false,
       });
     }
@@ -50,26 +50,23 @@ class _PackingListScreenState extends State<PackingListScreen> {
     final confirm = await showDialog<bool>(
       context: context,
       builder: (context) => AlertDialog(
-        backgroundColor: const Color(0xFF2C2C2E),
+        backgroundColor: const Color(0xFFA6BDA3), // Sage
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
         title: const Text(
           'Delete this item?',
-          style: TextStyle(color: Colors.white),
+          style: TextStyle(color: Color(0xFF1F1F1F)),
         ),
         content: const Text(
           'Are you sure you want to remove this from your packing list?',
-          style: TextStyle(color: Color(0xFFA1A1A3)),
+          style: TextStyle(color: Color(0xFF1F1F1F)),
         ),
         actions: [
           TextButton(
-            child: const Text('Cancel', style: TextStyle(color: Colors.white)),
+            child: const Text('Cancel', style: TextStyle(color: Color(0xFF1F1F1F))),
             onPressed: () => Navigator.of(context).pop(false),
           ),
           TextButton(
-            child: const Text(
-              'Delete',
-              style: TextStyle(color: Colors.redAccent),
-            ),
+            child: const Text('Delete', style: TextStyle(color: Color(0xFFD76C5B))),
             onPressed: () => Navigator.of(context).pop(true),
           ),
         ],
@@ -78,14 +75,6 @@ class _PackingListScreenState extends State<PackingListScreen> {
 
     if (confirm == true) {
       await _packingListRef.doc(id).delete();
-
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text("Item deleted"),
-          backgroundColor: Color(0xFF2C2C2E),
-          behavior: SnackBarBehavior.floating,
-        ),
-      );
     }
   }
 
@@ -95,22 +84,42 @@ class _PackingListScreenState extends State<PackingListScreen> {
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          title: Text("Add Item"),
+          backgroundColor: const Color(0xFFA6BDA3),
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+          title: const Text(
+            "Add Item",
+            style: TextStyle(color: Color(0xFF1F1F1F)),
+          ),
           content: TextField(
             controller: _controller,
-            decoration: InputDecoration(hintText: "Enter item name"),
+            style: const TextStyle(color: Color(0xFF1F1F1F)), // Charcoal text
+            decoration: const InputDecoration(
+              filled: true,
+              fillColor: Color(0xFFC9D6C9), // Lighter sage
+              hintText: "Enter item name",
+              hintStyle: TextStyle(color: Color(0xFF888888)),
+              border: OutlineInputBorder(
+                borderRadius: BorderRadius.all(Radius.circular(12)),
+                borderSide: BorderSide.none,
+              ),
+            ),
           ),
           actions: [
             TextButton(
               onPressed: () => Navigator.pop(context),
-              child: Text("Cancel"),
+              child: const Text("Cancel", style: TextStyle(color: Color(0xFF1F1F1F))),
             ),
             ElevatedButton(
+              style: ElevatedButton.styleFrom(
+                backgroundColor: const Color(0xFFD76C5B),
+                foregroundColor: Colors.white,
+                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+              ),
               onPressed: () {
                 _addItem(_controller.text);
                 Navigator.pop(context);
               },
-              child: Text("Add"),
+              child: const Text("Add"),
             ),
           ],
         );
@@ -121,31 +130,35 @@ class _PackingListScreenState extends State<PackingListScreen> {
   void _showInfoDialog() {
     showDialog(
       context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          title: Text("AI Suggestions"),
-          content: Text(
-              "This feature provides AI-generated packing recommendations based on your trip."),
-          actions: [
-            TextButton(
-              onPressed: () => Navigator.pop(context),
-              child: Text("Got it!"),
-            ),
-          ],
-        );
-      },
+      builder: (context) => AlertDialog(
+        backgroundColor: const Color(0xFFA6BDA3),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+        title: const Text("AI Suggestions", style: TextStyle(color: Color(0xFF1F1F1F))),
+        content: const Text(
+          "This feature provides AI-generated packing recommendations based on your trip.",
+          style: TextStyle(color: Color.fromARGB(255, 120, 117, 117)),
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context),
+            child: const Text("Got it!", style: TextStyle(color: Color(0xFFD76C5B))),
+          ),
+        ],
+      ),
     );
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: const Color(0xFFA6BDA3), // Darker sage
       appBar: AppBar(
         title: Text("Packing List for ${widget.tripTitle}"),
-        backgroundColor: const Color.fromARGB(255, 241, 127, 168),
+        backgroundColor: const Color(0xFF2C2C2E),
+        elevation: 2,
         actions: [
           IconButton(
-            icon: Icon(Icons.add),
+            icon: const Icon(Icons.add, color: Color(0xFFD76C5B)),
             onPressed: _showAddItemDialog,
           ),
         ],
@@ -157,37 +170,62 @@ class _PackingListScreenState extends State<PackingListScreen> {
 
           final docs = snapshot.data!.docs;
 
-          return docs.isEmpty
-              ? Center(child: Text("No items yet. Tap + to add."))
-              : ListView.builder(
-                  padding: const EdgeInsets.all(20),
-                  itemCount: docs.length,
-                  itemBuilder: (context, index) {
-                    final doc = docs[index];
-                    final data = doc.data() as Map<String, dynamic>;
-                    final item = data['item'] ?? '';
-                    final checked = data['checked'] == 1;
+          if (docs.isEmpty) {
+            return const Center(
+              child: Text(
+                "No items yet. Tap + to add.",
+                style: TextStyle(
+                  color: Color(0xFF1F1F1F),
+                  fontSize: 16,
+                ),
+              ),
+            );
+          }
 
-                    return ListTile(
-                      leading: Checkbox(
-                        value: checked,
-                        onChanged: (value) => _toggleCheckbox(doc.id, value!),
-                      ),
-                      title: Text(
+          return ListView.builder(
+            padding: const EdgeInsets.all(20),
+            itemCount: docs.length,
+            itemBuilder: (context, index) {
+              final doc = docs[index];
+              final data = doc.data() as Map<String, dynamic>;
+              final item = data['item'] ?? '';
+              final checked = data['checked'] == 1;
+
+              return Container(
+                margin: const EdgeInsets.symmetric(vertical: 8),
+                padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+                decoration: BoxDecoration(
+                  color: const Color(0xFFC9D6C9), // Lighter sage
+                  borderRadius: BorderRadius.circular(12),
+                ),
+                child: Row(
+                  children: [
+                    Checkbox(
+                      value: checked,
+                      activeColor: const Color(0xFFD76C5B),
+                      onChanged: (value) => _toggleCheckbox(doc.id, value!),
+                    ),
+                    Expanded(
+                      child: Text(
                         item,
                         style: TextStyle(
-                          fontSize: 18,
-                          decoration:
-                              checked ? TextDecoration.lineThrough : null,
+                          fontSize: 16,
+                          color: const Color(0xFF1F1F1F),
+                          decoration: checked ? TextDecoration.lineThrough : null,
+                          decorationColor: const Color(0xFF1F1F1F), // visible line
+                          decorationThickness: 2,
                         ),
                       ),
-                      trailing: IconButton(
-                        icon: Icon(Icons.delete_outline, color: Colors.red),
-                        onPressed: () => _deleteItem(doc.id),
-                      ),
-                    );
-                  },
-                );
+                    ),
+                    IconButton(
+                      icon: const Icon(Icons.delete_outline, color: Color(0xFFD76C5B)),
+                      onPressed: () => _deleteItem(doc.id),
+                    ),
+                  ],
+                ),
+              );
+            },
+          );
         },
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
@@ -196,76 +234,69 @@ class _PackingListScreenState extends State<PackingListScreen> {
         child: Row(
           mainAxisSize: MainAxisSize.min,
           children: [
-            // Info button
             GestureDetector(
               onTap: _showInfoDialog,
               child: ClipOval(
                 child: Container(
                   width: 30,
                   height: 30,
-                  color: const Color.fromARGB(255, 233, 40, 123),
+                  color: const Color(0xFFD76C5B),
                   alignment: Alignment.center,
-                  child: Icon(Icons.info, color: Colors.white, size: 20),
+                  child: const Icon(Icons.info, color: Colors.white, size: 18),
                 ),
               ),
             ),
-            const SizedBox(width: 10),
-            // Get AI Suggestions button
+            const SizedBox(width: 12),
             GestureDetector(
               onTap: () async {
-              final user = FirebaseAuth.instance.currentUser!;
-              final tripDocRef = FirebaseFirestore.instance
-                  .collection('users')
-                  .doc(user.uid)
-                  .collection('trip')
-                  .doc(widget.tripId);
+                final user = FirebaseAuth.instance.currentUser!;
+                final tripDocRef = FirebaseFirestore.instance
+                    .collection('users')
+                    .doc(user.uid)
+                    .collection('trip')
+                    .doc(widget.tripId);
 
-              try {
-                // 1. Get trip details (from tripID subcollection)
-                final tripIdSnapshot = await tripDocRef.collection('tripID').get();
-                final tripData = tripIdSnapshot.docs.isNotEmpty ? tripIdSnapshot.docs.first.data() : null;
+                try {
+                  final tripIdSnapshot = await tripDocRef.collection('tripID').get();
+                  final tripData = tripIdSnapshot.docs.isNotEmpty ? tripIdSnapshot.docs.first.data() : null;
 
-                if (tripData == null) {
-                  ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("Trip details not found.")));
-                  return;
-                }
+                  if (tripData == null) {
+                    ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("Trip details not found.")));
+                    return;
+                  }
 
-                final destination = "${tripData['City']}, ${tripData['Country']}";
-                final startDate = tripData['DateLeaving'].toString(); // Format if needed
-                final endDate = tripData['DateReturning'].toString();
+                  final destination = "${tripData['City']}, ${tripData['Country']}";
+                  final startDate = tripData['DateLeaving'].toString();
+                  final endDate = tripData['DateReturning'].toString();
 
-                // 2. Get packing list items
-                final packingSnapshot = await tripDocRef.collection('PackingList').get();
-                final items = packingSnapshot.docs.map((doc) {
-                  final data = doc.data();
-                  return data['item']?.toString() ?? '';
-                }).where((item) => item.isNotEmpty).toList();
+                  final packingSnapshot = await tripDocRef.collection('PackingList').get();
+                  final items = packingSnapshot.docs.map((doc) {
+                    final data = doc.data();
+                    return data['item']?.toString() ?? '';
+                  }).where((item) => item.isNotEmpty).toList();
 
-                // Navigate to AI Suggestions Screen
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => PackingAISuggestionsScreen(
-                      tripId: widget.tripId,
-                      destination: destination,
-                      startDate: startDate,
-                      endDate: endDate,
-                      existingItems: items,
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => PackingAISuggestionsScreen(
+                        tripId: widget.tripId,
+                        destination: destination,
+                        startDate: startDate,
+                        endDate: endDate,
+                        existingItems: items,
+                      ),
                     ),
-                  ),
-                );
-              } catch (e) {
-                print("Error fetching trip info or packing list: $e");
-                ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("Failed to fetch data.")));
-              }
-            },
-
+                  );
+                } catch (e) {
+                  print("Error fetching trip info or packing list: $e");
+                  ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("Failed to fetch data.")));
+                }
+              },
               child: ClipRRect(
                 borderRadius: BorderRadius.circular(10),
                 child: Container(
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 20, vertical: 14),
-                  color: const Color.fromARGB(255, 233, 40, 123),
+                  padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 14),
+                  color: const Color(0xFFD76C5B),
                   child: const Text(
                     "Get AI Suggestions",
                     style: TextStyle(color: Colors.white, fontSize: 14),
