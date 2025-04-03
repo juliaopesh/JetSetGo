@@ -18,7 +18,7 @@ class MyButton extends StatelessWidget {
       width: 300, //fill parent container
       child: ElevatedButton(
         style: ElevatedButton.styleFrom(
-          backgroundColor: color ?? const Color(0xFFD76C5B), // Warm terracotta default
+          backgroundColor: color ?? const Color(0xFFD76C5B),// Warm coral
           foregroundColor: Colors.white, // Text color
           padding: const EdgeInsets.symmetric(vertical: 16),
           shape: RoundedRectangleBorder(
