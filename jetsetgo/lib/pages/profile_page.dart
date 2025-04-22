@@ -94,7 +94,7 @@ class _ProfilePageState extends State<ProfilePage> {
               // Profile Info Section
               CircleAvatar(
                 radius: 70,
-                backgroundColor: const Color.fromARGB(255, 140, 160, 225),
+                backgroundColor: Colors.blue,
                 child: Icon(
                   Icons.person,
                   size: 80,
@@ -113,15 +113,15 @@ class _ProfilePageState extends State<ProfilePage> {
                     return const CircularProgressIndicator();
                   }
 
-                  if (snapshot.hasError || !snapshot.hasData || !snapshot.data!.exists) {
-                    return Text("Username: N/A", style: TextStyle(fontSize: 18));
-                  }
+                if (snapshot.hasError || !snapshot.hasData || !snapshot.data!.exists) {
+                  return Text("Username: N/A", style: TextStyle(fontSize: 18));
+                }
 
-                  final userData = snapshot.data!.data() as Map<String, dynamic>;
-                  final userName = userData['name'] ?? 'N/A'; // Get user name from Firestore
+                final userData = snapshot.data!.data() as Map<String, dynamic>;
+                final userName = userData['name'] ?? 'N/A'; // Get user name from Firestore
 
                   return Text(
-                    "Name: $userName", // Display the username dynamically
+                    "Username: $userName", // Display the username dynamically
                     style: TextStyle(fontSize: 18),
                   );
                 },
@@ -133,10 +133,16 @@ class _ProfilePageState extends State<ProfilePage> {
               ),
               const SizedBox(height: 30),
               // Log Out button
-              MyButton(
-                text: "Log Out",
-                onTap: () => _logOut(context),
-                color: const Color(0xFFD76C5B), // Optional: matches your current red theme
+              ElevatedButton(
+                onPressed: () => _logOut(context), // Log out button
+                child: const Text("Log Out"),
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Colors.red,
+                  padding: EdgeInsets.symmetric(vertical: 15.0, horizontal: 40.0),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(30.0), // Rounded button
+                  ),
+                ),
               ),
             ],
           ),

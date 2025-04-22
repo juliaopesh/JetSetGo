@@ -41,7 +41,7 @@ class DefaultFirebaseOptions {
   }
 
   static const FirebaseOptions web = FirebaseOptions(
-    apiKey: 'AIzaSyB5Jsjng-iajyBcYKpVzpcTyOdJMBsDxKI',
+    apiKey: 'REPLACE_WITH_SECURE_API_KEY',
     appId: '1:765733876116:web:453205f189d6d223a69f81',
     messagingSenderId: '765733876116',
     projectId: 'jetsetgo-c5d8c',
@@ -51,7 +51,7 @@ class DefaultFirebaseOptions {
   );
 
   static const FirebaseOptions android = FirebaseOptions(
-    apiKey: 'AIzaSyDIZHKhlbLJv9_QtmjaaSFv2YX1DOqTHLc',
+    apiKey: 'REPLACE_WITH_SECURE_API_KEY',
     appId: '1:765733876116:android:b26f3d85e72b97a3a69f81',
     messagingSenderId: '765733876116',
     projectId: 'jetsetgo-c5d8c',
